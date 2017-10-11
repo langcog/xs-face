@@ -1,0 +1,26 @@
+---
+title: "FPS Sanity Checks"
+output: html_notebook
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(knitr)
+```
+
+```{r, message=FALSE, warning=FALSE}
+new <- read_csv("../data/new_movie_lengths.csv")
+old <- read_csv("../data/old_movie_lengths.csv")
+```
+
+```{r}
+new %>%
+  rename(new_fps = fps, new_length = length) %>%
+  inner_join(old %>%
+              mutate(old_fps = last.frame / length) %>%
+              rename(old_length = length), 
+            by = "subid") %>%
+  mutate(length_close_enough = abs(new_length - old_length) <= 1) %>%
+  mutate(fps_close_enough =  abs(new_fps - old_fps) <= 1) %>%
+  kable
+```
