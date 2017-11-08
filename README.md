@@ -1,9 +1,4 @@
 # xs-face
 Headcam video analysis
 
-## Steps
-
-1. Get fps 
-2. Compare
-3. Get face annotations
-4. Compare
+The face detections are located inside data/face_detections.csv. There is a row for every face detected in both the normal and inverted orientations (0 and 180 degrees, respectively, found in the angle column). If a face was not detected, the row will have is_face = FALSE. The w and h fields are width and height of the face, so we can do cool stuff with how close the face is to the child.
