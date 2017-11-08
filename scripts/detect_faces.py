@@ -5,13 +5,12 @@ import csv
 import ntpath
 import traceback
 import multiprocessing
+sys.path.append('/home/sanchez7/local')
+import cv2
 
 DATA_DIR = os.path.expandvars("$PI_HOME/frames")
-OUTPUT_FILE = '../data/face_detection/face_detection.csv'
-
-sys.path.append('/home/sanchez7/local')
-
-import cv2
+OUTPUT_FILE = '../data/face_detection/face_detection_%s.csv'
+IMAGE_PATHS_FILE = '../data/image_paths.csv'
 
 
 def detect_faces(gray_img):
@@ -33,69 +32,58 @@ def rotate_img(image, angle):
     return result
 
 
-def get_gray_img(img_path):
-    img = cv2.imread(img_path)
-    return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-
-def process_img(root, filename):
-    imgpath = os.path.join(root, filename)
+def process_img(imgpath, i, arg):
+    # print('batch {0}: {1}%'.format(arg, i/1075.0 * 100))
     print imgpath
-    gray_img = get_gray_img(imgpath)
+    gray_img = cv2.cvtColor(cv2.imread(imgpath), cv2.COLOR_BGR2GRAY)
 
     faces = detect_faces(gray_img)
     faces_rotated = detect_faces(rotate_img(gray_img, 180))
 
-    group = ntpath.basename(os.path.dirname(root)).split('-')[0]
-    name = '_'.join(ntpath.basename(root).split('_')[:2])
-    frame_no = re.search('image-(.*).jpg', filename).group(1)
-
+    group = ntpath.basename(os.path.dirname(os.path.dirname(imgpath))).split('-')[0]
+    name = '_'.join(ntpath.basename(os.path.dirname(imgpath)).split('_')[:2])
+    frame = re.search('image-(.*).jpg', ntpath.basename(imgpath)).group(1)
 
     rows = []
 
-    face = False # TODO check if you can eval faces as bool
-    for (x, y, w, h) in faces:
-        face = True
-        rows.append([group, name, frame_no, True, x, y, w, h, 0])
+    if len(faces) == 0:
+        rows.append([group, name, frame, False, None, None, None, None, 0])
+    else:
+        for (x, y, w, h) in faces:
+            rows.append([group, name, frame, True, x, y, w, h, 0])
 
-    if not face:
-        rows.append([group, name, frame_no, False, None, None, None, None, 0])
+    if len(faces_rotated) == 0:
+        rows.append([group, name, frame, False, None, None, None, None, 180])
+    else:
+        for (x, y, w, h) in faces_rotated:
+            rows.append([group, name, frame, True, x, y, w, h, 180])
 
-    face = False
-    for (x, y, w, h) in faces_rotated:
-        face = True
-        rows.append([group, name, frame_no, True, x, y, w, h, 180])
-
-    if not face:
-        rows.append([group, name, frame_no, False, None, None, None, None, 180])
-
-    print rows
     return rows
 
-if __name__ == "__main__": # 8-m/XS_0801/image-00004
+
+if __name__ == "__main__":
+    img_index = int(sys.argv[1]) * 1075
+
+    with open(IMAGE_PATHS_FILE, 'rb') as img_paths_f:
+        img_paths = list(csv.reader(img_paths_f, delimiter=','))
+        images_to_process = img_paths[img_index-1074:img_index+1]
+
     pool = multiprocessing.Pool()
     results = []
-    for root, _, filenames in os.walk(DATA_DIR):
-        print root
-        for filename in filenames:
-            results.append(pool.apply_async(process_img, args=(root, filename)))
+
+    for i, row in enumerate(images_to_process):
+        results.append(pool.apply_async(process_img, args=(row[0], i, sys.argv[1])))
 
     pool.close()
 
-    f = open(OUTPUT_FILE, 'wb')
-    wr = csv.writer(f, quoting=csv.QUOTE_ALL)
-    wr.writerow(['group', 'video', 'frame', 'is_face', 'x', 'y', 'w', 'h', 'angle'])
+    with open(OUTPUT_FILE % sys.argv[1], 'wb') as csvfile:
+        wr = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        wr.writerow(['group', 'video', 'frame', 'is_face', 'x', 'y', 'w', 'h', 'angle'])
 
-    for result in results:
-        try:
-            rows = result.get()
-            print '***'
-            print rows
-            for row in rows:
-                wr.writerow(row)
-        except:
-            traceback.print_exc()
-
-
-
-
+        for result in results:
+            try:
+                rows = result.get()
+                for row in rows:
+                    wr.writerow(row)
+            except:
+                traceback.print_exc()
