@@ -1,0 +1,27 @@
+---
+title: "XS-FACE preliminary analysis"
+output: html_notebook
+---
+
+Imports
+```{r, message=FALSE, warning=FALSE}
+library(knitr)
+library(tidyverse)
+```
+
+Load CSV
+```{r}
+data <- read_csv('../data/face_detections.csv')
+```
+
+Summarize
+```{r}
+data %>%
+  distinct(group, video, frame, is_face, angle) %>% # ignore > 1 face detections
+  group_by(group, angle) %>%
+  summarise(face_frames=sum(is_face=="True"), total=n()) %>%
+  mutate(percentage=face_frames/total * 100) %>%
+  arrange(angle, group) %>%
+  kable
+```
+
