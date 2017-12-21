@@ -2,42 +2,26 @@ import os
 import re
 import sys
 import csv
+import cv2
+import face
 import ntpath
 import traceback
 import multiprocessing
-sys.path.append('/home/sanchez7/local')
-import cv2
+from scipy import misc
+from scipy.ndimage import rotate
 
 DATA_DIR = os.path.expandvars("$PI_HOME/frames")
 OUTPUT_FILE = '../data/face_detection/face_detection_%s.csv'
 IMAGE_PATHS_FILE = '../data/image_paths.csv'
 
 
-def detect_faces(gray_img):
-    cascPath = "haarcascade_frontalface_default.xml"
-    faceCascade = cv2.CascadeClassifier(cascPath)
-    return faceCascade.detectMultiScale(
-        gray_img,
-        scaleFactor=1.1,
-        minNeighbors=20,
-        minSize=(30, 30)
-    )
-
-
-def rotate_img(image, angle):
-    if angle == 0: return image
-    height, width = image.shape[:2]
-    rot_mat = cv2.getRotationMatrix2D((width/2, height/2), angle, 0.9)
-    result = cv2.warpAffine(image, rot_mat, (width, height), flags=cv2.INTER_LINEAR)
-    return result
-
-
 def process_img(imgpath):
     print imgpath
-    gray_img = cv2.cvtColor(cv2.imread(imgpath), cv2.COLOR_BGR2GRAY)
+    img = misc.imread(imgpath)
+    detector = face.Detection()
 
-    faces = detect_faces(gray_img)
-    faces_rotated = detect_faces(rotate_img(gray_img, 180))
+    faces = detector.find_faces(img)
+    faces_rotated = detector.find_faces(rotate(img, 180))
 
     group = ntpath.basename(os.path.dirname(os.path.dirname(imgpath))).split('-')[0]
     name = '_'.join(ntpath.basename(os.path.dirname(imgpath)).split('_')[:2])
@@ -48,13 +32,17 @@ def process_img(imgpath):
     if len(faces) == 0:
         rows.append([group, name, frame, False, None, None, None, None, 180])
     else:
-        for (x, y, w, h) in faces:
+        for f in faces:
+            arr = f.bounding_box
+            x, y, w, h = arr[0], arr[1], arr[2], arr[3]
             rows.append([group, name, frame, True, x, y, w, h, 180])
 
     if len(faces_rotated) == 0:
         rows.append([group, name, frame, False, None, None, None, None, 0])
     else:
-        for (x, y, w, h) in faces_rotated:
+        for f in faces_rotated:
+            arr = f.bounding_box
+            x, y, w, h = arr[0], arr[1], arr[2], arr[3]
             rows.append([group, name, frame, True, x, y, w, h, 0])
 
     return rows
@@ -66,6 +54,13 @@ if __name__ == "__main__":
     with open(IMAGE_PATHS_FILE, 'rb') as img_paths_f:
         img_paths = list(csv.reader(img_paths_f, delimiter=','))
         images_to_process = img_paths[img_index-4170:img_index+1]
+        #images_to_process = img_paths[60*4170:60*4170 + 15]
+        # images_to_process = [
+        #     ["/share/PI/mcfrank/frames/8-months/XS_0801/image-00247.jpg"],
+        #     ["/share/PI/mcfrank/frames/8-months/XS_0801/image-00250.jpg"],
+        #     ["/share/PI/mcfrank/frames/8-months/XS_0801/image-00260.jpg"],
+        #     #["/share/PI/mcfrank/frames/8-months/XS_0801/image-00038.jpg"]
+        # ]
 
     pool = multiprocessing.Pool()
     results = []
