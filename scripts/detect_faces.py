@@ -2,7 +2,6 @@ import os
 import re
 import sys
 import csv
-import cv2
 import face
 import ntpath
 import traceback
@@ -10,10 +9,12 @@ import multiprocessing
 from scipy import misc
 from scipy.ndimage import rotate
 
-DATA_DIR = os.path.expandvars("$PI_HOME/frames")
 OUTPUT_FILE = '../data/face_detection/face_detection_%s.csv'
 IMAGE_PATHS_FILE = '../data/image_paths.csv'
 
+
+def process_img_openpose(imgpath):
+    pass
 
 def process_img(imgpath):
     print imgpath
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     with open(IMAGE_PATHS_FILE, 'rb') as img_paths_f:
         img_paths = list(csv.reader(img_paths_f, delimiter=','))
         images_to_process = img_paths[img_index-4170:img_index+1]
-        #images_to_process = img_paths[60*4170:60*4170 + 15]
+        #images_to_process = img_paths[60*4170:60*4170 + 3]
         # images_to_process = [
         #     ["/share/PI/mcfrank/frames/8-months/XS_0801/image-00247.jpg"],
         #     ["/share/PI/mcfrank/frames/8-months/XS_0801/image-00250.jpg"],
