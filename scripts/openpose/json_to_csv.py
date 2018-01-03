@@ -36,7 +36,7 @@ if __name__ == "__main__":
                            person["hand_right_keypoints"]
                     wr.writerow(row)
             else:
-                wr.writerow([None]) # all 0s
+                wr.writerow([group, name, frame] + [0 for _ in xrange(109)])
 
 
 

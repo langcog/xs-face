@@ -2,24 +2,21 @@ import os
 import re
 import sys
 import csv
-import face
+import scripts.face
 import ntpath
 import traceback
 import multiprocessing
 from scipy import misc
 from scipy.ndimage import rotate
 
-OUTPUT_FILE = '../data/face_detection/face_detection_%s.csv'
-IMAGE_PATHS_FILE = '../data/image_paths.csv'
+OUTPUT_FILE = os.path.expandvars('$HOME/xs-face/data/face_detection/face_detection_%s.csv')
+IMAGE_PATHS_FILE = os.path.expandvars('$HOME/xs-face/data/image_paths.csv')
 
-
-def process_img_openpose(imgpath):
-    pass
 
 def process_img(imgpath):
     print imgpath
     img = misc.imread(imgpath)
-    detector = face.Detection()
+    detector = scripts.face.Detection()
 
     faces = detector.find_faces(img)
     faces_rotated = detector.find_faces(rotate(img, 180))
