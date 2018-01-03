@@ -1,0 +1,34 @@
+ffmpeg version 2.7.1 Copyright (c) 2000-2015 the FFmpeg developers
+  built with gcc 4.6.4 (Marvell GCC release 20150204-c4af733b 64K MAXPAGESIZE ALIGN CVE-2015-0235)
+  configuration: --prefix=/usr --incdir='${prefix}/include/ffmpeg' --arch=arm --target-os=linux --cross-prefix=/usr/local/arm-marvell-linux-gnueabi/bin/arm-marvell-linux-gnueabi- --enable-cross-compile --enable-optimizations --enable-pic --enable-gpl --enable-shared --disable-static --enable-version3 --enable-nonfree --enable-libfaac --enable-encoders --enable-pthreads --disable-bzlib --disable-protocol=rtp --disable-muxer=image2 --disable-muxer=image2pipe --disable-swscale-alpha --disable-ffserver --disable-ffplay --disable-devices --disable-bzlib --disable-altivec --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libmp3lame --disable-vaapi --disable-decoder=amrnb --disable-encoder=zmbv --disable-encoder=dca --disable-encoder=ac3 --disable-encoder=ac3_fixed --disable-encoder=eac3 --disable-decoder=dca --disable-decoder=eac3 --disable-decoder=truehd --cc=/usr/local/arm-marvell-linux-gnueabi/bin/arm-marvell-linux-gnueabi-ccache-gcc
+  libavutil      54. 27.100 / 54. 27.100
+  libavcodec     56. 41.100 / 56. 41.100
+  libavformat    56. 36.100 / 56. 36.100
+  libavdevice    56.  4.100 / 56.  4.100
+  libavfilter     5. 16.101 /  5. 16.101
+  libswscale      3.  1.101 /  3.  1.101
+  libswresample   1.  2.100 /  1.  2.100
+  libpostproc    53.  3.100 / 53.  3.100
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/volume1/Experiments/XS-FACE/final-set-materials/final-videos/headcam-final/16-months/XS_1628_objs.mov':
+  Metadata:
+    major_brand     : qt  
+    minor_version   : 0
+    compatible_brands: qt  
+    creation_time   : 2015-04-22 23:11:46
+  Duration: 00:15:41.30, start: 0.000000, bitrate: 115241 kb/s
+    Stream #0:0(und): Video: prores (apcn / 0x6E637061), yuv422p10le(bt709), 1280x720, 112868 kb/s, SAR 1:1 DAR 16:9, 60 fps, 60 tbr, 6k tbn, 6k tbc (default)
+    Metadata:
+      creation_time   : 2015-04-22 23:11:46
+      handler_name    : Core Media Data Handler
+      encoder         : Apple ProRes 422
+      timecode        : 00:00:00:00
+    Stream #0:1(und): Audio: pcm_s24le (in24 / 0x34326E69), 48000 Hz, stereo, s32 (24 bit), 2304 kb/s (default)
+    Metadata:
+      creation_time   : 2015-04-22 23:11:46
+      handler_name    : Core Media Data Handler
+    Stream #0:2(und): Data: none (tmcd / 0x64636D74) (default)
+    Metadata:
+      creation_time   : 2015-04-22 23:11:47
+      handler_name    : Core Media Data Handler
+      timecode        : 00:00:00:00
+At least one output file must be specified
