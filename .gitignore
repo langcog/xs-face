@@ -3,3 +3,5 @@
 xs-face.Rproj
 .idea
 .nfs*
+slurm-*
+*.pyc
