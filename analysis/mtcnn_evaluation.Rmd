@@ -1,0 +1,47 @@
+---
+title: "mtcnn evaluation"
+output: html_notebook
+---
+
+Load data
+```{r}
+mtcnn_data <- read_csv("data/final_output/mtcnn2.csv") %>%
+  select(-X1)
+ground_truth_data <- read_csv("data/ground_truth/ground_truth.csv")
+```
+
+Join
+```{r}
+combined <- mtcnn_data %>%
+  rename(mtcnn_is_face = is_face) %>%
+  right_join(ground_truth_data, by = c("group", "video", "frame"))
+```
+
+Eval function
+```{r}
+evaluate <- function(a, b) {
+  if (a == "True") {
+    if (a == b) return ("TP")
+    else return("FP")
+  }
+  else {
+    if (a == b) return("TN")
+    else return("FN")
+  }
+}
+```
+
+Evaluate
+```{r}
+results <- combined %>%
+  rowwise() %>%
+  mutate(result = evaluate(is_face, mtcnn_is_face))
+```
+
+Precison / Recall / F-score
+```{r}
+results %>%
+  group_by(result) %>%
+  summarise(count = n())
+```
+
