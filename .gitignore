@@ -5,3 +5,4 @@ xs-face.Rproj
 .nfs*
 slurm-*
 *.pyc
+*.html
