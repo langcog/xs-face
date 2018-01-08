@@ -7,8 +7,9 @@ library(tidyr)
 source("helper.R")
 
 ## load detectors, demo data, merge
-dets <- read_csv("../data/all_detectors.csv") %>%
+dets <- read_csv("../data/final_output/mtcnn2.csv") %>%
   mutate(y = as.numeric(y)) # because of leading zeros, apparently
+dets$subid <- dets$video # common names
 demo.data <- read_csv("../data/demographics/demographics.csv") %>% 
   select(-ra, -assist, -len) ## -dot -dib fields did not exist, deleted bll
 d <- dets %>%
