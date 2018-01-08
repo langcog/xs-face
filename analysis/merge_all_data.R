@@ -10,6 +10,8 @@ source("helper.R")
 dets <- read_csv("../data/final_output/mtcnn2.csv") %>%
   mutate(y = as.numeric(y)) # because of leading zeros, apparently
 dets$subid <- dets$video # common names
+dets$frame<-as.numeric(dets$frame) # numeric
+
 demo.data <- read_csv("../data/demographics/demographics.csv") %>% 
   select(-ra, -assist, -len) ## -dot -dib fields did not exist, deleted bll
 d <- dets %>%
@@ -18,7 +20,6 @@ d <- dets %>%
   do(add.times(.)) %>% 
   group_by(subid) %>%
   do(add.posture(.))
-
 
 # Complete the data frame so that zeros get counted: expands so that each subid
 # includes a zero length row for each posture and orientation.

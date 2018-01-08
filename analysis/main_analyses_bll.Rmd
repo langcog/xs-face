@@ -1,0 +1,477 @@
+---
+title: "XSFACE Analyses"
+author: "Mike Frank, continued Bria Long"
+date: "July 14, 2016; January 8, 2018"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: united
+    highlight: tango
+    code_folding: hide
+---
+
+```{r}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, cache = TRUE)
+```
+
+```{r}
+rm(list=ls())
+library(readr)
+library(dplyr)
+library(tidyr)
+library(langcog)
+library(ggplot2)
+# library(lubridate)
+```
+
+Note that the dataset here is those participants (31) who pass the length sanity checks. 
+
+```{r}
+d <- read_csv("../data/consolidated_data_passing.csv") %>%
+  mutate(posture = factor(posture), 
+         orientation = factor(orientation))
+demo <- read_csv("../data/demographics/demographics.csv")
+#cdis <- read_csv("../data/cdis/cdi_summary.csv") ## not in repo
+```
+
+# Postures and Orientations 
+
+## Postures
+
+```{r}
+ps <- d %>%
+  filter(!is.na(posture)) %>%
+  group_by(subid, age.grp, posture) %>%
+  summarise(time = sum(dt, na.rm=TRUE)) %>%
+  mutate(prop.time = time/sum(time)) %>%
+  group_by(age.grp, posture) %>%
+  multi_boot_standard(col = "prop.time", na.rm=TRUE)
+```
+
+```{r}
+ggplot(ps, aes(x = factor(age.grp), y = mean, 
+               fill = posture, pch = posture)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
+  geom_linerange(aes(ymin=ci_lower, ymax=ci_upper), 
+                 position = position_dodge(width = .9)) +
+  ylab("Proportion Time") + 
+  xlab("Age (months)") + 
+  scale_fill_solarized() + 
+  theme_bw()
+```
+
+## Orientations
+
+```{r}
+os <- d %>%
+  filter(!is.na(orientation)) %>%
+  group_by(age.grp, subid, orientation) %>%
+  summarise(time = sum(dt, na.rm=TRUE)) %>%
+  mutate(prop.time = time/sum(time)) %>%
+  group_by(age.grp, orientation) %>%
+  multi_boot_standard(col = "prop.time")
+```
+
+```{r}
+ggplot(os, aes(x = factor(age.grp), y = mean, 
+               fill = orientation, pch = orientation)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
+  geom_linerange(aes(ymin=ci_lower, ymax=ci_upper), 
+                 position = position_dodge(width = .9)) +
+  ylab("Proportion Time") + 
+  xlab("Age (months)") + 
+  scale_fill_solarized() + 
+  theme_bw()
+```
+
+## Postures and orientations together
+
+Data don't look interpretable typically when sliced this fine. 
+
+```{r}
+pos <- d %>%
+  filter(!is.na(orientation) & !is.na(posture)) %>%
+  group_by(age.grp, subid, orientation, posture) %>%
+  summarise(time = sum(dt, na.rm=TRUE)) %>%
+  group_by(age.grp, subid) %>%
+  mutate(prop.time = time/sum(time)) %>%
+  group_by(age.grp, orientation, posture) %>%
+  multi_boot_standard(col = "prop.time")
+```
+
+```{r}
+ggplot(pos, aes(x = factor(age.grp), y = mean, 
+               fill = posture)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
+  geom_linerange(aes(ymin=ci_lower, ymax=ci_upper), 
+                 position = position_dodge(width = .9)) +
+  facet_grid(.~ orientation) + 
+  ylab("Proportion Time") + 
+  xlab("Age (months)") + 
+  scale_fill_solarized() + 
+  theme_bw()
+```
+
+# Face detections
+
+Using automated face detection results. 
+
+## Basic detections descriptives
+
+```{r}
+d$face_num<-as.numeric(d$is_face=="True")
+
+mss <- d %>%
+  group_by(age.grp, subid) %>%
+  filter(!is.na(face_num)) %>% # filter out NA values
+  summarise(face = mean(face_num)) %>%
+  group_by(age.grp)
+
+ms <- mss %>%
+  multi_boot_standard(col = "face")
+  
+ggplot(mss, aes(x = age.grp, y = face)) + 
+  geom_jitter(width = .25) + 
+  geom_pointrange(data = ms, 
+                 aes(x = age.grp, 
+                     y = mean, 
+                     ymin = ci_lower, 
+                     ymax = ci_upper), col = "red") +
+  geom_line(data = ms, 
+             aes(x = age.grp, 
+                     y = mean), col = "red") + 
+  scale_x_continuous(breaks=c(8,12,16)) +
+  ylab("Proportion Face Detections") + 
+  xlab("Age (months)") + 
+  theme_bw() 
+```
+
+And with continuous age. This is probably the simplest option. 
+
+```{r, d}
+
+mss <- d %>%
+  filter(!is.na(age.at.test)) %>%
+  filter(!is.na(face_num)) %>%
+  group_by(subid, age.at.test) %>%
+  summarise(face = mean(face_num)) %>%
+  left_join(demo) %>%
+  mutate(len = as.numeric(lubridate::as.duration(lubridate::ms(len))))
+
+ggplot(mss, aes(x = age.at.test, y = face)) + 
+  geom_jitter(width = .25, aes(size = len)) + 
+  geom_smooth() + 
+  scale_x_continuous(breaks=c(8,12,16)) +
+  scale_size_continuous(name = "Length (s)") + 
+  ylab("Proportion Face Detections") + 
+  xlab("Age (months)") + 
+  theme_bw() 
+```
+
+Boxplot, though it's not as good. 
+
+```{r}
+ggplot(mss, aes(x = factor(age.grp), y = face)) + 
+  geom_boxplot() + 
+  ylab("Proportion Face Detections") + 
+  xlab("Age (months)") + 
+  theme_bw() 
+```
+
+Stats. Standard ANOVA (violates distributional assumptions). 
+
+```{r}
+mod <- lm(face ~ factor(age.grp), data = mss)
+summary(mod)
+anova(mod)
+```
+
+Now a non-parametric test.
+
+```{r}
+kruskal.test(face ~ factor(age.grp), data = mss)
+```
+
+No real signal that the (predicted) U-shaped pattern is reliable, unfortunately. 
+
+## Detections timecourse
+
+Do a 10s moving window average.
+
+```{r}
+d <- d %>%
+  group_by(subid) %>%
+  filter(!is.na(face_num)) %>%
+  mutate(face_avg = zoo::rollapply(data = face_num, 
+                                   width = 30*10, # 10s window
+                                   FUN = mean, 
+                                   align = "right", 
+                                   fill = NA, 
+                                   na.rm = TRUE))
+
+ggplot(d, aes(x = frame, y = face_avg)) + 
+  geom_line() + 
+  facet_wrap(~subid) + 
+  theme_bw()
+```
+
+# Detections by posture and orientation
+
+## Posture
+
+```{r}
+mss <- d %>%
+  filter(!is.na(posture)) %>%
+  filter(!is.na(face_num)) %>%
+  group_by(age.grp, posture, subid) %>%
+  summarise(face = mean(face_num)) %>%
+  group_by(age.grp)
+
+# ms <- mss %>%
+#   multi_boot_standard(col = "face")
+  
+ggplot(mss, aes(x = factor(age.grp), y = face, col = posture)) + 
+  geom_boxplot() + 
+  ylab("Proportion Face Detections") + 
+  xlab("Age (months)") + 
+  theme_bw() 
+```  
+
+## Orientation
+
+
+```{r}
+mss <- d %>%
+  filter(!is.na(orientation)) %>%
+  filter(!is.na(face_num)) %>%
+  group_by(age.grp, orientation, subid) %>%
+  summarise(face = mean(face_num)) %>%
+  group_by(age.grp)
+
+# ms <- mss %>%
+#   multi_boot_standard(col = "face")
+  
+ggplot(mss, aes(x = factor(age.grp), y = face, col = orientation)) + 
+  geom_boxplot() + 
+  ylab("Proportion Face Detections") + 
+  xlab("Age (months)") + 
+  theme_bw() 
+```  
+
+## Both
+
+Not really enough data to say much when binned this finely.
+
+```{r}
+mss <- d %>%
+  filter(!is.na(posture) & !is.na(orientation) & !is.na(face_num)) %>%
+  group_by(age.grp, posture, orientation, subid) %>%
+  summarise(face = mean(face_num)) %>%
+  group_by(age.grp)
+
+# ms <- mss %>%
+#   multi_boot_standard(col = "face")
+  
+ggplot(mss, aes(x = factor(age.grp), y = face, col = posture)) + 
+  geom_boxplot() + 
+  ylab("Proportion Face Detections") + 
+  xlab("Age (months)") + 
+  facet_grid(~orientation) + 
+  ylim(c(0,.2)) + 
+  theme_bw() 
+```  
+
+<!-- # Naming data -->
+
+<!-- Need some helper functions to merge in namings.  -->
+
+<!-- ```{r} -->
+<!-- source("helper.R") -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- namings <- d %>% -->
+<!--   group_by(subid) %>% -->
+<!--   do(summarize.naming(.)) %>% -->
+<!--   left_join(demo %>% select(subid, gender, age.at.test, len)) -->
+<!-- ``` -->
+
+<!-- First examine: how many namings do we have, generally?  -->
+
+<!-- ```{r} -->
+<!-- naming_rate <- namings %>% -->
+<!--   group_by(subid, age.grp, age.at.test) %>% -->
+<!--   summarise(num = n(),  -->
+<!--             len = len[1]) %>% -->
+<!--   mutate(rate = num / (as.numeric(lubridate::as.duration(lubridate::ms(len)))/60))  -->
+
+<!-- ggplot(naming_rate,  -->
+<!--        aes(x = age.at.test, y = rate)) + -->
+<!--   geom_point() +  -->
+<!--   geom_smooth(span = 1) +  -->
+<!--   ylab("Namings per minute") +  -->
+<!--   xlab("Age (months)") +  -->
+<!--   theme_bw()  -->
+<!-- ``` -->
+
+<!-- Break down by novel and familiar.  -->
+
+<!-- ```{r} -->
+<!-- naming_rate_familiarity <- namings %>% -->
+<!--   group_by(subid, familiarity, age.at.test) %>% -->
+<!--   summarise(num = n(),  -->
+<!--             len = len[1]) %>% -->
+<!--   mutate(rate = num / (as.numeric(lubridate::as.duration(lubridate::ms(len)))/60)) -->
+
+<!-- ggplot(naming_rate_familiarity,  -->
+<!--        aes(x = age.at.test, y = rate, col = familiarity)) + -->
+<!--   geom_point() +  -->
+<!--   geom_smooth(span = 1) +  -->
+<!--   ylab("Namings per minute") +  -->
+<!--   xlab("Age (months)") +  -->
+<!--   theme_bw()  -->
+<!-- ``` -->
+
+<!-- Item effects just for fun.  -->
+
+<!-- ```{r} -->
+<!-- namings %>% -->
+<!--   group_by(subid, name, familiarity, age.at.test) %>% -->
+<!--   summarise(num = n(),  -->
+<!--             len = len[1]) %>% -->
+<!--   mutate(rate = num / (as.numeric(lubridate::as.duration(lubridate::ms(len)))/60)) %>% -->
+<!--   ggplot(aes(x = age.at.test, y = rate, col = name)) + -->
+<!--   geom_point() +  -->
+<!--   facet_grid(.~familiarity) +  -->
+<!--   geom_smooth(span = 1) +  -->
+<!--   ylab("Namings per minute") +  -->
+<!--   xlab("Age (months)") +  -->
+<!--   theme_bw()  -->
+<!-- ``` -->
+
+
+<!-- # Namings and face detections -->
+
+<!-- ## Are there more faces during naming instances?  -->
+
+
+<!-- ## Are there more faces before or after naming instances?  -->
+
+<!-- ```{r} -->
+<!-- #   sb <- ddply(d,~subid, summarize.naming, window=c(-3,0)) -->
+<!-- #   sa <- ddply(d,~subid, summarize.naming, window=c(0,3)) -->
+<!-- #   sb$window <- "before" -->
+<!-- #   sa$window <- "after" -->
+<!-- #   s <- rbind(sb,sa) -->
+<!-- #   s$window <- factor(s$window) -->
+<!-- #    -->
+<!-- # #   d <- subset(d,!is.na(time)) -->
+<!-- # #   s <- ddply(d,~subid, summarize.naming, window=c(-3,3)) -->
+<!-- #    -->
+<!-- #   s$first.instance <- s$naming.instance == 1 -->
+<!-- #   s$log.instance <- round(log10(s$naming.instance)*4)/4 -->
+<!-- #   s$binned.instance <- 10^(round(log10(s$naming.instance)*4)/4) -->
+<!-- #   s$face.logical <- s$face != 0 -->
+<!-- #    -->
+<!-- #   ## try plotting individuals -->
+<!-- #   mss <- ddply(s,~subid+age.grp+window,summarise, -->
+<!-- #                face = na.mean(face)) -->
+<!-- ```   -->
+
+<!-- ```{r} -->
+<!--   # qplot(age.grp,face,colour=window, -->
+<!--   #       xlab="Age (Months)",ylab="Proportion faces detected in window", -->
+<!--   #       data=mss,geom=c("point")) +  -->
+<!--   #   scale_x_continuous(breaks=c(8,12,16)) + -->
+<!--   #   geom_smooth() -->
+<!-- ``` -->
+
+
+<!-- ## How do face detections change with sequence of naming instances? -->
+
+<!-- ```{r} -->
+<!-- ms <- namings %>% -->
+<!--   group_by(age.grp, subid, naming.instance, familiarity, name) %>% -->
+<!--   summarise(face = mean(face)) %>% -->
+<!--   group_by(age.grp, naming.instance, familiarity) %>% -->
+<!--   multi_boot_standard(col = "face", na.rm = TRUE) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- ggplot(ms,  -->
+<!--        aes(x = naming.instance, y = mean, col = familiarity)) + -->
+<!--   geom_point() +  -->
+<!--   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) +  -->
+<!--   geom_smooth(se = FALSE) +  -->
+<!--   facet_grid(~age.grp) +  -->
+<!--   xlim(c(0,20)) +  -->
+<!--   scale_color_solarized() +  -->
+<!--   theme_bw() -->
+
+<!-- ``` -->
+
+
+
+
+<!-- ```{r} -->
+
+<!-- #   ## now calculate differences from base rate -->
+<!-- #   n <- ddply(s,~subid+age.grp,summarise, -->
+<!-- #              face = na.mean(face)) -->
+<!-- #    -->
+<!-- #   n$br <- ddply(d,~subid+age.grp,summarise, -->
+<!-- #               face=na.mean(face))$face -->
+<!-- #    -->
+<!-- #   n$br.diff <- n$face - n$br -->
+<!-- #    -->
+<!-- # #   pdf("~/Projects/xsface/writeup/figures/naming_faces_diff.pdf",width=4,height=3) -->
+<!-- #   qplot(age.grp,br.diff,position=position_jitter(.2), -->
+<!-- #         data=subset(n,age.grp>4),xlab="Age (Months)",ylab="Face detections relative to base rate") +  -->
+<!-- #     scale_x_continuous(breaks=c(8,12,16,20)) + -->
+<!-- #     geom_abline(slope=0,intercept=0,lty=2) +  -->
+<!-- #     stat_summary(fun.data="mean_cl_boot",color="red") -->
+<!-- # #   dev.off() -->
+<!-- ``` -->
+
+
+
+<!-- # CDIs, namings, and face detections -->
+
+<!-- ```{r} -->
+<!-- cdi_namings <- left_join(naming_rate, cdis) -->
+
+<!-- qplot(comprehension, facets= .~ age.grp, data = cdi_namings) +  -->
+<!--   theme_bw() -->
+
+<!-- qplot(production, facets= .~ age.grp, data = cdi_namings) +  -->
+<!--   theme_bw() -->
+
+<!-- ``` -->
+
+<!-- ## CDIs and namings -->
+
+<!-- Just out of curiousity, are there any major differences in terms of CDIs by naming rate? (Would help to establish the validity of the naming rate analyses).  -->
+
+<!-- ```{r} -->
+<!-- ggplot(cdi_namings,  -->
+<!--        aes(x = rate, y = comprehension)) +  -->
+<!--   geom_point() +  -->
+<!--   geom_smooth(method = "lm", se = FALSE) +  -->
+<!--   facet_grid(.~age.grp) +  -->
+<!--   xlab("Namings per minute") +  -->
+<!--   ylab("CDI Summed Comprehension Vocabulary") +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- cdis <- read_csv("../data/cdis/cdi_summary.csv") -->
+<!-- left_join(naming_rate, cdis) %>% -->
+<!--   ggplot(aes(x = rate, y = production)) +  -->
+<!--   geom_point() +  -->
+<!--   geom_smooth(method = "lm", se = FALSE) +  -->
+<!--   facet_grid(.~age.grp) +  -->
+<!--   xlab("Namings per minute") +  -->
+<!--   ylab("CDI Summed Production Vocabulary") +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
