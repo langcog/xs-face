@@ -11,8 +11,8 @@ library(tidyverse)
 
 Load CSV
 ```{r, message=FALSE, warning=FALSE}
-data1 <- read_csv('/Users/alessandro/workspace/3.csv')
-data <- read_csv("../data/final_output/mtcnn_face_detections.csv")
+# data1 <- read_csv('/Users/alessandro/workspace/3.csv')
+data <- read_csv("../data/final_output/mtcnn2.csv")
 ```
 
 ```{r}
@@ -21,7 +21,7 @@ setwd("..")
 
 Summarize
 ```{r}
-data1 %>%
+data %>%
   #filter(w>100 | is.na(w)) %>%
   distinct(group, video, frame, is_face) %>% # ignore > 1 face detections
   group_by(group) %>%
@@ -32,12 +32,12 @@ data1 %>%
 ```
 
 
-```{r}
-b <- data %>%
-  filter(video=="XS_0801", angle==0, is_face=="True") %>%
-  arrange(frame) 
-
-```
+# ```{r} # no "angle" in data
+# b <- data %>%
+#   filter(video=="XS_0801", angle==0, is_face=="True") %>%
+#   arrange(frame) 
+# 
+# ```
 
 ```{r}
 a <- data %>% filter(angle ==0, is_face=="True") %>% sample_n(250)
