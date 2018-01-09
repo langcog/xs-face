@@ -6,3 +6,5 @@ xs-face.Rproj
 slurm-*
 *.pyc
 *.html
+cdi/
+cdi_summary.csv

@@ -1,0 +1,44 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(knitr)
+```
+
+```{r}
+data <- read_csv("../data/openpose.csv")
+```
+
+```{r}
+check <- function(nose, l, r) {
+  return(!is.na(nose) & !is.na(l) & !is.na(r))
+}
+```
+
+```{r}
+data2 <- data %>%
+  #rowwise() %>%
+  mutate(is_face = check(Nose, LEye, REye))
+
+#!is.na(Nose) && !is.na(LEye) && !is.na(REye)
+```
+
+```{r}
+data2 %>%
+  #filter(w>100 | is.na(w)) %>%
+  #distinct(group, video, frame, is_face) %>% # ignore > 1 face detections
+  group_by(group) %>%
+  summarise(face_frames=sum(is_face==TRUE), total=n()) %>%
+  mutate(percentage=face_frames/total * 100) %>%
+  arrange(group) %>%
+  kable
+```
+
+```
+```{r}
+
+```
+
+
