@@ -1,0 +1,34 @@
+---
+title: "redo_mtcnn_csv"
+output: html_document
+---
+
+```{r}
+data <- read_csv("data/final_output/mtcnn2.csv") %>%
+  select(-X1)
+
+# TODO preprocessing with new_frames? match header
+# new_frames <- read_csv("data/final_output/new_frames.csv")
+```
+
+Filter out messed up videos (contain less frames)
+```{r}
+data %<>% 
+  filter(!(video %in% c("XS_1612", "XS_1614", "XS_1631", "XS_1635")))
+```
+
+```{r}
+result <- data %>%
+  rbind(new_frames) %>%
+  arrange(video, frame)
+```
+
+Sanity check # of frames
+```{r}
+
+```
+
+```{r}
+write_csv(result, "data/final_output/mtcnn3.csv")
+```
+

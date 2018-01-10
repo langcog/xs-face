@@ -4,7 +4,43 @@ output: html_document
 ---
 
 ```{r}
-
+library(tidyverse)
+library(magrittr)
 ```
+
+# TODO replace with proper csv result
+```{r}
+data <- read_csv("data/final_output/mtcnn2.csv") %>%
+  select(-X1) %>%
+  distinct(video, frame, .keep_all = TRUE)
+```
+
+Sample high density faces, remove selected from original data
+```{r}
+high_density_faces_sample <- data %>%
+  group_by(video) %>%
+  filter(is_face == "True") %>%
+  sample_n(7)
+
+data %<>%
+  anti_join(high_density_faces_sample)
+```
+
+Choose random frames from remaining
+```{r}
+random_sample <- data %>%
+  group_by(video) %>%
+  sample_n(7)
+```
+
+Combine and save result
+```{r}
+gold_set_candidates <- high_density_faces_sample %>%
+  rbind(random_sample) %>%
+  mutate(path = paste0(video, "/image-", frame, ".jpg"))
+
+# write_csv(gold_set_candidates, "data/ground_truth/gold_set_candidates.csv")
+```
+
 
 

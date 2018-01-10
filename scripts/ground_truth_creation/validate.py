@@ -2,6 +2,8 @@ import os
 import csv
 import ntpath
 
+# TODO change folder name to sample or whatever in ~/xsface
+
 BRIA_ANNOTATIONS = "/Users/alessandro/Downloads/sample_images_bria"
 
 if __name__ == "__main__":
@@ -27,7 +29,7 @@ if __name__ == "__main__":
 
     print(len(rows))
 
-    with open("ground_truth.csv", 'wb') as csvfile:
+    with open("ground_truth2.csv", 'wb') as csvfile:
         wr = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         wr.writerow(['group', 'video', 'frame', 'is_face', 'angle'])
         for key, val in rows.iteritems():
