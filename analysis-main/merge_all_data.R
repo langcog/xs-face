@@ -7,7 +7,7 @@ library(tidyr)
 source("helper.R")
 
 ## load detectors, demo data, merge
-dets <- read_csv("../data/final_output/mtcnn2.csv") %>%
+dets <- read_csv("../data/final_output/mtcnn3.csv") %>%
   mutate(y = as.numeric(y)) # because of leading zeros, apparently
 dets<-arrange(dets,video,frame) # comes out in weird order because of sherlock jobs!
 dets$subid <- dets$video # common names
@@ -39,8 +39,8 @@ d <- bind_rows(d, complete_combos)
 
 write_csv(d, "../data/consolidated_data.csv")
 
-## Create a set of videos that passes the sanity checks in length_sanity_check.Rmd
-d_passing <- filter(d, not(subid %in% c("XS_1205","XS_1211","XS_1225",
-                                        "XS_1628","XS_1639")))
-
-write_csv(d_passing, "../data/consolidated_data_passing.csv")
+# ## Create a set of videos that passes the sanity checks in length_sanity_check.Rmd
+# d_passing <- filter(d, not(subid %in% c("XS_1205","XS_1211","XS_1225",
+#                                         "XS_1628","XS_1639")))
+# 
+# write_csv(d_passing, "../data/consolidated_data_passing.csv")

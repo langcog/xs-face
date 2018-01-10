@@ -149,6 +149,7 @@ summarize.naming <- function (x, window = c(-2,2)) {
   # for each row of p, populate posture and orientation to x
   namings$posture <- factor(NA, levels=levels(x$posture))
   namings$orientation <- factor(NA, levels=levels(x$orientation))
+
   
   for (i in 1:nrow(namings)) {
     t <- namings$time[i]

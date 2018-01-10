@@ -26,7 +26,7 @@ read in lengths on movies
 ```{r}
 demo <- read_csv("../data/demographics/demographics.csv")
 movies <- read_csv("../data/video_stats/new_movie_lengths.csv") 
-dets <- read_csv("../data/final_output/mtcnn2.csv")
+dets <- read_csv("../data/final_output/mtcnn3.csv")
 ```
 
 Clean up measurements. 

@@ -1,5 +1,6 @@
 base
 readr
+plyr
 dplyr
 tidyr
 langcog
@@ -7,4 +8,3 @@ ggplot2
 lubridate
 bindrcpp
 stringr
-plyr
