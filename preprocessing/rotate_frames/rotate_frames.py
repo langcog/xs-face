@@ -9,7 +9,9 @@ import sys
 import ntpath
 # folder arg is frames3
 
-OUT_DIR = os.path.expandvars("$PI_HOME/frames4")
+#OUT_DIR = os.path.expandvars("$PI_HOME/frames4")
+# TMP
+OUT_DIR = os.path.expandvars("$PI_HOME/redo_rotate")
 
 # define a function that rotates images in the current directory
 # given the rotation in degrees as a parameter
