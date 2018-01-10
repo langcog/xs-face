@@ -1,4 +1,10 @@
+.Rhistory
+.Rproj.user/
+xs-face.Rproj
 .idea
 .nfs*
 slurm-*
 *.pyc
+*.html
+cdi/
+cdi_summary.csv
