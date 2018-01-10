@@ -4,7 +4,7 @@ import ntpath
 
 # TODO change folder name to sample or whatever in ~/xsface
 
-BRIA_ANNOTATIONS = "/Users/alessandro/Downloads/sample_images_bria"
+BRIA_ANNOTATIONS = "/Users/alessandro/xsface/sample_images3"
 
 if __name__ == "__main__":
 
@@ -15,21 +15,22 @@ if __name__ == "__main__":
         if root[len(root) - 1].isdigit(): # inside video directory
             for filename in filenames:
                 if filename == ".DS_Store": continue
-                group = ntpath.basename(os.path.dirname(root))
                 video = ntpath.basename(root)
+                group = str(int(video.split("_")[1][:2]))
                 frame = filename.split(".")[0].split("-")[1]
 
-                rows[filename.split(".")[0]] = [group, video, frame, "False", 0]
+                rows[video + filename.split(".")[0]] = [group, video, frame, "False", 0]
 
         elif ntpath.basename(root) == "annotations": #inside annotations
+            video = ntpath.basename(os.path.dirname(root))
             for filename in filenames:
-                arr = rows[filename.split(".")[0]]
+                arr = rows[video + filename.split(".")[0]]
                 arr[3] = "True"
-                rows[filename.split(".")[0]] = arr
+                rows[video + filename.split(".")[0]] = arr
 
     print(len(rows))
 
-    with open("ground_truth2.csv", 'wb') as csvfile:
+    with open("ground_truth3.csv", 'wb') as csvfile:
         wr = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         wr.writerow(['group', 'video', 'frame', 'is_face', 'angle'])
         for key, val in rows.iteritems():

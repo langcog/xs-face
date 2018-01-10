@@ -6,17 +6,21 @@ output: html_notebook
 500 frames were taken across all groups, half of them labeled as containing a face and half with no face.
 
 Load data
-```{r}
-mtcnn_data <- read_csv("data/final_output/mtcnn2.csv") %>%
-  select(-X1)
-ground_truth_data <- read_csv("data/ground_truth/ground_truth.csv")
+```{r, message=FALSE, warning=FALSE}
+setwd("..")
+
+data <- read_csv("data/final_output/mtcnn3.csv") %>%
+  distinct(video, frame, .keep_all = TRUE)
+
+ground_truth_data <- read_csv("data/ground_truth/ground_truth3.csv") %>%
+  select(-angle)
 ```
 
 Join
 ```{r}
-combined <- mtcnn_data %>%
-  rename(mtcnn_is_face = is_face) %>%
-  right_join(ground_truth_data, by = c("group", "video", "frame"))
+combined <- data %>%
+  rename(detector_is_face = is_face) %>%
+  inner_join(ground_truth_data, by = c("group", "video", "frame"))
 ```
 
 Eval function
@@ -24,11 +28,11 @@ Eval function
 evaluate <- function(a, b) {
   if (a == "True") {
     if (a == b) return ("TP")
-    else return("FP")
+    else return("FN")
   }
   else {
     if (a == b) return("TN")
-    else return("FN")
+    else return("FP")
   }
 }
 ```
@@ -37,13 +41,17 @@ Evaluate
 ```{r}
 results <- combined %>%
   rowwise() %>%
-  mutate(result = evaluate(is_face, mtcnn_is_face))
+  mutate(result = evaluate(is_face, detector_is_face))
 ```
 
 Precison / Recall / F-score
 ```{r}
-results %>%
+score <- results %>%
   group_by(result) %>%
   summarise(count = n())
+
+p <- score[4,2] / (score[4,2] + score[2,2])
+r <- score[4,2] / (score[4,2] + score[1,2])
+f <- 2 * p * r / (p + r)
 ```
 

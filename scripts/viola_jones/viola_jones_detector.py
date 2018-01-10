@@ -41,6 +41,8 @@ def process_img(imgpath):
         for (x, y, w, h) in faces:
             rows.append([group, name, frame, True, x, y, w, h])
 
+    return rows
+
 
 if __name__ == "__main__":
     vid_folder = sys.argv[1]
