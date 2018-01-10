@@ -22,7 +22,7 @@ def detect_faces(gray_img):
     )
 
 
-def process_img(imgpath, i, arg):
+def process_img(imgpath):
     # print('batch {0}: {1}%'.format(arg, i/1075.0 * 100))
     print imgpath
     gray_img = cv2.cvtColor(cv2.imread(imgpath), cv2.COLOR_BGR2GRAY)

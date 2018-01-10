@@ -1,5 +1,4 @@
 #!/bin/sh
-# TODO add all frames to frames4 first
 for vid in $PI_HOME/frames4/*; do
 	if [[ $vid == *1205* || $vid == *1211* || $vid == *1225* || $vid == *1628*  ]]; then
 	    echo "Large video (> 10GB): $vid"
