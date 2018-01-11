@@ -38,6 +38,7 @@ library(xtable)
 library(lubridate)
 library(langcog)
 library(ggplot2)
+library(lme4)
 ```
 
 # Methods
@@ -131,14 +132,12 @@ We created a set of custom annotations that described the child's physical postu
 ## Face Detection
 Measuring the availability of caregiver’s faces across development was an important goal of the study. We used a total of three face detection systems to explore this hypothesis and to avoid the cost of hand-annotating every frame. Results for the evaluation of these three systems are shown in Table X.
 
-
 ### Face Detection Algorithms
-The first face detection system made use of a series of Haar feature-based cascade classifiers (viola) applied to each individual frame. This detector provided information about the presence of a face as well as its size and position. 
+The first face detection system made use of a series of Haar feature-based cascade classifiers (Viola-Jones, CITEXX) applied to each individual frame. This detector provided information about the presence of a face as well as its size and position. 
 
-The second algorithm was based on the work by () using multi-task cascaded convolutional neural networks (MTCNNs). The system was built using a novel cascaded CNN-based framework for joint detection and alignment, built to perform well in real-world environments where varying illuminations and occlusions are present. We used a Tensorflow implementation of this algorithm provided by (https://github.com/davidsandberg/facenet)
+The second algorithm was based on the work by (CITEXX) using multi-task cascaded convolutional neural networks (MTCNNs). The system was built using a novel cascaded CNN-based framework for joint detection and alignment, built to perform well in real-world environments where varying illuminations and occlusions are present. We used a Tensorflow implementation of this algorithm provided by (https://github.com/davidsandberg/facenet)
 
-The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc). The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose).
-
+The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc) (CITEXX). The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose).
 
 ### Detector evaluation
 
@@ -215,7 +214,16 @@ ggplot(faceByOrientation, aes(x = factor(age.grp), y = face, col = orientation))
   theme_bw() 
 ```
 
+## Model
+```{r}
 
+fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid), 
+      data = d,  
+      family = "binomial")
+
+kable(summary(mod_covariates_age_v2)$coef, digits = 3)
+
+```
 
 # Changes in Access to Hands
 
