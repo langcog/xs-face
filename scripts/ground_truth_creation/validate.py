@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
                 rows[video + filename.split(".")[0]] = [group, video, frame, "False", 0]
 
-        elif ntpath.basename(root) == "annotations": #inside annotations
+        elif ntpath.basename(root) == "annotations": # inside annotations
             video = ntpath.basename(os.path.dirname(root))
             for filename in filenames:
                 arr = rows[video + filename.split(".")[0]]

@@ -18,7 +18,8 @@ Sample high density faces, remove selected from original data
 high_density_faces_sample <- data %>%
   group_by(video) %>%
   filter(is_face == "True") %>%
-  sample_n(7)
+  sample_n(7) %>%
+  mutate(sample_type = "high_density")
 
 data %<>%
   anti_join(high_density_faces_sample)
@@ -28,7 +29,8 @@ Choose random frames from remaining
 ```{r}
 random_sample <- data %>%
   group_by(video) %>%
-  sample_n(7)
+  sample_n(7) %>%
+  mutate(sample_type = "random")
 ```
 
 Combine and save result
