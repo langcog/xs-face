@@ -6,3 +6,6 @@ tidyr
 xtable
 lubridate
 bindrcpp
+plyr
+langcog
+ggplot2

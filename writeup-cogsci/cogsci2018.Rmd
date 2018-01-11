@@ -1,5 +1,5 @@
 ---
-title: "Developmental and postural changes in children's visual access to faces"
+title: "Postural changes mediate children's visual access to faces and hands"
 bibliography: xsface.bib
 csl: apa6.csl
 document-params: "10pt, letterpaper"
@@ -31,10 +31,14 @@ knitr::opts_chunk$set(fig.width=6, fig.height=5, fig.crop = FALSE,
                       fig.path='figs/', echo=FALSE, warning = FALSE, 
                       cache=TRUE, message = FALSE, sanitize = TRUE)
 library(readr)
+library(plyr) # need to load this for scripts, always load before
 library(dplyr)
 library(tidyr)
 library(xtable)
 library(lubridate)
+library(langcog)
+library(ggplot2)
+library(lme4)
 ```
 
 # Methods
@@ -113,10 +117,10 @@ The experimenter then left the playroom for approximately 15 minutes, during whi
 
 \begin{figure*}
 \includegraphics[width=6in]{images/framesample.pdf}
-\caption{\label{fig:frames} Sample frames from the headcam videos for a child from each age group, selected because they featured successful face detections (green squares).}
+\caption{\label{fig:frames} Example face detections made by MTCNN for the headcam videos from a child in each group  (green squares).}
 \end{figure*}
 
-All headcam videos were cropped to exclude the period of entry to the playroom and were automatically synchronized with the tripod-mounted videos using FinalCut Pro Software. These sessions yielded a substantial amount of video: a total of
+Headcam videos were trimmed such that they excluded the instruction phase when the experimenter was in the room and were automatically synchronized with the tripod-mounted videos using FinalCut Pro Software. These sessions yielded videos of 
 `r round(sum(inc_subs$len.min), digits = 0)` minutes (almost a milion frames), with an average video length of
 `r round(sum(inc_subs$len.min)/60, digits = 2)` minutes
 (min = `r round(min(inc_subs$len.min), digits = 2)`, max = `r round(max(inc_subs$len.min), digits = 2)`).
@@ -128,14 +132,12 @@ We created a set of custom annotations that described the child's physical postu
 ## Face Detection
 Measuring the availability of caregiver’s faces across development was an important goal of the study. We used a total of three face detection systems to explore this hypothesis and to avoid the cost of hand-annotating every frame. Results for the evaluation of these three systems are shown in Table X.
 
-
 ### Face Detection Algorithms
-The first face detection system made use of a series of Haar feature-based cascade classifiers (viola) applied to each individual frame. This detector provided information about the presence of a face as well as its size and position. 
+The first face detection system made use of a series of Haar feature-based cascade classifiers (Viola-Jones, CITEXX) applied to each individual frame. This detector provided information about the presence of a face as well as its size and position. 
 
-The second algorithm was based on the work by () using multi-task cascaded convolutional neural networks (MTCNNs). The system was built using a novel cascaded CNN-based framework for joint detection and alignment, built to perform well in real-world environments where varying illuminations and occlusions are present. We used a Tensorflow implementation of this algorithm provided by (https://github.com/davidsandberg/facenet)
+The second algorithm was based on the work by (CITEXX) using multi-task cascaded convolutional neural networks (MTCNNs). The system was built using a novel cascaded CNN-based framework for joint detection and alignment, built to perform well in real-world environments where varying illuminations and occlusions are present. We used a Tensorflow implementation of this algorithm provided by (https://github.com/davidsandberg/facenet)
 
-The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc). The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose).
-
+The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc) (CITEXX). The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose).
 
 ### Detector evaluation
 
@@ -156,14 +158,74 @@ The third algorithm was a CNN-based pose detector that provided the locations of
 \end{table}
 
 # Results
-We report results from three different sets of analyses. First, we explore developmental changes in posture and orientation in our dataset. Next, we explore how these changes affect access to faces and to hands, as measured using computater vision algorithms. Finally, we explore how these changes impact the accessibility of faces and hands during labeling events.
+We report results from three different sets of analyses. First, we explore how these changes affect access to faces and to hands, as measured using computater vision algorithms. Second, we explore how these changes impact the accessibility of faces and hands during labeling events.
 
+```{r}
+d <- read_csv("../data/consolidated_data.csv") %>%
+  mutate(posture = factor(posture), 
+         orientation = factor(orientation))
 
-## Changes in Posture and Orientation
+facebyAge <- d %>%
+  filter(!is.na(age.at.test)) %>%
+  group_by(subid, age.at.test) %>%
+  summarise(face = mean(face)) %>%
+  left_join(inc_subs) %>%
+  mutate(len = as.numeric(len_seconds/60))
 
-## Changes in Access to Faces
+faceByOrientation <- d %>%
+  filter(!is.na(orientation)) %>%
+  group_by(age.grp, orientation, subid) %>%
+  summarise(face = mean(face)) %>%
+  group_by(age.grp)
 
-## Changes in Access to Hands
+facebyPosture <- d %>%
+  filter(!is.na(posture)) %>%
+  group_by(age.grp, posture, subid) %>%
+  summarise(face = mean(face)) %>%
+  group_by(age.grp)
+```
+
+# Changes in Access to Faces
+
+```{r fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=4, fig.height=3, fig.cap = "R plot" }
+ggplot(facebyAge, aes(x = age.at.test, y = face)) + 
+  geom_jitter(width = .25, aes(size = len)) + 
+  geom_smooth() + 
+  scale_x_continuous(breaks=c(8,12,16)) +
+  scale_size_continuous(name = "Length (s)") + 
+  ylab("Proportion Face Detections") + 
+  xlab("Age (months)") + 
+  theme_bw() 
+```
+
+```{r fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=4, fig.height=3, fig.cap = "R plot" }
+ggplot(facebyPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
+  geom_boxplot() + 
+  ylab("Proportion Face Detections") + 
+  xlab("Age (months)") + 
+  theme_bw()
+```
+  
+```{r fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=4, fig.height=3, fig.cap = "R plot" }
+ggplot(faceByOrientation, aes(x = factor(age.grp), y = face, col = orientation)) + 
+  geom_boxplot() + 
+  ylab("Proportion Face Detections") + 
+  xlab("Age (months)") + 
+  theme_bw() 
+```
+
+## Model
+```{r}
+
+fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid), 
+      data = d,  
+      family = "binomial")
+
+kable(summary(mod_covariates_age_v2)$coef, digits = 3)
+
+```
+
+# Changes in Access to Hands
 
 
 # Acknowledgements

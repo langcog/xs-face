@@ -49,7 +49,7 @@
 % \textwidth 16cm
 % \textheight 21cm
 
-\title{Developmental and postural changes in children's visual access to faces}
+\title{Postural changes mediate children's visual access to faces and hands}
 
 
 \author{{\large \bf Alessandro Sanchez} \\ \texttt{author1@university.edu} \\ Department of Psychology \\ Stanford University \And {\large \bf Bria Long} \\ \texttt{bria@stanford.edu} \\ Department of Psychology \\ Stanford University
@@ -162,14 +162,14 @@ Annotation}\label{data-processing-and-annotation}
 
 \begin{figure*}
 \includegraphics[width=6in]{images/framesample.pdf}
-\caption{\label{fig:frames} Sample frames from the headcam videos for a child from each age group, selected because they featured successful face detections (green squares).}
+\caption{\label{fig:frames} Example face detections made by MTCNN for the headcam videos from a child in each group  (green squares).}
 \end{figure*}
 
-All headcam videos were cropped to exclude the period of entry to the
-playroom and were automatically synchronized with the tripod-mounted
-videos using FinalCut Pro Software. These sessions yielded a substantial
-amount of video: a total of 516 minutes (almost a milion frames), with
-an average video length of 8.6 minutes (min = 4.53, max = 19.35).
+Headcam videos were trimmed such that they excluded the instruction
+phase when the experimenter was in the room and were automatically
+synchronized with the tripod-mounted videos using FinalCut Pro Software.
+These sessions yielded videos of 516 minutes (almost a milion frames),
+with an average video length of 8.6 minutes (min = 4.53, max = 19.35).
 
 \subsubsection{Posture and Orientation
 Annotation}\label{posture-and-orientation-annotation}
@@ -220,20 +220,47 @@ algorithms}\label{face-detection-algorithms}
 \section{Results}\label{results}
 
 We report results from three different sets of analyses. First, we
-explore developmental changes in posture and orientation in our dataset.
-Next, we explore how these changes affect access to faces and to hands,
-as measured using computater vision algorithms. Finally, we explore how
+explore how these changes affect access to faces and to hands, as
+measured using computater vision algorithms. Second, we explore how
 these changes impact the accessibility of faces and hands during
 labeling events.
 
-\subsection{Changes in Posture and
-Orientation}\label{changes-in-posture-and-orientation}
+\section{Changes in Access to Faces}\label{changes-in-access-to-faces}
 
-\subsection{Changes in Access to
-Faces}\label{changes-in-access-to-faces}
+\begin{CodeChunk}
+\begin{figure}[H]
 
-\subsection{Changes in Access to
-Hands}\label{changes-in-access-to-hands}
+{\centering \includegraphics{figs/unnamed-chunk-3-1} 
+
+}
+
+\caption[R plot]{R plot}\label{fig:unnamed-chunk-3}
+\end{figure}
+\end{CodeChunk}
+
+\begin{CodeChunk}
+\begin{figure}[H]
+
+{\centering \includegraphics{figs/unnamed-chunk-4-1} 
+
+}
+
+\caption[R plot]{R plot}\label{fig:unnamed-chunk-4}
+\end{figure}
+\end{CodeChunk}
+
+\begin{CodeChunk}
+\begin{figure}[H]
+
+{\centering \includegraphics{figs/unnamed-chunk-5-1} 
+
+}
+
+\caption[R plot]{R plot}\label{fig:unnamed-chunk-5}
+\end{figure}
+\end{CodeChunk}
+
+\section{Changes in Access to Hands}\label{changes-in-access-to-hands}
 
 \section{Acknowledgements}\label{acknowledgements}
 
