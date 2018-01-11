@@ -19,7 +19,7 @@ author-note:
     "Thanks to Ally Kraus, Kathy Woo, Aditi Maliwal, and other members of the Language and Cognition Lab for help in recruitment, data collection, and annotation. This research was supported by a John Merck Scholars grant to MCF. An earlier version of this work was presented to the Cognitive Science Society in @frank2013. Please address correspondence to Michael C. Frank, Department of Psychology, Stanford University, 450 Serra Mall (Jordan Hall), Stanford, CA, 94305, tel: (650) 724-4003, email: \texttt{mcfrank@stanford.edu}."
     
 abstract: 
-    "The faces of other people are a critical information source for young children. During early development, children undergo significant postural and locomotor development, changing from lying and sitting infants to toddlers who walk independently. We used a head-mounted camera in conjunction with a face-detection system to explore the eff  ects of these changes on children's visual access to their caregivers' faces during an in-lab play session. In a cross-sectional sample of 8--16 month old children, we found substantial changes in face accessibility based on age and posture. These changes may translate into changes in the accessibility of social information during language learning. We make our corpus available for reanalysis, and discuss strengths and limitations of the headcam method more generally."
+    "The faces of other people are a critical information source for young children. During early development, children undergo significant postural and locomotor development, changing from lying and sitting infants to toddlers who walk independently. We used a head-mounted camera in conjunction with a face-detection system to explore the effects of these changes on children's visual access to their caregivers' faces during an in-lab play session. In a cross-sectional sample of 8--16 month old children, we found substantial changes in face accessibility based on age and posture. These changes may translate into changes in the accessibility of social information during language learning. We make our corpus available for reanalysis, and discuss strengths and limitations of the headcam method more generally."
     
 keywords:
     "social cognition; face-perception; infancy; locomotion; head-cameras"
@@ -37,7 +37,7 @@ library(readr)
 library(dplyr)
 library(tidyr)
 library(xtable)
-# library(lubridate)
+library(lubridate)
 ```
 
 
@@ -106,7 +106,7 @@ all_subs %>%
   \hline
 Age group & N & \% included & Mean age & Video length (min) & \% female \\ 
   \hline
-  8 &  12 & 0.46 & 8.71 & 14.41 & 0.50 \\ 
+   8 &  12 & 0.46 & 8.71 & 14.41 & 0.50 \\ 
    12 &  12 & 0.40 & 12.62 & 13.48 & 0.58 \\ 
    16 &  12 & 0.31 & 16.29 & 15.00 & 0.50 \\ 
    \hline
