@@ -129,10 +129,16 @@ Headcam videos were trimmed such that they excluded the instruction phase when t
 We created a set of custom annotations that described the child's physical posture (e.g. standing) and the orientation of the caregiver relative to the child (e.g. far away). The child's posture was categorized as being held/carried, prone (crawling or lying), sitting, or standing. The caregiver's orientation was characterized as being close to the child, farther from the child, and a global category of caregiver behind the child. For the first two annotationes (close/far from the child), the caregiver could either be to the the front or to the side of the child. All annontations were made using OpenSHAPA/Datavyu software  [@adolph2012], and times when the child was out of view of the tripod camera was marked as uncodable and was excluded from these annotations. 
 
 ## Face Detection
+Measuring the availability of caregiver’s faces across development was an important goal of the study. We used a total of three face detection systems to explore this hypothesis and to avoid the cost of hand-annotating every frame. Results for the evaluation of these three systems are shown in Table X.
 
-An additional goal of the study was to measure the presence of caregivers' faces in the child's field of view (as approximated by the headcam). To avoid hand-annotating the size and position of faces in every frame of video, we tested two face detection systems. Sample frames from the video with successful detections are given in Figure \ref{fig:frames}.
 
-### Face detection algorithms
+### Face Detection Algorithms
+The first face detection system made use of a series of Haar feature-based cascade classifiers (viola) applied to each individual frame. This detector provided information about the presence of a face as well as its size and position. 
+
+The second algorithm was based on the work by () using multi-task cascaded convolutional neural networks (MTCNNs). The system was built using a novel cascaded CNN-based framework for joint detection and alignment, built to perform well in real-world environments where varying illuminations and occlusions are present. We used a Tensorflow implementation of this algorithm provided by (https://github.com/davidsandberg/facenet)
+
+The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc). The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose).
+
 
 ### Detector evaluation
 
