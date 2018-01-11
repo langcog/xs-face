@@ -281,8 +281,12 @@ ggplot(mss, aes(x = factor(age.grp), y = face, col = posture)) +
   ylim(c(0,.2)) +
   theme_bw()
 ```
+
 # Face area: descriptives, posture and orientation
-## When detected, how much of the field of view did faces occupy? (% of screen)
+
+When detected, how much of the field of view did faces occupy? (% of screen)
+
+## Descriptves by age
 
 ```{r}
 screenPixels=720 * 480
@@ -312,7 +316,7 @@ ggplot(mss, aes(x = age.grp, y = faceArea)) +
   theme_bw() 
 ```
  
-## Face size as a function of continous age  
+## Face Area as a function of continous age  
 
 ```{r}
 mssFaceArea <- d %>%
@@ -332,7 +336,7 @@ ggplot(mssFaceArea, aes(x = age.at.test, y = faceArea)) +
   theme_bw() 
 ```
 
-## Face size by infant's posture 
+## Face Area by infant's posture 
 
 ```{r}
 mss <- d %>%
