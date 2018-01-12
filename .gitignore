@@ -1,4 +1,5 @@
-data/final_output/openpose_results.csv
+.DS_Store
+data/final_output/openpose_results*
 .Rhistory
 .Rproj.user/
 xs-face.Rproj

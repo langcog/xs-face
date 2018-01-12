@@ -4,6 +4,10 @@ output: html_document
 ---
 
 500 frames were taken across all groups, half of them labeled as containing a face and half with no face.
+```{r}
+library(tidyverse)
+library(magrittr)
+```
 
 Load data
 ```{r, message=FALSE, warning=FALSE}
@@ -15,11 +19,35 @@ ground_truth_data <- read_csv("data/ground_truth/ground_truth3.csv") %>%
   select(-angle)
 ```
 
+For openpose only 
+```{r}
+data <- read_csv("data/final_output/openpose_results_truncated.csv") %>%
+  distinct(name, frame, .keep_all = TRUE)
+```
+
+```{r}
+contains_face <- function(n, l, r) {
+  return(n != 0)
+}
+```
+
+```{r}
+data2 <- data %>%
+  mutate(is_face = (LEye_conf != 0 | REye_conf != 0) | Nose_conf != 0) %>%
+  select(group, name, frame, is_face) %>%
+  rename(video = name)
+```
+
 Join
 ```{r}
-combined <- data %>%
+combined <- data2 %>%
   rename(detector_is_face = is_face) %>%
   inner_join(ground_truth_data, by = c("group", "video", "frame"))
+```
+openpose, annoying
+```{r}
+combined %<>% 
+  mutate(detector_is_face = ifelse(detector_is_face == TRUE, "True", "False"))
 ```
 
 Eval function
