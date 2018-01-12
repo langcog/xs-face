@@ -2,41 +2,42 @@ import os
 import csv
 import sys
 import json
+import ntpath
 
-# should these go in common file?
-OPENPOSE_DIR =  os.path.expandvars("$PI_HOME/openpose_output")
-CSV_OUTPUT_DIR = os.path.expandvars("$HOME/xs-face/data")
+CSV_OUTPUT_DIR = os.path.expandvars("$HOME/xs-face/scripts/openpose/tmp")
 
+# TODO 1229 is weird because title contains "cropped"
+# TODO if no face or hand or whatever, fill in with 0s!!! first check if, and if not, extend with 0s
 
 if __name__ == "__main__":
-    video = sys.argv[1]
+    video_full_path = sys.argv[1]
+    video_filename = ntpath.basename(video_full_path)
+    print(video_filename)
 
-    group = None
-    name = None
+    subject = "_".join(video_filename.split("_")[:2])
+    group = str(int(subject.split("_")[1][:2]))
 
-    # change title of csv
-    with open(os.path.join(CSV_OUTPUT_DIR, video)) as f:
-        wr = csv.writer(f, "wb", quoting=csv.QUOTE_ALL)
+    with open(os.path.join(CSV_OUTPUT_DIR, subject + ".csv"), "wb") as f:
+        wr = csv.writer(f, quoting=csv.QUOTE_ALL)
 
-    for root, dirs, filenames in os.walk(os.path.join(OPENPOSE_DIR, video)):
-        for filename in filenames:
+        for filename in os.listdir(video_full_path):
+            frame = filename.split("_")[3][7:]
 
-            frame = None
-
-            with open(filename) as json_file:
+            with open(os.path.join(video_full_path, filename), "rb") as json_file:
                 data = json.load(json_file)
                 people = data["people"]
 
             if people:
                 for person in people:
-                    row = [group, name, frame] + \
+                    row = [group, subject, frame] + \
                            person["pose_keypoints"] + \
                            person["face_keypoints"] + \
                            person["hand_left_keypoints"] + \
                            person["hand_right_keypoints"]
                     wr.writerow(row)
             else:
-                wr.writerow([group, name, frame] + [0 for _ in xrange(109)])
+                wr.writerow([group, subject, frame] + [0 for _ in xrange(390)])
+
 
 
 
