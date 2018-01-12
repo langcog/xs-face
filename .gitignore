@@ -1,4 +1,6 @@
 .DS_Store
+data/final_output/*
+data/consolidateddata/*
 data/final_output/openpose_results*
 .Rhistory
 .Rproj.user/

@@ -14,15 +14,26 @@ output:
 ```{r}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, cache = TRUE)
 options(error = browser)
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> ef16392816084c123fa7a598eeda72e854cb4677
 ```
 
 ```{r}
 rm(list=ls())
 library(readr)
+<<<<<<< HEAD
+library(langcog)
+library(dplyr)
+library(tidyr)
+=======
 library(plyr) # need to load this for scripts, always load before
 library(dplyr)
 library(tidyr)
 library(langcog)
+>>>>>>> ef16392816084c123fa7a598eeda72e854cb4677
 library(ggplot2)
 library(lubridate)
 ```
@@ -30,7 +41,11 @@ library(lubridate)
 Note that the dataset here is now the complete data (N=36); all pass length sanity checks.
 
 ```{r}
+<<<<<<< HEAD
+d <- read_csv("../data/consolidated_data_3dets.csv") %>%
+=======
 d <- read_csv("../data/consolidated_data.csv") %>%
+>>>>>>> ef16392816084c123fa7a598eeda72e854cb4677
   mutate(posture = factor(posture), 
          orientation = factor(orientation))
 demo <- read_csv("../data/demographics/demographics.csv")
@@ -122,6 +137,13 @@ Using automated face detection results.
 ## Basic detections descriptives
 
 ```{r}
+<<<<<<< HEAD
+#d$face=d$faceVJ
+#d$face=d$faceMT
+d$face=d$faceOP
+#d$face=d$handOP
+=======
+>>>>>>> ef16392816084c123fa7a598eeda72e854cb4677
 
 mss <- d %>%
   group_by(age.grp, subid) %>%
@@ -444,11 +466,78 @@ namings %>%
 ```
 
 
+<<<<<<< HEAD
+<!-- # Namings and face detections -->
+=======
 # Namings and face detections
+>>>>>>> ef16392816084c123fa7a598eeda72e854cb4677
 
 ## Are there more faces before or after naming instances?
 
 ```{r}
+<<<<<<< HEAD
+aroundNamings <- d %>%
+  filter(!is.na(posture)) %>%
+  group_by(subid) %>%
+  do(summarize.naming(.))
+
+ggplot(aroundNamings, aes(x = factor(age.grp), y = face, col = posture)) + 
+  geom_boxplot() + 
+  ylab("detections within naming window") + 
+  xlab("Age (months)") + 
+  facet_grid(.~familiarity) +
+  theme_bw() 
+
+
+
+```{r}
+# mss <- d %>%
+#   filter(!is.na(posture)) %>%
+#   filter(!is.na(face)) %>%
+#   group_by(age.grp, posture, subid) %>%
+#   summarise(faceArea = mean(faceArea, na.rm="TRUE")) %>%
+#   group_by(age.grp)
+# 
+# 
+# sb_summary <- sb %>%
+#   filter(!is.na(posture)) %>%
+#   filter(!is.na(face)) %>%
+#   group_by(age.grp, posture, subid) %>%
+#   dplyr::summarise(face = count(face)) %>%
+#   group_by(age.grp)
+# 
+# 
+# nameFreq <- sb %>%
+#   filter(!is.na(posture)) %>%
+#   filter(!is.na(face)) %>%
+#   group_by(age.grp, posture, subid) %>%
+#   dplyr::summarise(nameFreq= max(naming.instance, na.rm="TRUE")) %>%
+#   group_by(age.grp)
+# 
+# ggplot(nameFreq, aes(x = factor(age.grp), y = nameFreq, col = posture)) + 
+#   geom_boxplot() + 
+#   ylab("within window") + 
+#   xlab("Age (months)") + 
+#   theme_bw() 
+# 
+# 
+# # ggplot(sb_summary, aes(x = factor(age.grp), y = face, col = posture)) + 
+# #   geom_boxplot() + 
+# #   ylab("within window") + 
+# #   xlab("Age (months)") + 
+# #   theme_bw() 
+
+sb <- sb %>%
+  filter(!is.na(posture)) 
+  
+ggplot(sb, aes(x = factor(age.grp), y = face, col = posture)) + 
+  geom_boxplot() + 
+  ylab("within window") + 
+  xlab("Age (months)") + 
+  facet_grid(.~familiarity) +
+  theme_bw() 
+
+=======
 sb <- plyr::ddply(d,~subid, summarize.naming, window=c(-2,0)) ## used 2 second window as in ms draft
 sa <- plyr::ddply(d,~subid, summarize.naming, window=c(0,2))
 
@@ -466,6 +555,7 @@ s$window <- factor(s$window)
 ## try plotting individuals
 mss <- ddply(s,~subid+age.grp+window,summarise,
                face = mean(face, na.rm="TRUE"))
+>>>>>>> ef16392816084c123fa7a598eeda72e854cb4677
 ```
 
 ```{r}
@@ -477,13 +567,23 @@ mss <- ddply(s,~subid+age.grp+window,summarise,
 ```
 
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> ef16392816084c123fa7a598eeda72e854cb4677
 ## How do face detections change with sequence of naming instances?
 
 ```{r}
 ms <- namings %>%
+<<<<<<< HEAD
+  dplyr::group_by(age.grp, subid, naming.instance, familiarity, name) %>%
+  dplyr::summarise(face = mean(face)) %>%
+  dplyr::group_by(age.grp, naming.instance, familiarity) %>%
+=======
   group_by(age.grp, subid, naming.instance, familiarity, name) %>%
   summarise(face = mean(face)) %>%
   group_by(age.grp, naming.instance, familiarity) %>%
+>>>>>>> ef16392816084c123fa7a598eeda72e854cb4677
   multi_boot_standard(col = "face", na.rm = TRUE)
 ```
 
@@ -499,6 +599,70 @@ ggplot(ms,
   theme_bw()
 ```
 
+<<<<<<< HEAD
+<!-- ## Now calculate face detection differences from base rate -->
+
+<!-- ```{r} -->
+
+<!--   n <- ddply(s,~subid+age.grp,summarise, -->
+<!--              face = mean(face, na.rm="TRUE")) -->
+
+<!--   n$br <- ddply(d,~subid+age.grp,summarise, -->
+<!--               face=mean(face, na.rm="TRUE"))$face -->
+
+<!--   n$br.diff <- n$face - n$br -->
+
+<!-- #   pdf("~/Projects/xsface/writeup/figures/naming_faces_diff.pdf",width=4,height=3) -->
+<!--   qplot(age.grp,br.diff,position=position_jitter(.2), -->
+<!--         data=subset(n,age.grp>4),xlab="Age (Months)",ylab="Face detections relative to base rate") + -->
+<!--     scale_x_continuous(breaks=c(8,12,16)) + -->
+<!--     geom_abline(slope=0,intercept=0,lty=2) + -->
+<!--     stat_summary(fun.data="mean_cl_boot",color="red") -->
+<!-- #   dev.off() -->
+<!-- ``` -->
+
+
+
+<!-- <!-- # CDIs, namings, and face detections --> -->
+
+<!-- <!-- ```{r} --> -->
+<!-- <!-- cdi_namings <- left_join(naming_rate, cdis) --> -->
+
+<!-- <!-- qplot(comprehension, facets= .~ age.grp, data = cdi_namings) + --> -->
+<!-- <!--   theme_bw() --> -->
+
+<!-- <!-- qplot(production, facets= .~ age.grp, data = cdi_namings) + --> -->
+<!-- <!--   theme_bw() --> -->
+
+<!-- <!-- ``` --> -->
+
+<!-- <!-- ## CDIs and namings --> -->
+
+<!-- <!-- Just out of curiousity, are there any major differences in terms of CDIs by naming rate? (Would help to establish the validity of the naming rate analyses). --> -->
+
+<!-- <!-- ```{r} --> -->
+<!-- <!-- ggplot(cdi_namings, --> -->
+<!-- <!--        aes(x = rate, y = comprehension)) + --> -->
+<!-- <!--   geom_point() + --> -->
+<!-- <!--   geom_smooth(method = "lm", se = FALSE) + --> -->
+<!-- <!--   facet_grid(.~age.grp) + --> -->
+<!-- <!--   xlab("Namings per minute") + --> -->
+<!-- <!--   ylab("CDI Summed Comprehension Vocabulary") + --> -->
+<!-- <!--   theme_bw() --> -->
+<!-- <!-- ``` --> -->
+
+<!-- <!-- ```{r} --> -->
+<!-- <!-- cdis <- read_csv("../data/cdis/cdi_summary.csv") --> -->
+<!-- <!-- left_join(naming_rate, cdis) %>% --> -->
+<!-- <!--   ggplot(aes(x = rate, y = production)) + --> -->
+<!-- <!--   geom_point() + --> -->
+<!-- <!--   geom_smooth(method = "lm", se = FALSE) + --> -->
+<!-- <!--   facet_grid(.~age.grp) + --> -->
+<!-- <!--   xlab("Namings per minute") + --> -->
+<!-- <!--   ylab("CDI Summed Production Vocabulary") + --> -->
+<!-- <!--   theme_bw() --> -->
+<!-- <!-- ``` --> -->
+=======
 ## Now calculate face detection differences from base rate
 
 ```{r}
@@ -561,3 +725,4 @@ ggplot(ms,
 <!--   ylab("CDI Summed Production Vocabulary") + -->
 <!--   theme_bw() -->
 <!-- ``` -->
+>>>>>>> ef16392816084c123fa7a598eeda72e854cb4677
