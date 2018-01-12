@@ -6,6 +6,7 @@ import ntpath
 
 CSV_OUTPUT_DIR = os.path.expandvars("$HOME/xs-face/scripts/openpose/tmp")
 
+# TODO 1 index
 # TODO 1229 is weird because title contains "cropped"
 # TODO if no face or hand or whatever, fill in with 0s!!! first check if, and if not, extend with 0s
 
