@@ -4,19 +4,46 @@ library(dplyr)
 library(readr)
 library(magrittr)
 library(tidyr)
+library(assertthat)
 source("helper.R")
 
-## load detectors, demo data, merge
+## load detectors for mtcnn2
 dets <- read_csv("../data/final_output/mtcnn3.csv") %>%
-  mutate(y = as.numeric(y)) # because of leading zeros, apparently
-dets<-arrange(dets,video,frame) # comes out in weird order because of sherlock jobs!
-dets$subid <- dets$video # common names
-dets$frame<-as.numeric(dets$frame) # numeric
-dets$face<-as.logical(dets$is_face) # make logical
+  mutate(subid = video) %>%
+  mutate(frame = as.numeric(frame)) %>%
+  mutate(faceMT = as.logical(is_face)) %>%
+  distinct(video,frame,.keep_all=TRUE) 
 
+# open pose detectors
+detsOpenPose <- read_csv("../data/final_output/openpose_results_truncated.csv") 
+detsOpenPose <- detsOpenPose %>%
+  mutate(video = name) %>%
+  distinct(video,frame,.keep_all=TRUE)  %>%
+  mutate(frame = as.numeric(frame)) %>%
+  mutate(faceOP = Nose_conf!=0 & REye_conf!=0 | LEye_conf!=0 )  %>%
+  mutate(handOP = LWrist_conf!=0 | RWrist_conf!=0 )   
+  
+# viola jones detectors
+detsViola <- read_csv("../data/final_output/viola.csv") 
+detsViola <- detsViola %>%
+  distinct(video,frame,.keep_all=TRUE)  %>%
+  mutate(faceVJ = as.logical(is_face))  %>%
+  mutate(frame = as.numeric(frame))
+
+# merge all three detectors
+alldets=left_join(dets,detsViola[,c("video","frame","faceVJ")]) 
+alldets=left_join(alldets,detsOpenPose[,c("video","frame","faceOP","handOP")]) 
+
+# load demographics and pose / orientation / timing
 demo.data <- read_csv("../data/demographics/demographics.csv") %>% 
   select(-ra, -assist, -len) ## -dot -dib fields did not exist, deleted bll
-d <- dets %>%
+
+# rearrange so we make sure it is in the order of the frames
+alldets<-arrange(alldets,video,frame) 
+
+# calls helper functions in helper.r to get times and posture coding integrated
+d <- alldets %>%
+  distinct(video,frame,.keep_all=TRUE)  %>%
   left_join(demo.data) %>%
   group_by(subid) %>%
   do(add.times(.)) %>% 
@@ -37,10 +64,6 @@ complete_combos <- expand(d, nesting(posture, orientation),
 
 d <- bind_rows(d, complete_combos)
 
+## save it out
 write_csv(d, "../data/consolidated_data.csv")
 
-# ## Create a set of videos that passes the sanity checks in length_sanity_check.Rmd
-# d_passing <- filter(d, not(subid %in% c("XS_1205","XS_1211","XS_1225",
-#                                         "XS_1628","XS_1639")))
-# 
-# write_csv(d_passing, "../data/consolidated_data_passing.csv")
