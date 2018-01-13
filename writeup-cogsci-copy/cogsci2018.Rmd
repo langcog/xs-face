@@ -10,8 +10,8 @@ author-information: >
         \And {\large \bf Ally Kraus} \\ \texttt{bria@stanford.edu} \\ Department of Psychology \\ Stanford University
         \And {\large \bf Michael C. Frank} \\ \texttt{mcfrank@stanford.edu} \\ Department of Psychology \\ Stanford University}
 
-# abstract: 
-# The ability to process social cues (e.g., eye gaze) is a critical component of children's early language and cognitive development. However, as children reach their first birthday, they begin to locomote themselves, exploring their visual environment in an entirely new way. How do these postural changes affect children\'s access to the social information relevant for word-learning? Here, explore this question by using head-mounted cameras to record infants\' (8-16 months of age) egocentric visual perspective and by using computer-vision algorithms to detect the proportion of faces and hands in infants' environments.  We find that infant\'s postural changes largely mediate infants\' accesses to both faces and hands, suggesting that these postural and locomotive developments facilitate infants' emerging linguistic and social capacities.
+abstract: 
+  "The ability to process social cues (e.g., eye gaze) is a critical component of children's early language and cognitive development. However, as children reach their first birthday, they begin to locomote themselves, exploring their visual environment in an entirely new way. How do these postural changes affect children's access to the social information relevant for word-learning? Here, explore this question by using head-mounted cameras to record infants' (8-16 months of age) egocentric visual perspective and by using computer-vision algorithms to detect the proportion of faces and hands in infants' environments.  We find that infant's postural changes largely mediate infants' accesses to both faces and hands, suggesting that these postural and locomotive developments facilitate infants' emerging linguistic and social capacities."
 
 keywords:
     "social cognition; face-perception; infancy; locomotion; head-cameras"
@@ -96,7 +96,7 @@ Our final sample consisted of 36 infants and children, with 8 participants in th
 \end{tabular}
 \caption{\label{tab:pop} Demographics by age group.}
 \end{table}
-To obtain this final sample, we tested `r length(all_subs$reason)`, excluding  `r sum(all_subs$reason!="included")` children for the following reasons:
+To obtain this final sample, we tested `r length(all_subs$reason)` children, excluding  `r sum(all_subs$reason!="included")` children for the following reasons:
 `r sum(all_subs$reason=="HC technical error")` for technical issues related to the headcam,
 `r sum(all_subs$reason=="would not wear camera")` for failing to wear the headcam,
 `r sum(all_subs$reason=="less than 4 min HC footage")` for fewer than 4 minutes of headcam footage,
@@ -106,14 +106,16 @@ To obtain this final sample, we tested `r length(all_subs$reason)`, excluding  `
 `r sum(all_subs$reason=="infant crying")` for fussiness, and one excluded for sample symmetry. All inclusion decisions were made independent of the results of subsequent analyses.
 
 ## Head-mounted camera
-We used a small, head-mounted camera ("headcam") that was constructed from a MD80 model camera attached to a soft elastic headband. Videos captured by the headcam were 720x480 pixels with 25 frames per second.Detailed instructions for creating this headcam can be found  at \url{http://babieslearninglanguage.blogspot.com/2013/10/how-to-make-babycam.html}. A fisheye lens was attached to the camera to cincrease the view angle from $32^{\circ}$ horizontal by $24^{\circ}$ vertical to $64^{\circ}$ horizontal by $46^{\circ}$ vertical (see Figure \ref{fig:headcam}, left). 
-
-Even with the fish-eye lens, the vertical field of view of the camera is still considerably reduced compared to the child's approximate vertical field of view, which spans around 100--120$^{\circ}$ in the vertical dimension by 6-7 months of age [@mayer1988;@cummings1988]. As we were primarily interested in the presence of faces in the child's field of view, we chose to orient the camera upwards to capture the entirely of the child's upper visual field where the child is likely to see the faces of adults around them. This allowed us to maximize our chances of capturing faces that the child would have seen during the play session.
-
 ```{r image, fig.env = "figure", fig.pos = "H", fig.align='center', fig.width=2, fig.height=3, set.cap.width=T, num.cols.cap=1, fig.label="headcam", fig.cap = "Field of view for three different headcam configurations, with the device we used in the middle. The lowest camera is pictured for comparison, but was not available until after our study was already in progress."}
 img <- png::readPNG("images/viewangle.png")
 grid::grid.raster(img)
 ```
+
+We used a small, head-mounted camera ("headcam") that was constructed from a MD80 model camera attached to a soft elastic headband. Videos captured by the headcam were 720x480 pixels with 25 frames per second.Detailed instructions for creating this headcam can be found  at \url{http://babieslearninglanguage.blogspot.com/2013/10/how-to-make-babycam.html}. A fisheye lens was attached to the camera to cincrease the view angle from $32^{\circ}$ horizontal by $24^{\circ}$ vertical to $64^{\circ}$ horizontal by $46^{\circ}$ vertical (see Figure \ref{fig:headcam}, left). 
+
+Even with the fish-eye lens, the vertical field of view of the camera is still considerably reduced compared to the child's approximate vertical field of view, which spans around 100--120$^{\circ}$ in the vertical dimension by 6-7 months of age [@mayer1988;@cummings1988]. As we were primarily interested in the presence of faces in the child's field of view, we chose to orient the camera upwards to capture the entirely of the child's upper visual field where the child is likely to see the faces of adults around them. This allowed us to maximize our chances of capturing faces that the child would have seen during the play session.
+
+
 
 ## Procedure
 
@@ -156,23 +158,25 @@ The third algorithm was a CNN-based pose detector that provided the locations of
 Evaluating face detectors (text here about how gold standard was selected)
 Evaluating hand/wrist detectors (text here about how gold standard was selected)
 
-\begin{table}[t]
-  \caption{Model performance on gold standard generalization training set dataset. P, R, and F denote precision, recall, and F-score for each of the two samples. \label{tab:model_eval}}
-  \begin{center}
-    \begin{tabular}{l|ccc|ccc}
-      \hline
-       &  \multicolumn{3}{c|}{High-density} &  \multicolumn{3}{c}{Random} \\
-      % \null Model & P & R & F & P & R & F  \\
-      \hline
-      % Viola-Jones & .55  & .38 &  .45 & .89 & .74 & .81   \\
-      % MTCNN & .86 & .78 & .81 & .93 & .76 & .83 \\
-      % OpenPose-Faces & .86 & .78 & .81 & .93 & .76 & .83 \\
-      % OpenPose-Wrists & .86 & .78 & .81 & .93 & .76 & .83 \\
-      % OpenPose-Hands & .86 & .78 & .81 & .93 & .76 & .83 \\
-    \hline
-    \end{tabular}
-  \end{center}
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
+  \hline
+(Intercept) & -4.846 & 0.077 & -62.682 & 0.000 \\ 
+  Age & 0.170 & 0.061 & 2.766 & 0.006 \\ 
+  Posture-Prone & -0.513 & 0.036 & -14.045 & 0.000 \\ 
+  Posture-Sit & 0.648 & 0.034 & 18.853 & 0.000 \\ 
+  Posture-Stand & 1.005 & 0.035 & 28.402 & 0.000 \\ 
+  Orient.-Close & 1.549 & 0.021 & 72.757 & 0.000 \\ 
+  Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\ 
+   \hline
+\end{tabular}
+\caption{TABLE PLACEHOLDER} 
 \end{table}
+
+
 
 # Results
 First, we report developmental shifts in infants' posture and their orientation to their caregiver. Then, we explore how these changes influence children's visual access to faces and to hands. Finally, we explore how these changes impact the accessibility of faces and hands during labeling events.
@@ -193,7 +197,9 @@ dlong <- d %>%
 levels(dlong$detectorType) <- c("MTCNN-Faces", "OpenPose-Faces","OpenPose-Hands", "OpenPose-Wrists") 
 ```
 
-# Changes in Posture and Orientation
+## Changes in Posture and Orientation
+
+
 ```{r echo=FALSE, include=FALSE}
 orientation <- d %>%
   filter(!is.na(orientation)) %>%
@@ -209,33 +215,34 @@ posture <- d %>%
   mutate(prop.time = time/sum(time)) %>%
   group_by(subid, age.grp, posture) 
 ```
+
+```{r orientation, fig.env="figure", fig.pos = "h", fig.align = "center", fig.width=3, fig.height=2, fig.cap = "Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)." }
+
+ggplot(orientation, aes(x = factor(age.grp), y = prop.time, col = orientation)) + 
+  geom_boxplot() + 
+  ylab("Proportion Time") + 
+  xlab("Age (months)") + 
+  theme_bw()
+```
 We noted characteristic changes in infants posture and orientation across this developmental time range. The proportion of time infant's spent sitting decreased with age, and the proportion of time infant's spent standing increased with age. Both 8-month-olds and 12-month-olds psent equivalent amounts of time either lying/crawling, which was markedly decreased in the 16-month-olds, who spent most of their time either sitting or standing (see Figure \ref{fig:posture}).  We also observed characteristic changes in children's orientation relative to their caregivers: the 8-month-olds spent more time with their caregiver behind them supporting their sitting positions (see Figure \ref{fig:orientation}). 
 
-```{r posture, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)." }
-
-p1=ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) + 
+```{r posture, fig.env="figure", fig.pos = "h", fig.align = "center", fig.width=3, fig.height=2, fig.cap = "Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)." }
+ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) + 
   geom_boxplot() + 
   ylab("Proportion Time") + 
   xlab("Age (months)") + 
   theme_bw()
-
-p2=ggplot(orientation, aes(x = factor(age.grp), y = prop.time, col = orientation)) + 
-  geom_boxplot() + 
-  ylab("Proportion Time") + 
-  xlab("Age (months)") + 
-  theme_bw()
-
-grid.arrange(p1,p2,nrow = 1)
-
 ```
 
 # Changes in Access to Faces & Hands
 
- We first examined the proportion of face and hand detections across age; a full summary can be seen in Figure \ref{fig:detsbyAge}. We observed  a slight u-shaped function both when analyzing the output of the MTCNN and OpenPose detectors, such that 12-month-olds may experience less faces than 8 or 12-month-olds. Next, we observed that hand detections increased with the age of the participant, though they were relatively infrequent in this dataset. As expected, we found that wrist detections we relatively more frequent and also appeared to increase somewhat with age, suggesting that caregivers hands may be just outside of the field of view of our camera or that they were often occluded by toys.
+We first examined the proportion of face and hand detections across age; a full summary can be seen in Figure \ref{fig:detsbyAge}. We observed  a slight u-shaped function both when analyzing the output of the MTCNN and OpenPose detectors, such that 12-month-olds may experience less faces than 8 or 12-month-olds. Next, we observed that hand detections increased with the age of the participant, though they were relatively infrequent in this dataset. As expected, we found that wrist detections we relatively more frequent and also appeared to increase somewhat with age, suggesting that caregivers hands may be just outside of the field of view of our camera or that they were often occluded by toys.
  
-Next, we turned to our hypothesis of interest, examinig the impact of postural and locomotive developments on children's visual access to faces and hands. Overall, we ofund that children's posture was a major factor both in how many faces they saw during the play session. Infants who were sitting saw mor faces than infants who were lying down or being carried, while infants who were standing saw the most faces.
+Next, we turned to our hypothesis of interest, examinig the impact of postural and locomotive developments on children's visual access to faces and hands. Overall, we ofund that children's posture was a major factor both in how many faces they saw during the play session. Infants who were sitting saw more faces than infants who were lying down or being carried, while infants who were standing saw the most faces. We observed a similar pattern with respect to hands: children who were sitting or standing tended to see more hands/wrists than children who were lying down or held. 
 
-```{r detByAge, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset." }
+We next examined how the child's orientation relative to their caregiver impacted their visual access to faces and hands. Overlal, we saw that children who were far away from their caregiver were more likely to see faces and hands than children who were close to their caregiver; this was true within all age groups and for all detectors. 
+
+```{r detByAge, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=2, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset." }
 detectionsByAge <- dlong %>%
   filter(!is.na(age.at.test)) %>%
   group_by(subid, age.at.test, detectorType) %>%
@@ -284,12 +291,6 @@ p2=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col 
   theme_bw() 
 
 grid.arrange(p1,p2, nrow=2)
-
-```
-  
-```{r faceByOrientFig, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, num.cols.cap=2, fig.cap = "sing the MTCNN3 face detections and OpenPose face detections (left two panels) and the proportion of hand detections as a function of infant's posture, using OpenPose hand detections and the OpenPose wrist detections" }
-
-
 
 ```
 
