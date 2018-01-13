@@ -1,5 +1,5 @@
 data/consolidated_data.csv
-.DS_Store
+data/.DS_Store
 data/final_output/*
 data/consolidateddata/*
 data/final_output/openpose_results*
@@ -14,5 +14,7 @@ slurm-*
 cdi/
 cdi_summary.csv
 writeup-cogsci-copy/cogsci2018_cache/*
+analysis-main/main_analyses_bll_cache/*
+analysis-main/main_analyses_bll_files/*
 figs/
 
