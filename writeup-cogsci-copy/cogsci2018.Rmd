@@ -211,7 +211,7 @@ posture <- d %>%
 ```
 We noted characteristic changes in infants posture and orientation across this developmental time range. The proportion of time infant's spent sitting decreased with age, and the proportion of time infant's spent standing increased with age. Both 8-month-olds and 12-month-olds psent equivalent amounts of time either lying/crawling, which was markedly decreased in the 16-month-olds, who spent most of their time either sitting or standing (see Figure \ref{fig:posture}).  We also observed characteristic changes in children's orientation relative to their caregivers: the 8-month-olds spent more time with their caregiver behind them supporting their sitting positions (see Figure \ref{fig:orientation}). 
 
-```{r posture fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)." }
+```{r posture, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)." }
 
 p1=ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) + 
   geom_boxplot() + 
@@ -229,11 +229,13 @@ grid.arrange(p1,p2,nrow = 1)
 
 ```
 
-# Changes in Access to Faces
+# Changes in Access to Faces & Hands
 
-Next, we examined the impact of these changes
+ We first examined the proportion of face and hand detections across age; a full summary can be seen in Figure \ref{fig:detsbyAge}. We observed  a slight u-shaped function both when analyzing the output of the MTCNN and OpenPose detectors, such that 12-month-olds may experience less faces than 8 or 12-month-olds. Next, we observed that hand detections increased with the age of the participant, though they were relatively infrequent in this dataset. As expected, we found that wrist detections we relatively more frequent and also appeared to increase somewhat with age, suggesting that caregivers hands may be just outside of the field of view of our camera or that they were often occluded by toys.
+ 
+Next, we turned to our hypothesis of interest, examinig the impact of postural and locomotive developments on children's visual access to faces and hands. Overall, we ofund that children's posture was a major factor both in how many faces they saw during the play session. Infants who were sitting saw mor faces than infants who were lying down or being carried, while infants who were standing saw the most faces.
 
-```{r fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset." }
+```{r detByAge, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset." }
 detectionsByAge <- dlong %>%
   filter(!is.na(age.at.test)) %>%
   group_by(subid, age.at.test, detectorType) %>%
@@ -253,7 +255,7 @@ ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorTyp
     theme_bw()
 ```
 
-```{r faceByPostureFig, fig.env="figure*", fig.pos = "h", fig.align = "center", num.cols.cap=2, fig.width=7, fig.height=3, fig.cap = "Proportion of face detections as a function of infant's orientation, using the MTCNN3 face detections and OpenPose face detections (left two panels) and the proportion of hand detections as a function of infant's orientation, using OpenPose hand detections and the OpenPose wrist detections."}
+```{r faceByPostureFig, fig.env="figure*", fig.pos = "h", fig.align = "center", num.cols.cap=2, fig.width=7, fig.height=6, fig.cap = "Proportion of face/hand detections as a function of infant's posture (top panels) and orientation (bottom panels), using the MTCNN3 face detections and OpenPose face detections (left two panels) and using OpenPose hand detections and the OpenPose wrist detections (right two panels)."}
 
 detectionsByPosture <- dlong %>%
   filter(!is.na(posture)) %>%
@@ -261,75 +263,81 @@ detectionsByPosture <- dlong %>%
   summarise(face = mean(detection)) %>%
   group_by(age.grp)
 
-ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
+p1=ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
   geom_boxplot() + 
   ylab("Proportion  Detections") + 
   xlab("Age (months)") + 
   facet_grid(~detectorType) +
   theme_bw() 
 
-```
-  
-```{r faceByOrientFig, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, num.cols.cap=2, fig.cap = "sing the MTCNN3 face detections and OpenPose face detections (left two panels) and the proportion of hand detections as a function of infant's posture, using OpenPose hand detections and the OpenPose wrist detections" }
-detectionsByPosture <- dlong %>%
+detectionsByOrientation <- dlong %>%
   filter(!is.na(orientation)) %>%
   group_by(age.grp, orientation, subid,detectorType) %>%
   summarise(detections = mean(detection)) %>%
   group_by(age.grp)
 
-ggplot(detectionsByPosture, aes(x = factor(age.grp), y = detections, col = orientation)) + 
+p2=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col = orientation)) + 
   geom_boxplot() + 
   ylab("Proportion  Detections") + 
   xlab("Age (months)") + 
   facet_grid(~detectorType) +
   theme_bw() 
+
+grid.arrange(p1,p2, nrow=2)
+
+```
+  
+```{r faceByOrientFig, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, num.cols.cap=2, fig.cap = "sing the MTCNN3 face detections and OpenPose face detections (left two panels) and the proportion of hand detections as a function of infant's posture, using OpenPose hand detections and the OpenPose wrist detections" }
+
+
+
 ```
 
 ## Model
 
-```{r echo=FALSE, include=FALSE}
-d$faceNum=as.numeric(d$faceMT)
-d$handNum=as.numeric(d$handOP)
+<!-- ```{r echo=FALSE, include=FALSE} -->
+<!-- d$faceNum=as.numeric(d$faceMT) -->
+<!-- d$handNum=as.numeric(d$handOP) -->
 
-# Fails to converge
-# fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid),
-#       data = d,
-#       family = "binomial")
+<!-- # Fails to converge -->
+<!-- # fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid), -->
+<!-- #       data = d, -->
+<!-- #       family = "binomial") -->
 
-# Fails to converge
-# agexOrientation <- glmer(faceNum ~ scale(age.at.test) * orientation + (1|subid),
-#       data = d,
-#       family = "binomial")
+<!-- # Fails to converge -->
+<!-- # agexOrientation <- glmer(faceNum ~ scale(age.at.test) * orientation + (1|subid), -->
+<!-- #       data = d, -->
+<!-- #       family = "binomial") -->
 
-fullModelminsInt_Faces <- glmer(faceNum ~ scale(age.at.test) + posture + orientation + (1|subid),
-       data = d,
-       family = "binomial")
+<!-- fullModelminsInt_Faces <- glmer(faceNum ~ scale(age.at.test) + posture + orientation + (1|subid), -->
+<!--        data = d, -->
+<!--        family = "binomial") -->
 
-fullModelminsInt_Handd <- glmer(handNum ~ scale(age.at.test) + posture + orientation + (1|subid),
-       data = d,
-       family = "binomial")
+<!-- fullModelminsInt_Handd <- glmer(handNum ~ scale(age.at.test) + posture + orientation + (1|subid), -->
+<!--        data = d, -->
+<!--        family = "binomial") -->
 
-ageOnly <- glmer(faceNum ~ scale(age.at.test) + (1|subid),
-      data = d,
-      family = "binomial")
+<!-- ageOnly <- glmer(faceNum ~ scale(age.at.test) + (1|subid), -->
+<!--       data = d, -->
+<!--       family = "binomial") -->
 
-```
+<!-- ``` -->
 
 To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame (as detected by the MTCNN3 model) as the dependent variable, and participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table {ref}. While age remained a significant predictor even when accounting for the effects of infants' posture and caregiver's oirentation, it held relativley less predictive power. Overall, these results confirm that infant's access to faces is heavily infleunced by their own posture and their caregivers orientation towards them.
 
-```{r xtable, results="asis"}
-tab2 <- xtable::xtable(summary(fullModelminsInt_Faces)$coef, digits=3,
-                      caption = "Results from GLMM model prediting the presence/absence of a face (MTCNN-Faces) across                       the entire dataset.")
+<!-- ```{r xtable, results="asis"} -->
+<!-- tab2 <- xtable::xtable(summary(fullModelminsInt_Faces)$coef, digits=3, -->
+<!--                       caption = "Results from GLMM model prediting the presence/absence of a face (MTCNN-Faces) across the entire dataset.") -->
 
-print(tab2, type="latex", comment = F, table.placement = "H")
-```
+<!-- print(tab2, type="latex", comment = F, table.placement = "H") -->
+<!-- ``` -->
 
-```{r xtable, results="asis"}
-tab2 <- xtable::xtable(summary(fullModelminsInt_Hands)$coef, digits=3,
-                      caption = "Results from GLMM model prediting the presence/absence of a hands (OpenPose-Hands) across                       the entire dataset.")
+<!-- ```{r xtable, results="asis"} -->
+<!-- tab3 <- xtable::xtable(summary(fullModelminsInt_Handd)$coef, digits=3, -->
+<!--                       caption = "Results from GLMM model prediting the presence/absence of a hands (OpenPose-Hands) across the entire dataset.") -->
 
-print(tab2, type="latex", comment = F, table.placement = "H")
-```
+<!-- print(tab3, type="latex", comment = F, table.placement = "H") -->
+<!-- ``` -->
 
 \begin{table}[H]
 \centering
@@ -346,8 +354,27 @@ print(tab2, type="latex", comment = F, table.placement = "H")
   Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\ 
    \hline
 \end{tabular}
-\caption{Results from GLMM model prediting the presence/absence of a face across                       the entire dataset.} 
+\caption{Results from GLMM model prediting the presence/absence of a face across  the entire dataset.} 
 \end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
+  \hline
+(Intercept) & -8.775 & 0.236 & -37.259 & 0.000 \\ 
+  Age & 0.879 & 0.166 & 5.292 & 0.000 \\ 
+  Posture-Prone  & 1.215 & 0.110 & 11.082 & 0.000 \\ 
+  Posture-Sit & 1.943 & 0.108 & 18.000 & 0.000 \\ 
+  Posture-Stand  & 2.175 & 0.107 & 20.260 & 0.000 \\ 
+  Orient.-Close  & 0.608 & 0.059 & 10.371 & 0.000 \\ 
+  Orient.-Far & 2.244 & 0.060 & 37.222 & 0.000 \\ 
+   \hline
+\end{tabular}
+\caption{Results from GLMM model prediting the presence/absence of hands (OpenPose-Hands) across the entire dataset.} 
+\end{table}
+
 
 # General Discussion
 We use a head-mounted camera to explore how children's postural and locomotive development directly impacts their access to social information relevant for word-learning, here operationalized as the presence of the faces and hands of their caregiver. We found that children's posture and orientation towards their caregiver changed systematically across age, and that all three of these factors dramatically impacted the proportion of faces and hands that were avaliable in the child's visual field. Thus, infants postural development is mediating factor that explains age-related changes in the proportion of faces and hands avaliable in infants' visual field.
