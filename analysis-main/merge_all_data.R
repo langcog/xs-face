@@ -83,13 +83,12 @@ ages <- d %>%
   group_by(subid) %>%
   summarise(age.grp = mean(age.grp)) 
 
-complete_combos <- expand(d, nesting(posture, orientation), 
-                          subid) %>% 
-  mutate(dt = 0, faceMT = FALSE, faceVJ = FALSE, faceOP = FALSE, handOP = FALSE) %>%
+complete_combos <- expand(d, nesting(posture, orientation), subid) %>% 
+  mutate(dt = 0, faceMT = FALSE, faceVJ = FALSE, faceOP = FALSE, handOP = FALSE, wristOP = FALSE) %>%
   left_join(ages)
 
 d <- bind_rows(d, complete_combos)
 
 ## save it out
-write_csv(d, "../data/consolidateddata/consolidated_data_3dets.csv")
+write_csv(d, "../data/consolidateddata/consolidated_data_4dets.csv")
 
