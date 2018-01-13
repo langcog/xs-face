@@ -125,8 +125,8 @@ Using automated face detection results.
 ```{r}
 #d$face=d$faceVJ
 #d$face=d$faceMT
-d$face=d$faceOP
-#d$face=d$handOP
+#d$face=d$faceOP
+d$face=d$handOP
 
 mss <- d %>%
   group_by(age.grp, subid) %>%

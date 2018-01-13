@@ -21,8 +21,19 @@ detsOpenPose <- detsOpenPose %>%
   distinct(video,frame,.keep_all=TRUE)  %>%
   mutate(frame = as.numeric(frame)) %>%
   mutate(faceOP = Nose_conf!=0 & REye_conf!=0 | LEye_conf!=0 )  %>%
-  mutate(handOP = LWrist_conf!=0 | RWrist_conf!=0 )   
-  
+  mutate(wristOP = LWrist_conf!=0 | RWrist_conf!=0 )   
+
+# open pose detectors
+detsOpenPose_Hands <- read_csv("../data/final_output/openpose_results_with_detail_hands.csv") 
+detsOpenPose_HandConf <- detsOpenPose_Hands %>%
+  mutate(video = name) %>%
+  distinct(video,frame,.keep_all=TRUE)  %>%
+  mutate(frame = as.numeric(frame)) %>%
+  select(video,frame,ends_with("conf")) %>%
+  mutate(confLeft=rowSums(.[grep("hand_left", names(.))])/21)  %>%
+  mutate(confRight=rowSums(.[grep("hand_right", names(.))])/21)  %>%
+  mutate(handOP = confRight>.5 | confLeft>.5 )
+
 # viola jones detectors
 detsViola <- read_csv("../data/final_output/viola.csv") 
 detsViola <- detsViola %>%
@@ -32,7 +43,8 @@ detsViola <- detsViola %>%
 
 # merge all three detectors
 alldets=left_join(dets,detsViola[,c("video","frame","faceVJ")]) 
-alldets=left_join(alldets,detsOpenPose[,c("video","frame","faceOP","handOP")]) 
+alldets=left_join(alldets,detsOpenPose[,c("video","frame","faceOP","wristOP")]) 
+alldets=left_join(alldets,detsOpenPose_HandConf[,c("video","frame","handOP")]) 
 
 # load demographics and pose / orientation / timing
 demo.data <- read_csv("../data/demographics/demographics.csv") %>% 
@@ -51,6 +63,7 @@ missingOP<-alldets %>%
 # None of the missing frames are faces. Replace OP "NAN" detections with "FALSE"
 alldets$faceOP[missingInd]=FALSE
 alldets$handOP[missingInd]=FALSE
+alldets$wristOP[missingInd]=FALSE
 
 # calls helper functions in helper.r to get times and posture coding integrated
 d <- alldets %>%

@@ -10,11 +10,9 @@ author-information: >
         \And {\large \bf Ally Kraus} \\ \texttt{bria@stanford.edu} \\ Department of Psychology \\ Stanford University
         \And {\large \bf Michael C. Frank} \\ \texttt{mcfrank@stanford.edu} \\ Department of Psychology \\ Stanford University}
 
-abstract: 
-The aiblity to rpocess social cues (e.g., eye gaze) is a critical component in children/s early language development. However, As children reach their first birthday, they begin to locomote themselves, exploring their visual environment in an entirely new way. How do these postural changes affect children's access to the social information relevant for word-learning?
+# abstract: 
+# The ability to process social cues (e.g., eye gaze) is a critical component of children's early language and cognitive development. However, as children reach their first birthday, they begin to locomote themselves, exploring their visual environment in an entirely new way. How do these postural changes affect children\'s access to the social information relevant for word-learning? Here, explore this question by using head-mounted cameras to record infants\' (8-16 months of age) egocentric visual perspective and by using computer-vision algorithms to detect the proportion of faces and hands in infants' environments.  We find that infant\'s postural changes largely mediate infants\' accesses to both faces and hands, suggesting that these postural and locomotive developments facilitate infants' emerging linguistic and social capacities.
 
-   
-    
 keywords:
     "social cognition; face-perception; infancy; locomotion; head-cameras"
     
@@ -204,7 +202,6 @@ facebyPosture <- dlong %>%
 ```
 
 # Changes in Access to Faces
-
 ```{r fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=4, fig.height=3, fig.cap = "R plot" }
 
   ggplot(facebyAge, aes(x = age.at.test, y = face, color = detectorType, size = len)) +
@@ -291,7 +288,6 @@ To formalize these observations, we fit a generalized logistic mixed-effect mode
 \end{tabular}
 \caption{Results from GLMM model prediting the presence/absence of a face across                       the entire dataset.} 
 \end{table}
-
 
 # Changes in Access to Hands
 
