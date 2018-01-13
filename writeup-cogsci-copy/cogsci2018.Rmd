@@ -172,17 +172,19 @@ The third algorithm was a CNN-based pose detector that provided the locations of
 First, we report developmental shifts in infants' posture and their orientation to their caregiver. Then, we explore how these changes influence children's visual access to faces and to hands. Finally, we explore how these changes impact the accessibility of faces and hands during labeling events.
 
 ```{r echo=FALSE, include=FALSE}
-d <- read_csv("../data/consolidateddata/consolidated_data_3dets.csv") %>%
+d <- read_csv("../data/consolidateddata/consolidated_data_4dets.csv") %>%
   mutate(posture = factor(posture), orientation = factor(orientation))
 
 ## make long form version for plotting both face detections on same graph
 dlong <- d %>%
   mutate(id = paste(subid,frame)) %>%
-  gather(key = detectorType, value = face, faceMT, faceOP) %>%
+  gather(key = detectorType, value = detection, faceMT, faceOP, handOP, wristOP) %>%
   mutate(detectorType=as.factor(detectorType))  
 
 # for better plotting names
-levels(detectorType) <- c("MTCNN", "OpenPose") 
+#levels(dlong$detectorType) 
+#[1] "faceMT"  "faceOP"  "handOP"  "wristOP"
+levels(dlong$detectorType) <- c("MTCNN-Faces", "OpenPose-Faces","OpenPose-Hands", "OpenPose-Wrists") 
 ```
 
 # Changes in Posture and Orientation
@@ -202,9 +204,7 @@ posture <- d %>%
   group_by(subid, age.grp, posture) 
 ```
 
-
-
-```{r fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=6, fig.height=3, fig.cap = "R plot" }
+```{r fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)." }
 
 p1=ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) + 
   geom_boxplot() + 
@@ -223,94 +223,56 @@ grid.arrange(p1,p2,nrow = 1)
 ```
 
 # Changes in Access to Faces
-```{r fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=6, fig.height=2, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset." }
-facebyAge <- dlong %>%
+```{r fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset." }
+detectionsByAge <- dlong %>%
   filter(!is.na(age.at.test)) %>%
   group_by(subid, age.at.test, detectorType) %>%
-  summarise(face = mean(face)) %>%
+  summarise(detections = mean(detection)) %>%
   left_join(inc_subs) %>%
   mutate(len = as.numeric(len.min))
 
-handsbyAge <- d %>%
-  filter(!is.na(age.at.test)) %>%
-  group_by(subid, age.at.test) %>%
-  summarise(hands = mean(handOP)) %>%
-  left_join(inc_subs) %>%
-  mutate(len = as.numeric(len.min))
-
-p1<-ggplot(facebyAge, aes(x = age.at.test, y = face, color = detectorType, size = len)) +
-    geom_jitter(width = .25) + 
+ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorType, size=len.min)) +
+    geom_jitter(width = .25) +
     geom_smooth() +
     scale_x_continuous(breaks=c(8,12,16)) +
-    scale_size_continuous(range=c(1,4),name = "Video Length (mins)") + 
-    ylab("Proportion Face Detections") + 
-    xlab("Age (months)") + 
-    theme_bw() +
-    theme(legend.position="bottom", legend.box = "horizontal")
-
-p2<-ggplot(handsbyAge, aes(x = age.at.test, y = hands, size = len)) +
-    geom_jitter(width = .25) + 
-    geom_smooth() +
-    scale_x_continuous(breaks=c(8,12,16)) +
-    scale_size_continuous(range=c(1,4),name = "Video Length (mins)") + 
-    ylab("Proportion Hand Detections") + 
-    xlab("Age (months)") + 
-    theme_bw() +
-    theme(legend.position="bottom", legend.box = "horizontal")
-
-grid.arrange(p1,p2,nrow = 1)
-
+    scale_size_continuous(range=c(.2,2),name = "Video Length (mins)") +
+    ylab("Proportion Detections") +
+    xlab("Age (months)") +
+    scale_color_manual(values=c("#1F618D", "#7FB3D5", "#C70039", "#FF5733")) +
+    facet_grid(~detectorType, scales = "free") +
+    theme_bw()
 ```
 
-```{r faceByPostureFig, fig.env="figure*", fig.pos = "h", fig.align = "center", num.cols.cap=2, fig.width=6, fig.height=2, fig.cap = "Proportion of face detections as a function of infant's posture, using the MTCNN3 detections (left panel) and OpenPose detections (right panel)"}
+```{r faceByPostureFig, fig.env="figure*", fig.pos = "h", fig.align = "center", num.cols.cap=2, fig.width=7, fig.height=3, fig.cap = "Proportion of face detections as a function of infant's posture, using the MTCNN3 face detections and OpenPose face detections (left two panels) and the proportion of hand detections as a function of infant's posture, using OpenPose hand detections and the OpenPose wrist detections. "}
 
-facebyPosture <- dlong %>%
+detectionsByPosture <- dlong %>%
   filter(!is.na(posture)) %>%
   group_by(age.grp, posture, subid,detectorType) %>%
-  summarise(face = mean(face)) %>%
+  summarise(face = mean(detection)) %>%
   group_by(age.grp)
 
-handbyPosture <- d %>%
-  filter(!is.na(posture)) %>%
-  group_by(age.grp, posture, subid) %>%
-  summarise(hand = mean(handOP)) %>%
-  group_by(age.grp)
-
-p2=ggplot(handbyPosture, aes(x = factor(age.grp), y = hand, col = posture)) + 
+ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
   geom_boxplot() + 
-  ylab("Proportion Hand Detections") + 
-  xlab("Age (months)") + 
-  ggtitle("Hand detections") +
-  theme_bw()
-
-p1=ggplot(facebyPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
-  geom_boxplot() + 
-  ylab("Proportion Face Detections") + 
-  xlab("Age (months)") + 
-  facet_grid(~detectorType) +
-  theme_bw() +
-  theme(strip.background = element_blank(), strip.text.y = element_blank()) 
-  
-
-grid.arrange(p1,p2,nrow = 1, widths=2:1)
-
-```
-  
-```{r faceByOrientFig, fig.env="figure*", fig.pos = "h", fig.align = "center", num.cols.cap=2, fig.width=6, fig.height=2, fig.cap = "Proportion of face detections as a function of caregiver's orientation,using the MTCNN3 detections (left panel) and OpenPose detections (right panel)" }
-faceByOrientation <- dlong %>%
-  filter(!is.na(orientation)) %>%
-  group_by(age.grp, orientation, subid, detectorType) %>%
-  summarise(face = mean(face)) %>%
-  group_by(age.grp)
-
-ggplot(faceByOrientation, aes(x = factor(age.grp), y = face, col = orientation)) + 
-  geom_boxplot() + 
-  ylab("Proportion Face Detections") + 
+  ylab("Proportion  Detections") + 
   xlab("Age (months)") + 
   facet_grid(~detectorType) +
   theme_bw() 
-  # theme(legend.position="bottom", legend.box = "horizontal")
 
+```
+  
+```{r faceByOrientFig, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, num.cols.cap=2, fig.cap = "Proportion of face detections as a function of caregiver's orientation,using the MTCNN3 detections (left panel) and OpenPose detections (right panel)" }
+detectionsByPosture <- dlong %>%
+  filter(!is.na(orientation)) %>%
+  group_by(age.grp, orientation, subid,detectorType) %>%
+  summarise(detections = mean(detection)) %>%
+  group_by(age.grp)
+
+ggplot(detectionsByPosture, aes(x = factor(age.grp), y = detections, col = orientation)) + 
+  geom_boxplot() + 
+  ylab("Proportion  Detections") + 
+  xlab("Age (months)") + 
+  facet_grid(~detectorType) +
+  theme_bw() 
 ```
 
 <!-- ## Model -->
@@ -364,10 +326,6 @@ To formalize these observations, we fit a generalized logistic mixed-effect mode
 \end{tabular}
 \caption{Results from GLMM model prediting the presence/absence of a face across                       the entire dataset.} 
 \end{table}
-
-# Changes in Access to Hands
-
-Next, we examined whether we would see similar trends in infant and children's access to hands. 
 
 # General Discussion
 We use a head-mounted camera to explore how children's postural and locomotive development directly impacts their access to social information relevant for word-learning, here operationalized as the presence of the faces and hands of their caregiver. We found that children's posture and orientation towards their caregiver changed systematically across age, and that all three of these factors dramatically impacted the proportion of faces and hands that were avaliable in the child's visual field. Thus, infants postural development is mediating factor that explains age-related changes in the proportion of faces and hands avaliable in infants' visual field.
