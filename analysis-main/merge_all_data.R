@@ -12,7 +12,7 @@ dets <- read_csv("../data/final_output/mtcnn3.csv") %>%
   mutate(subid = video) %>%
   mutate(frame = as.numeric(frame)) %>%
   mutate(faceMT = as.logical(is_face)) %>%
-  distinct(video,frame,.keep_all=TRUE)   %>%
+  distinct(video,frame,.keep_all=TRUE)   
 
 # open pose detectors
 detsOpenPose <- read_csv("../data/final_output/openpose_results_truncated_2.csv") 
@@ -21,14 +21,14 @@ detsOpenPose <- detsOpenPose %>%
   distinct(video,frame,.keep_all=TRUE)  %>%
   mutate(frame = as.numeric(frame)) %>%
   mutate(faceOP = Nose_conf!=0 & REye_conf!=0 | LEye_conf!=0 )  %>%
-  mutate(handOP = LWrist_conf!=0 | RWrist_conf!=0 )   %>%
+  mutate(handOP = LWrist_conf!=0 | RWrist_conf!=0 )   
   
 # viola jones detectors
 detsViola <- read_csv("../data/final_output/viola.csv") 
 detsViola <- detsViola %>%
   distinct(video,frame,.keep_all=TRUE)  %>%
   mutate(faceVJ = as.logical(is_face))  %>%
-  mutate(frame = as.numeric(frame)) %>%
+  mutate(frame = as.numeric(frame)) 
 
 # merge all three detectors
 alldets=left_join(dets,detsViola[,c("video","frame","faceVJ")]) 
@@ -68,8 +68,9 @@ d <- alldets %>%
 
 ages <- d %>%
   group_by(subid) %>%
-  summarise(age.grp = mean(age.grp))
-  complete_combos <- expand(d, nesting(posture, orientation), 
+  summarise(age.grp = mean(age.grp)) 
+
+complete_combos <- expand(d, nesting(posture, orientation), 
                           subid) %>% 
   mutate(dt = 0, faceMT = FALSE, faceVJ = FALSE, faceOP = FALSE, handOP = FALSE) %>%
   left_join(ages)
@@ -77,5 +78,5 @@ ages <- d %>%
 d <- bind_rows(d, complete_combos)
 
 ## save it out
-write_csv(d, "../data/consolidated_data_3dets.csv")
+write_csv(d, "../data/consolidateddata/consolidated_data_3dets.csv")
 
