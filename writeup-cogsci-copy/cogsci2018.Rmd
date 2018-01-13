@@ -140,16 +140,22 @@ Headcam videos were trimmed such that they excluded the instruction phase when t
 We created a set of custom annotations that described the child's physical posture (e.g. standing) and the orientation of the caregiver relative to the child (e.g. far away). The child's posture was categorized as being held/carried, prone (crawling or lying), sitting, or standing. The caregiver's orientation was characterized as being close to the child, farther from the child, and a global category of caregiver behind the child. For the first two annotationes (close/far from the child), the caregiver could either be to the the front or to the side of the child. All annontations were made using OpenSHAPA/Datavyu software  [@adolph2012], and times when the child was out of view of the tripod camera was marked as uncodable and was excluded from these annotations. 
 
 ## Face Detection
-Measuring the availability of caregiver’s faces across development was an important goal of the study. We used a total of three face detection systems to explore this hypothesis and to avoid the cost of hand-annotating every frame. Results for the evaluation of these three systems are shown in Table X.
+Measuring the availability of caregiver’s faces across development was an important goal of the study. We thus used a total of three face detection systems to explore this hypothesis and to avoid the cost of hand-annotating every frame. We first measure the performance of the most commonly-used and widely avlaialbe face detection algorithmsm (Viola-Jones). We use this as a benchmark for performance, as while it can achieve impressive accuracy in some situations, it is is notoriously bad at dealing with occluded faces (@citeAnthony2016). We next capitalized on recent improvements in computer vision, testing the performance of two other algorithms that extract face information in distinct ways.  Rsults for the evaluation of these three systems are shown in Table XX.
+
+The second of these algorithms (OpenPose) also captures information about the "skeleton" of people in a given frame, outputting information about the entire set of body parts that were detected. This allowed us to extract hand information as well as wrist information. We analyze wrist detections as a good proxy for the presence of a hand. We do so first because we did not capture the entire visual field experienced by the infants/children. Thus evne though the video may only show the presence of a wrist, the caregiver's hand may be within the child's field of view. Second, we do so because hands are often occluded by objects when caregivers are interacting with children, yet still visually accessible by the child and part of their joint interaction. For example,if a caregiver was holding a toy and presenting it to the infant, their wrists may be visible but their hand may not necessarily be (as it is occluded by the toy). 
 
 ### Face Detection Algorithms
 The first face detection system made use of a series of Haar feature-based cascade classifiers (Viola-Jones, CITEXX) applied to each individual frame. This detector provided information about the presence of a face as well as its size and position. 
 
-The second algorithm was based on the work by (CITEXX) using multi-task cascaded convolutional neural networks (MTCNNs). The system was built using a novel cascaded CNN-based framework for joint detection and alignment, built to perform well in real-world environments where varying illuminations and occlusions are present. We used a Tensorflow implementation of this algorithm provided by (https://github.com/davidsandberg/facenet)
+The second algorithm was based on the work by (CITEXX) using multi-task cascaded convolutional neural networks (MTCNNs). The system was built using a novel cascaded CNN-based framework for joint detection and alignment, built to perform well in real-world environments where varying illuminations and occlusions are present. We used a Tensorflow implementation of this algorithm provided by (https://github.com/davidsandberg/facenet). Like Viola-Jones, this detector provided ifnormation about the presence of a face as well as it's size and position.
 
-The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc) (CITEXX). The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose).
+The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc) (CITEXX). The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose). We operationalized face detections as ....., we operationalized hand detedctions as ..... we operationalized wrist detections as.....
 
 ### Detector evaluation
+
+Evaluating face detectors (text here about how gold standard was selected)
+Evaluating hand/wrist detectors (text here about how gold standard was selected)
+
 \begin{table}[t]
   \caption{Model performance on gold standard generalization training set dataset. P, R, and F denote precision, recall, and F-score for each of the two samples. \label{tab:model_eval}}
   \begin{center}
@@ -203,8 +209,9 @@ posture <- d %>%
   mutate(prop.time = time/sum(time)) %>%
   group_by(subid, age.grp, posture) 
 ```
+We noted characteristic changes in infants posture and orientation across this developmental time range. The proportion of time infant's spent sitting decreased with age, and the proportion of time infant's spent standing increased with age. Both 8-month-olds and 12-month-olds psent equivalent amounts of time either lying/crawling, which was markedly decreased in the 16-month-olds, who spent most of their time either sitting or standing (see Figure \ref{fig:posture}).  We also observed characteristic changes in children's orientation relative to their caregivers: the 8-month-olds spent more time with their caregiver behind them supporting their sitting positions (see Figure \ref{fig:orientation}). 
 
-```{r fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)." }
+```{r posture fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)." }
 
 p1=ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) + 
   geom_boxplot() + 
@@ -223,6 +230,9 @@ grid.arrange(p1,p2,nrow = 1)
 ```
 
 # Changes in Access to Faces
+
+Next, we examined the impact of these changes
+
 ```{r fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset." }
 detectionsByAge <- dlong %>%
   filter(!is.na(age.at.test)) %>%
@@ -243,7 +253,7 @@ ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorTyp
     theme_bw()
 ```
 
-```{r faceByPostureFig, fig.env="figure*", fig.pos = "h", fig.align = "center", num.cols.cap=2, fig.width=7, fig.height=3, fig.cap = "Proportion of face detections as a function of infant's posture, using the MTCNN3 face detections and OpenPose face detections (left two panels) and the proportion of hand detections as a function of infant's posture, using OpenPose hand detections and the OpenPose wrist detections. "}
+```{r faceByPostureFig, fig.env="figure*", fig.pos = "h", fig.align = "center", num.cols.cap=2, fig.width=7, fig.height=3, fig.cap = "Proportion of face detections as a function of infant's orientation, using the MTCNN3 face detections and OpenPose face detections (left two panels) and the proportion of hand detections as a function of infant's orientation, using OpenPose hand detections and the OpenPose wrist detections."}
 
 detectionsByPosture <- dlong %>%
   filter(!is.na(posture)) %>%
@@ -260,7 +270,7 @@ ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) +
 
 ```
   
-```{r faceByOrientFig, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, num.cols.cap=2, fig.cap = "Proportion of face detections as a function of caregiver's orientation,using the MTCNN3 detections (left panel) and OpenPose detections (right panel)" }
+```{r faceByOrientFig, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, num.cols.cap=2, fig.cap = "sing the MTCNN3 face detections and OpenPose face detections (left two panels) and the proportion of hand detections as a function of infant's posture, using OpenPose hand detections and the OpenPose wrist detections" }
 detectionsByPosture <- dlong %>%
   filter(!is.na(orientation)) %>%
   group_by(age.grp, orientation, subid,detectorType) %>%
@@ -275,39 +285,51 @@ ggplot(detectionsByPosture, aes(x = factor(age.grp), y = detections, col = orien
   theme_bw() 
 ```
 
-<!-- ## Model -->
+## Model
 
-<!-- # ```{r} -->
-<!-- # d$faceNum=as.numeric(d$faceMT) -->
-<!-- # -->
-<!-- # # Fails to converge -->
-<!-- # # fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid), -->
-<!-- # #       data = d, -->
-<!-- # #       family = "binomial") -->
-<!-- # -->
-<!-- # # Fails to converge -->
-<!-- # # agexOrientation <- glmer(faceNum ~ scale(age.at.test) * orientation + (1|subid), -->
-<!-- # #       data = d, -->
-<!-- # #       family = "binomial") -->
-<!-- # -->
-<!-- # fullModelminsInt <- glmer(faceNum ~ scale(age.at.test) + posture + orientation + (1|subid), -->
-<!-- #        data = d, -->
-<!-- #        family = "binomial") -->
-<!-- # -->
-<!-- # ageOnly <- glmer(faceNum ~ scale(age.at.test) + (1|subid), -->
-<!-- #       data = d, -->
-<!-- #       family = "binomial") -->
-<!-- # -->
-<!-- # ``` -->
+```{r echo=FALSE, include=FALSE}
+d$faceNum=as.numeric(d$faceMT)
+d$handNum=as.numeric(d$handOP)
+
+# Fails to converge
+# fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid),
+#       data = d,
+#       family = "binomial")
+
+# Fails to converge
+# agexOrientation <- glmer(faceNum ~ scale(age.at.test) * orientation + (1|subid),
+#       data = d,
+#       family = "binomial")
+
+fullModelminsInt_Faces <- glmer(faceNum ~ scale(age.at.test) + posture + orientation + (1|subid),
+       data = d,
+       family = "binomial")
+
+fullModelminsInt_Handd <- glmer(handNum ~ scale(age.at.test) + posture + orientation + (1|subid),
+       data = d,
+       family = "binomial")
+
+ageOnly <- glmer(faceNum ~ scale(age.at.test) + (1|subid),
+      data = d,
+      family = "binomial")
+
+```
 
 To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame (as detected by the MTCNN3 model) as the dependent variable, and participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table {ref}. While age remained a significant predictor even when accounting for the effects of infants' posture and caregiver's oirentation, it held relativley less predictive power. Overall, these results confirm that infant's access to faces is heavily infleunced by their own posture and their caregivers orientation towards them.
 
-<!-- ```{r xtable, results="asis"} -->
-<!-- tab2 <- xtable::xtable(summary(fullModelminsInt)$coef, digits=3,  -->
-<!--                       caption = "Results from GLMM model prediting the presence/absence of a face across                       the entire dataset.") -->
+```{r xtable, results="asis"}
+tab2 <- xtable::xtable(summary(fullModelminsInt_Faces)$coef, digits=3,
+                      caption = "Results from GLMM model prediting the presence/absence of a face (MTCNN-Faces) across                       the entire dataset.")
 
-<!-- print(tab2, type="latex", comment = F, table.placement = "H") -->
-<!-- ``` -->
+print(tab2, type="latex", comment = F, table.placement = "H")
+```
+
+```{r xtable, results="asis"}
+tab2 <- xtable::xtable(summary(fullModelminsInt_Hands)$coef, digits=3,
+                      caption = "Results from GLMM model prediting the presence/absence of a hands (OpenPose-Hands) across                       the entire dataset.")
+
+print(tab2, type="latex", comment = F, table.placement = "H")
+```
 
 \begin{table}[H]
 \centering
