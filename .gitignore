@@ -13,3 +13,6 @@ slurm-*
 *.html
 cdi/
 cdi_summary.csv
+writeup-cogsci-copy/cogsci2018_cache/*
+figs/
+
