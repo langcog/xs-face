@@ -31,7 +31,7 @@ library(lubridate)
 Note that the dataset here is now the complete data (N=36); all pass length sanity checks.
 
 ```{r}
-d <- read_csv("../data/consolidated_data_3dets.csv") %>%
+d <- read_csv("../data/consolidateddata/consolidated_data_3dets.csv") %>%
   mutate(posture = factor(posture), 
          orientation = factor(orientation))
 demo <- read_csv("../data/demographics/demographics.csv")
@@ -466,64 +466,63 @@ ggplot(aroundNamings, aes(x = factor(age.grp), y = face, col = posture)) +
   facet_grid(.~familiarity) +
   theme_bw() 
 
-
-
-```{r}
-# mss <- d %>%
-#   filter(!is.na(posture)) %>%
-#   filter(!is.na(face)) %>%
-#   group_by(age.grp, posture, subid) %>%
-#   summarise(faceArea = mean(faceArea, na.rm="TRUE")) %>%
-#   group_by(age.grp)
-# 
-# 
-# sb_summary <- sb %>%
-#   filter(!is.na(posture)) %>%
-#   filter(!is.na(face)) %>%
-#   group_by(age.grp, posture, subid) %>%
-#   dplyr::summarise(face = count(face)) %>%
-#   group_by(age.grp)
-# 
-# 
-# nameFreq <- sb %>%
-#   filter(!is.na(posture)) %>%
-#   filter(!is.na(face)) %>%
-#   group_by(age.grp, posture, subid) %>%
-#   dplyr::summarise(nameFreq= max(naming.instance, na.rm="TRUE")) %>%
-#   group_by(age.grp)
-# 
-# ggplot(nameFreq, aes(x = factor(age.grp), y = nameFreq, col = posture)) + 
-#   geom_boxplot() + 
-#   ylab("within window") + 
-#   xlab("Age (months)") + 
-#   theme_bw() 
-# 
-# 
-# # ggplot(sb_summary, aes(x = factor(age.grp), y = face, col = posture)) + 
-# #   geom_boxplot() + 
-# #   ylab("within window") + 
-# #   xlab("Age (months)") + 
-# #   theme_bw() 
-
-sb <- sb %>%
-  filter(!is.na(posture)) 
-  
-ggplot(sb, aes(x = factor(age.grp), y = face, col = posture)) + 
-  geom_boxplot() + 
-  ylab("within window") + 
-  xlab("Age (months)") + 
-  facet_grid(.~familiarity) +
-  theme_bw() 
-
 ```
 
-```{r}
-  qplot(age.grp,face,colour=window,
-        xlab="Age (Months)",ylab="Proportion faces detected in window",
-        data=mss,geom=c("point")) +
-    scale_x_continuous(breaks=c(8,12,16)) +
-    geom_smooth()
-```
+<!-- # mss <- d %>% -->
+<!-- #   filter(!is.na(posture)) %>% -->
+<!-- #   filter(!is.na(face)) %>% -->
+<!-- #   group_by(age.grp, posture, subid) %>% -->
+<!-- #   summarise(faceArea = mean(faceArea, na.rm="TRUE")) %>% -->
+<!-- #   group_by(age.grp) -->
+<!-- #  -->
+<!-- #  -->
+<!-- # sb_summary <- sb %>% -->
+<!-- #   filter(!is.na(posture)) %>% -->
+<!-- #   filter(!is.na(face)) %>% -->
+<!-- #   group_by(age.grp, posture, subid) %>% -->
+<!-- #   dplyr::summarise(face = count(face)) %>% -->
+<!-- #   group_by(age.grp) -->
+<!-- #  -->
+<!-- #  -->
+<!-- # nameFreq <- sb %>% -->
+<!-- #   filter(!is.na(posture)) %>% -->
+<!-- #   filter(!is.na(face)) %>% -->
+<!-- #   group_by(age.grp, posture, subid) %>% -->
+<!-- #   dplyr::summarise(nameFreq= max(naming.instance, na.rm="TRUE")) %>% -->
+<!-- #   group_by(age.grp) -->
+<!-- #  -->
+<!-- # ggplot(nameFreq, aes(x = factor(age.grp), y = nameFreq, col = posture)) +  -->
+<!-- #   geom_boxplot() +  -->
+<!-- #   ylab("within window") +  -->
+<!-- #   xlab("Age (months)") +  -->
+<!-- #   theme_bw()  -->
+<!-- #  -->
+<!-- #  -->
+<!-- # # ggplot(sb_summary, aes(x = factor(age.grp), y = face, col = posture)) +  -->
+<!-- # #   geom_boxplot() +  -->
+<!-- # #   ylab("within window") +  -->
+<!-- # #   xlab("Age (months)") +  -->
+<!-- # #   theme_bw()  -->
+
+<!-- sb <- sb %>% -->
+<!--   filter(!is.na(posture))  -->
+
+<!-- ggplot(sb, aes(x = factor(age.grp), y = face, col = posture)) +  -->
+<!--   geom_boxplot() +  -->
+<!--   ylab("within window") +  -->
+<!--   xlab("Age (months)") +  -->
+<!--   facet_grid(.~familiarity) + -->
+<!--   theme_bw()  -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!--   qplot(age.grp,face,colour=window, -->
+<!--         xlab="Age (Months)",ylab="Proportion faces detected in window", -->
+<!--         data=mss,geom=c("point")) + -->
+<!--     scale_x_continuous(breaks=c(8,12,16)) + -->
+<!--     geom_smooth() -->
+<!-- ``` -->
 
 
 
