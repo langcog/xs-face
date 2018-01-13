@@ -38,6 +38,7 @@ library(lubridate)
 library(langcog)
 library(ggplot2)
 library(lme4)
+library(gridExtra)
 ```
 # Introduction
 Children are remarkably skilled language learners, connecting arbitrary labels (“cup”) with specific visual concepts at a rapid pace through the first two years of life. However, children do not learn words in a vacuum but rather in a rich social environment, where social cues provided by speakers (e.g., eye-gaze) provide strong scaffolding for this learning process. Further, children’s ability to effectively process these social cues may be a key factor in their early language development.  In a longitudinal study, children’s level of joint engagement with their mother was found to predict both their receptive and productive vocabularies (@carpenter1998).  More recently, 10 month-olds who follow an adult’s gaze in an experimental context have larger vocabularies at 18 months (@brooks2005) and throughout the second year of life (@brooks2008). 
@@ -105,7 +106,7 @@ To obtain this final sample, we tested `r length(all_subs$reason)`, excluding  `
 `r sum(all_subs$reason=="infant crying")` for fussiness, and one excluded for sample symmetry. All inclusion decisions were made independent of the results of subsequent analyses.
 
 ## Head-mounted camera
-We used a small, head-mounted camera ("headcam") that was constructed from a MD80 model camera attached to a soft elastic headband.Videos captured by the headcam were 720x480 pixels with 25 frames per second.Detailed instructions for creating this headcam can be found  at \url{http://babieslearninglanguage.blogspot.com/2013/10/how-to-make-babycam.html}. A fisheye lens was attached to the camera to cincrease the view angle from $32^{\circ}$ horizontal by $24^{\circ}$ vertical to $64^{\circ}$ horizontal by $46^{\circ}$ vertical (see Figure \ref{fig:headcam}, left). 
+We used a small, head-mounted camera ("headcam") that was constructed from a MD80 model camera attached to a soft elastic headband. Videos captured by the headcam were 720x480 pixels with 25 frames per second.Detailed instructions for creating this headcam can be found  at \url{http://babieslearninglanguage.blogspot.com/2013/10/how-to-make-babycam.html}. A fisheye lens was attached to the camera to cincrease the view angle from $32^{\circ}$ horizontal by $24^{\circ}$ vertical to $64^{\circ}$ horizontal by $46^{\circ}$ vertical (see Figure \ref{fig:headcam}, left). 
 
 Even with the fish-eye lens, the vertical field of view of the camera is still considerably reduced compared to the child's approximate vertical field of view, which spans around 100--120$^{\circ}$ in the vertical dimension by 6-7 months of age [@mayer1988;@cummings1988]. As we were primarily interested in the presence of faces in the child's field of view, we chose to orient the camera upwards to capture the entirely of the child's upper visual field where the child is likely to see the faces of adults around them. This allowed us to maximize our chances of capturing faces that the child would have seen during the play session.
 
@@ -116,7 +117,7 @@ grid::grid.raster(img)
 
 ## Procedure
 
-First, all parents signed consent documentsin a waiting room  where children were fitted with the headcam. After the child was comfortable in the waiting room and with the experimenter, the experimenter placed the headcam on the child's head. If the child was uninterested in wearing the headcam or tried to take it off, the experimenter presented engaging toys to try to draw the child's focus away from the headcam [@yoshida2008].
+First, all parents signed consent documents in a waiting room  where children were fitted with the headcam. After the child was comfortable in the waiting room and with the experimenter, the experimenter placed the headcam on the child's head. If the child was uninterested in wearing the headcam or tried to take it off, the experimenter presented engaging toys to try to draw the child's focus away from the headcam [@yoshida2008].
 
 After the child was comfortable with wearing the headcam, the child and caregiver were shown to a playroom for the free-play session--the focus of the current study. Parents were shown a box containing three pairs of novel and familiar objects (e.g., a ball and a feather duster, named a "zem"), and were instructed to play with the object pairs with their child one at a time, "as they typically would." All parents confirmed that their child had not previosuly seen the novel toys and were instructed to use the novel labels to refer to the novel toys.  
 
@@ -149,8 +150,6 @@ The second algorithm was based on the work by (CITEXX) using multi-task cascaded
 The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc) (CITEXX). The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose).
 
 ### Detector evaluation
-
-
 \begin{table}[t]
   \caption{Model performance on gold standard generalization training set dataset. P, R, and F denote precision, recall, and F-score for each of the two samples. \label{tab:model_eval}}
   \begin{center}
@@ -170,41 +169,76 @@ The third algorithm was a CNN-based pose detector that provided the locations of
 \end{table}
 
 # Results
-We report results from three different sets of analyses. First, we explore how these changes affect access to faces and to hands, as measured using computater vision algorithms. Second, we explore how these changes impact the accessibility of faces and hands during labeling events.
+First, we report developmental shifts in infants' posture and their orientation to their caregiver. Then, we explore how these changes influence children's visual access to faces and to hands. Finally, we explore how these changes impact the accessibility of faces and hands during labeling events.
 
-```{r}
+```{r echo=FALSE, include=FALSE}
 d <- read_csv("../data/consolidateddata/consolidated_data_3dets.csv") %>%
   mutate(posture = factor(posture), orientation = factor(orientation))
 
-## make long form version for plotting
+## make long form version for plotting both face detections on same graph
 dlong <- d %>%
   mutate(id = paste(subid,frame)) %>%
-  gather(key = detectorType, value = face, faceMT, faceOP)
+  gather(key = detectorType, value = face, faceMT, faceOP) %>%
+  mutate(detectorType=as.factor(detectorType))  
 
+# for better plotting names
+levels(detectorType) <- c("MTCNN", "OpenPose") 
+```
+
+# Changes in Posture and Orientation
+```{r echo=FALSE, include=FALSE}
+orientation <- d %>%
+  filter(!is.na(orientation)) %>%
+  group_by(age.grp, subid, orientation) %>%
+  summarise(time = sum(dt, na.rm=TRUE)) %>%
+  mutate(prop.time = time/sum(time)) %>%
+  group_by(subid, age.grp, orientation) 
+
+posture <- d %>%
+  filter(!is.na(posture)) %>%
+  group_by(age.grp, subid, posture) %>%
+  summarise(time = sum(dt, na.rm=TRUE)) %>%
+  mutate(prop.time = time/sum(time)) %>%
+  group_by(subid, age.grp, posture) 
+```
+
+
+
+```{r fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=6, fig.height=3, fig.cap = "R plot" }
+
+p1=ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) + 
+  geom_boxplot() + 
+  ylab("Proportion Time") + 
+  xlab("Age (months)") + 
+  theme_bw()
+
+p2=ggplot(orientation, aes(x = factor(age.grp), y = prop.time, col = orientation)) + 
+  geom_boxplot() + 
+  ylab("Proportion Time") + 
+  xlab("Age (months)") + 
+  theme_bw()
+
+grid.arrange(p1,p2,nrow = 1)
+
+```
+
+# Changes in Access to Faces
+```{r fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=6, fig.height=2, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset." }
 facebyAge <- dlong %>%
   filter(!is.na(age.at.test)) %>%
   group_by(subid, age.at.test, detectorType) %>%
   summarise(face = mean(face)) %>%
   left_join(inc_subs) %>%
-  mutate(len = as.numeric(len_seconds/60))
+  mutate(len = as.numeric(len.min))
 
-faceByOrientation <- dlong %>%
-  filter(!is.na(orientation)) %>%
-  group_by(age.grp, orientation, subid, detectorType) %>%
-  summarise(face = mean(face)) %>%
-  group_by(age.grp)
+handsbyAge <- d %>%
+  filter(!is.na(age.at.test)) %>%
+  group_by(subid, age.at.test) %>%
+  summarise(hands = mean(handOP)) %>%
+  left_join(inc_subs) %>%
+  mutate(len = as.numeric(len.min))
 
-facebyPosture <- dlong %>%
-  filter(!is.na(posture)) %>%
-  group_by(age.grp, posture, subid,detectorType) %>%
-  summarise(face = mean(face)) %>%
-  group_by(age.grp)
-```
-
-# Changes in Access to Faces
-```{r fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=4, fig.height=3, fig.cap = "R plot" }
-
-  ggplot(facebyAge, aes(x = age.at.test, y = face, color = detectorType, size = len)) +
+p1<-ggplot(facebyAge, aes(x = age.at.test, y = face, color = detectorType, size = len)) +
     geom_jitter(width = .25) + 
     geom_smooth() +
     scale_x_continuous(breaks=c(8,12,16)) +
@@ -213,20 +247,62 @@ facebyPosture <- dlong %>%
     xlab("Age (months)") + 
     theme_bw() +
     theme(legend.position="bottom", legend.box = "horizontal")
-    
+
+p2<-ggplot(handsbyAge, aes(x = age.at.test, y = hands, size = len)) +
+    geom_jitter(width = .25) + 
+    geom_smooth() +
+    scale_x_continuous(breaks=c(8,12,16)) +
+    scale_size_continuous(range=c(1,4),name = "Video Length (mins)") + 
+    ylab("Proportion Hand Detections") + 
+    xlab("Age (months)") + 
+    theme_bw() +
+    theme(legend.position="bottom", legend.box = "horizontal")
+
+grid.arrange(p1,p2,nrow = 1)
+
 ```
 
 ```{r faceByPostureFig, fig.env="figure*", fig.pos = "h", fig.align = "center", num.cols.cap=2, fig.width=6, fig.height=2, fig.cap = "Proportion of face detections as a function of infant's posture, using the MTCNN3 detections (left panel) and OpenPose detections (right panel)"}
-ggplot(facebyPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
+
+facebyPosture <- dlong %>%
+  filter(!is.na(posture)) %>%
+  group_by(age.grp, posture, subid,detectorType) %>%
+  summarise(face = mean(face)) %>%
+  group_by(age.grp)
+
+handbyPosture <- d %>%
+  filter(!is.na(posture)) %>%
+  group_by(age.grp, posture, subid) %>%
+  summarise(hand = mean(handOP)) %>%
+  group_by(age.grp)
+
+p2=ggplot(handbyPosture, aes(x = factor(age.grp), y = hand, col = posture)) + 
+  geom_boxplot() + 
+  ylab("Proportion Hand Detections") + 
+  xlab("Age (months)") + 
+  ggtitle("Hand detections") +
+  theme_bw()
+
+p1=ggplot(facebyPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
   geom_boxplot() + 
   ylab("Proportion Face Detections") + 
   xlab("Age (months)") + 
   facet_grid(~detectorType) +
-  theme_bw()
+  theme_bw() +
+  theme(strip.background = element_blank(), strip.text.y = element_blank()) 
+  
+
+grid.arrange(p1,p2,nrow = 1, widths=2:1)
 
 ```
   
 ```{r faceByOrientFig, fig.env="figure*", fig.pos = "h", fig.align = "center", num.cols.cap=2, fig.width=6, fig.height=2, fig.cap = "Proportion of face detections as a function of caregiver's orientation,using the MTCNN3 detections (left panel) and OpenPose detections (right panel)" }
+faceByOrientation <- dlong %>%
+  filter(!is.na(orientation)) %>%
+  group_by(age.grp, orientation, subid, detectorType) %>%
+  summarise(face = mean(face)) %>%
+  group_by(age.grp)
+
 ggplot(faceByOrientation, aes(x = factor(age.grp), y = face, col = orientation)) + 
   geom_boxplot() + 
   ylab("Proportion Face Detections") + 
