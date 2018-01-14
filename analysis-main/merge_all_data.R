@@ -32,7 +32,7 @@ detsOpenPose_HandConf <- detsOpenPose_Hands %>%
   select(video,frame,ends_with("conf")) %>%
   mutate(confLeft=rowSums(.[grep("hand_left", names(.))])/21)  %>%
   mutate(confRight=rowSums(.[grep("hand_right", names(.))])/21)  %>%
-  mutate(handOP = confRight>.5 | confLeft>.5 )
+  mutate(handOP = confRight>0 | confLeft>0 )
 
 # viola jones detectors
 detsViola <- read_csv("../data/final_output/viola.csv") 
