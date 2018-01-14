@@ -61,7 +61,19 @@
 \maketitle
 
 \begin{abstract}
-
+The ability to process social cues (e.g., eye gaze) is a critical
+component of children's early language and cognitive development.
+However, as children reach their first birthday, they begin to locomote
+themselves, exploring their visual environment in an entirely new way.
+How do these postural changes affect children's access to the social
+information relevant for word-learning? Here, explore this question by
+using head-mounted cameras to record infants' (8-16 months of age)
+egocentric visual perspective and by using computer-vision algorithms to
+detect the proportion of faces and hands in infants' environments. We
+find that infant's postural changes largely mediate infants' accesses to
+both faces and hands, suggesting that these postural and locomotive
+developments facilitate infants' emerging linguistic and social
+capacities.
 
 \textbf{Keywords:}
 social cognition; face-perception; infancy; locomotion; head-cameras
@@ -72,26 +84,28 @@ social cognition; face-perception; infancy; locomotion; head-cameras
 Children are remarkably skilled language learners, connecting arbitrary
 labels (``cup'') with specific visual concepts at a rapid pace through
 the first two years of life. However, children do not learn words in a
-vacuum but rather in a rich social environment, where social cues
-provided by speakers (e.g., eye-gaze) provide strong scaffolding for
-this learning process. Further, children's ability to effectively
-process these social cues may be a key factor in their early language
-development. In a longitudinal study, children's level of joint
-engagement with their mother was found to predict both their receptive
-and productive vocabularies (Carpenter, Nagell, \& Tomasello (1998)).
-More recently, 10 month-olds who follow an adult's gaze in an
-experimental context have larger vocabularies at 18 months (Brooks \&
-Meltzoff (2005)) and throughout the second year of life
-(({\textbf{???}})).
+vacuum but in a rich social environment, where social cues provided by
+speakers (e.g., eye-gaze) provide strong scaffolding for this learning
+process. Indeed, children's ability to effectively process these social
+cues may be a key factor in their early language development. For
+example,in a longitudinal study, children's level of joint engagement
+with their mother was found to predict both their receptive and
+productive vocabularies (Carpenter, Nagell, \& Tomasello (1998)). More
+recently, 10 month-olds who follow an adult's gaze in an experimental
+context have larger vocabularies at 18 months (Brooks \& Meltzoff
+(2005)) and throughout the second year of life (({\textbf{???}})).
 
 However, as children are learning their first words, their view of the
 world is also changing radically (Adolph \& Berger, 2007). Infant's
 motor abilities improve dramatically near the end of the first year of
 life, allowing them to locomote independently and to determine what they
-see. During spontaneous play in a laboratory playroom, toddlers are more
-likely to look at the floor while crawling than while walking (Franchak
-et al., 2011), when they have full visual access to their environment
-and the people in it (Kretch, Franchak, and Adolph, 2014).
+see. These motor changes have drastic consequences for what children
+see: crawling and walking infants have radically different views of the
+world. During spontaneous play in a laboratory playroom, toddlers are
+more likely to look at the floor while crawling than while walking
+(Franchak et al., 2011); walking vs.~crawling infants tend to have full
+visual access to their environment and the people in it (Kretch,
+Franchak, and Adolph, 2014).
 
 One possibility is that these motor improvements have strong
 developmental cascades, impacting children's emerging social, cognitive,
@@ -162,15 +176,26 @@ Demographics and exclusion rates are given in Table \ref{tab:pop}.
 \caption{\label{tab:pop} Demographics by age group.}
 \end{table}
 
-To obtain this final sample, we tested 95, excluding 59 children for the
-following reasons: 20 for technical issues related to the headcam, 15
-for failing to wear the headcam, 10 for fewer than 4 minutes of headcam
-footage, 5 for having multiple adults present, 5 for missing CDI data, 2
-for missing scene camera footage, 1 for fussiness, and one excluded for
-sample symmetry. All inclusion decisions were made independent of the
-results of subsequent analyses.
+To obtain this final sample, we tested 95 children, excluding 59
+children for the following reasons: 20 for technical issues related to
+the headcam, 15 for failing to wear the headcam, 10 for fewer than 4
+minutes of headcam footage, 5 for having multiple adults present, 5 for
+missing CDI data, 2 for missing scene camera footage, 1 for fussiness,
+and one excluded for sample symmetry. All inclusion decisions were made
+independent of the results of subsequent analyses.
 
 \subsection{Head-mounted camera}\label{head-mounted-camera}
+
+\begin{CodeChunk}
+\begin{figure}[H]
+
+{\centering \includegraphics{figs/image-1} 
+
+}
+
+\caption[Field of view for three different headcam configurations, with the device we used in the middle]{Field of view for three different headcam configurations, with the device we used in the middle. The lowest camera is pictured for comparison, but was not available until after our study was already in progress.}\label{fig:image}
+\end{figure}
+\end{CodeChunk}
 
 We used a small, head-mounted camera (``headcam'') that was constructed
 from a MD80 model camera attached to a soft elastic headband. Videos
@@ -192,17 +217,6 @@ view, we chose to orient the camera upwards to capture the entirely of
 the child's upper visual field where the child is likely to see the
 faces of adults around them. This allowed us to maximize our chances of
 capturing faces that the child would have seen during the play session.
-
-\begin{CodeChunk}
-\begin{figure}[H]
-
-{\centering \includegraphics{figs/image-1} 
-
-}
-
-\caption[Field of view for three different headcam configurations, with the device we used in the middle]{Field of view for three different headcam configurations, with the device we used in the middle. The lowest camera is pictured for comparison, but was not available until after our study was already in progress.}\label{fig:image}
-\end{figure}
-\end{CodeChunk}
 
 \subsection{Procedure}\label{procedure}
 
@@ -260,10 +274,32 @@ camera was marked as uncodable and was excluded from these annotations.
 \subsection{Face Detection}\label{face-detection}
 
 Measuring the availability of caregiver's faces across development was
-an important goal of the study. We used a total of three face detection
-systems to explore this hypothesis and to avoid the cost of
-hand-annotating every frame. Results for the evaluation of these three
-systems are shown in Table X.
+an important goal of the study. We thus used a total of three face
+detection systems to explore this hypothesis and to avoid the cost of
+hand-annotating every frame. We first measure the performance of the
+most commonly-used and widely avlaialbe face detection algorithmsm
+(Viola-Jones). We use this as a benchmark for performance, as while it
+can achieve impressive accuracy in some situations, it is is notoriously
+bad at dealing with occluded faces (({\textbf{???}})). We next
+capitalized on recent improvements in computer vision, testing the
+performance of two other algorithms that extract face information in
+distinct ways. Rsults for the evaluation of these three systems are
+shown in Table XX.
+
+The second of these algorithms (OpenPose) also captures information
+about the ``skeleton'' of people in a given frame, outputting
+information about the entire set of body parts that were detected. This
+allowed us to extract hand information as well as wrist information. We
+analyze wrist detections as a good proxy for the presence of a hand. We
+do so first because we did not capture the entire visual field
+experienced by the infants/children. Thus evne though the video may only
+show the presence of a wrist, the caregiver's hand may be within the
+child's field of view. Second, we do so because hands are often occluded
+by objects when caregivers are interacting with children, yet still
+visually accessible by the child and part of their joint interaction.
+For example,if a caregiver was holding a toy and presenting it to the
+infant, their wrists may be visible but their hand may not necessarily
+be (as it is occluded by the toy).
 
 \subsubsection{Face Detection
 Algorithms}\label{face-detection-algorithms}
@@ -279,7 +315,9 @@ using a novel cascaded CNN-based framework for joint detection and
 alignment, built to perform well in real-world environments where
 varying illuminations and occlusions are present. We used a Tensorflow
 implementation of this algorithm provided by
-(\url{https://github.com/davidsandberg/facenet})
+(\url{https://github.com/davidsandberg/facenet}). Like Viola-Jones, this
+detector provided information about the presence of a face as well as
+it's size and position.
 
 The third algorithm was a CNN-based pose detector that provided the
 locations of 18 body parts (ears, nose, wrists, etc) (CITEXX). The
@@ -288,9 +326,18 @@ applies part affinity fields (PAFs) for part association, producing a
 series of body part candidates. The candidates are then matched to a
 single individual and finally assembled into a pose. For the purposes of
 our investigation we only made use of the body parts relevant to the
-face (ears, eyes, nose).
+face (ears, eyes, nose). We operationalized face detections as any
+frames containing a nose and either the left or right eye; we
+operationalized hand detections as any frames containing any of the 21
+points detected on either the left or the right hand, and we
+operationalized wrist detections any frames containing either the left
+or the right wrist.
 
 \subsubsection{Detector evaluation}\label{detector-evaluation}
+
+In order to evaluate the performance of these detectors, we constructed
+a ``gold set'' of frames Evaluating face detectors (text here about how
+gold standard was selected)
 
 \begin{table}[t]
   \caption{Model performance on gold standard generalization training set dataset. P, R, and F denote precision, recall, and F-score for each of the two samples. \label{tab:model_eval}}
@@ -300,14 +347,32 @@ face (ears, eyes, nose).
        &  \multicolumn{3}{c|}{High-density} &  \multicolumn{3}{c}{Random} \\
       % \null Model & P & R & F & P & R & F  \\
       \hline
-      % Viola-Jones & .55  & .38 &  .45 & .89 & .74 & .81   \\
-      % MTCNN & .86 & .78 & .81 & .93 & .76 & .83 \\
-      % OpenPose-Faces & .86 & .78 & .81 & .93 & .76 & .83 \\
-      % OpenPose-Wrists & .86 & .78 & .81 & .93 & .76 & .83 \\
-      % OpenPose-Hands & .86 & .78 & .81 & .93 & .76 & .83 \\
+      % MTCNN & .84  & 1 &  .91 & .95 & .75 & .85   \\
+      % OpenPose & .99 & .87 & .93 & .71 & .92 & .8 \\
     \hline
     \end{tabular}
   \end{center}
+\end{table}
+
+Evaluating hand/wrist detectors (text here about how gold standard was
+selected)
+
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
+  \hline
+(Intercept) & -4.846 & 0.077 & -62.682 & 0.000 \\ 
+  Age & 0.170 & 0.061 & 2.766 & 0.006 \\ 
+  Posture-Prone & -0.513 & 0.036 & -14.045 & 0.000 \\ 
+  Posture-Sit & 0.648 & 0.034 & 18.853 & 0.000 \\ 
+  Posture-Stand & 1.005 & 0.035 & 28.402 & 0.000 \\ 
+  Orient.-Close & 1.549 & 0.021 & 72.757 & 0.000 \\ 
+  Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\ 
+   \hline
+\end{tabular}
+\caption{TABLE PLACEHOLDER} 
 \end{table}
 
 \section{Results}\label{results}
@@ -318,30 +383,81 @@ influence children's visual access to faces and to hands. Finally, we
 explore how these changes impact the accessibility of faces and hands
 during labeling events.
 
-\section{Changes in Posture and
+\subsection{Changes in Posture and
 Orientation}\label{changes-in-posture-and-orientation}
 
 \begin{CodeChunk}
-\begin{figure}[H]
+\begin{figure}[h]
 
-{\centering \includegraphics{figs/unnamed-chunk-4-1} 
+{\centering \includegraphics{figs/orientation-1} 
 
 }
 
-\caption[R plot]{R plot}\label{fig:unnamed-chunk-4}
+\caption[Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)]{Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel).}\label{fig:orientation}
 \end{figure}
 \end{CodeChunk}
 
-\section{Changes in Access to Faces}\label{changes-in-access-to-faces}
+We noted characteristic changes in infants posture and orientation
+across this developmental time range. The proportion of time infant's
+spent sitting decreased with age, and the proportion of time infant's
+spent standing increased with age. Both 8-month-olds and 12-month-olds
+psent equivalent amounts of time either lying/crawling, which was
+markedly decreased in the 16-month-olds, who spent most of their time
+either sitting or standing (see Figure \ref{fig:posture}). We also
+observed characteristic changes in children's orientation relative to
+their caregivers: the 8-month-olds spent more time with their caregiver
+behind them supporting their sitting positions (see Figure
+\ref{fig:orientation}).
+
+\begin{CodeChunk}
+\begin{figure}[h]
+
+{\centering \includegraphics{figs/posture-1} 
+
+}
+
+\caption[Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)]{Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel).}\label{fig:posture}
+\end{figure}
+\end{CodeChunk}
+
+\section{Changes in Access to Faces \&
+Hands}\label{changes-in-access-to-faces-hands}
+
+We first examined the proportion of face and hand detections across age;
+a full summary can be seen in Figure \ref{fig:detsbyAge}. We observed a
+slight u-shaped function both when analyzing the output of the MTCNN and
+OpenPose detectors, such that 12-month-olds may experience less faces
+than 8 or 12-month-olds. Next, we observed that hand detections
+increased with the age of the participant, though they were relatively
+infrequent in this dataset. As expected, we found that wrist detections
+we relatively more frequent and also appeared to increase somewhat with
+age, suggesting that caregivers hands may be just outside of the field
+of view of our camera or that they were often occluded by toys.
+
+Next, we turned to our hypothesis of interest, examinig the impact of
+postural and locomotive developments on children's visual access to
+faces and hands. Overall, we ofund that children's posture was a major
+factor both in how many faces they saw during the play session. Infants
+who were sitting saw more faces than infants who were lying down or
+being carried, while infants who were standing saw the most faces. We
+observed a similar pattern with respect to hands: children who were
+sitting or standing tended to see more hands/wrists than children who
+were lying down or held.
+
+We next examined how the child's orientation relative to their caregiver
+impacted their visual access to faces and hands. Overlal, we saw that
+children who were far away from their caregiver were more likely to see
+faces and hands than children who were close to their caregiver; this
+was true within all age groups and for all detectors.
 
 \begin{CodeChunk}
 \begin{figure*}[h]
 
-{\centering \includegraphics{figs/unnamed-chunk-5-1} 
+{\centering \includegraphics{figs/detByAge-1} 
 
 }
 
-\caption[Proportion face (left) and hand (right) detections as a function of participant's age]{Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset.}\label{fig:unnamed-chunk-5}
+\caption[Proportion face (left) and hand (right) detections as a function of participant's age]{Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset.}\label{fig:detByAge}
 \end{figure*}
 \end{CodeChunk}
 
@@ -352,20 +468,11 @@ Orientation}\label{changes-in-posture-and-orientation}
 
 }
 
-\caption[Proportion of face detections as a function of infant's posture, using the MTCNN3 detections (left panel) and OpenPose detections (right panel)]{Proportion of face detections as a function of infant's posture, using the MTCNN3 detections (left panel) and OpenPose detections (right panel)}\label{fig:faceByPostureFig}
+\caption[Proportion of face/hand detections as a function of infant's posture (top panels) and orientation (bottom panels), using the MTCNN3 face detections and OpenPose face detections (left two panels) and using OpenPose hand detections and the OpenPose wrist detections (right two panels)]{Proportion of face/hand detections as a function of infant's posture (top panels) and orientation (bottom panels), using the MTCNN3 face detections and OpenPose face detections (left two panels) and using OpenPose hand detections and the OpenPose wrist detections (right two panels).}\label{fig:faceByPostureFig}
 \end{figure*}
 \end{CodeChunk}
 
-\begin{CodeChunk}
-\begin{figure*}[h]
-
-{\centering \includegraphics{figs/faceByOrientFig-1} 
-
-}
-
-\caption[Proportion of face detections as a function of caregiver's orientation,using the MTCNN3 detections (left panel) and OpenPose detections (right panel)]{Proportion of face detections as a function of caregiver's orientation,using the MTCNN3 detections (left panel) and OpenPose detections (right panel)}\label{fig:faceByOrientFig}
-\end{figure*}
-\end{CodeChunk}
+\subsection{Model}\label{model}
 
 To formalize these observations, we fit a generalized logistic
 mixed-effect model to all with the presence/absence of a face on every
@@ -394,13 +501,26 @@ their own posture and their caregivers orientation towards them.
   Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\ 
    \hline
 \end{tabular}
-\caption{Results from GLMM model prediting the presence/absence of a face across                       the entire dataset.} 
+\caption{Results from GLMM model prediting the presence/absence of a face across  the entire dataset.} 
 \end{table}
 
-\section{Changes in Access to Hands}\label{changes-in-access-to-hands}
-
-Next, we examined whether we would see similar trends in infant and
-children's access to hands.
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
+  \hline
+(Intercept) & -8.775 & 0.236 & -37.259 & 0.000 \\ 
+  Age & 0.879 & 0.166 & 5.292 & 0.000 \\ 
+  Posture-Prone  & 1.215 & 0.110 & 11.082 & 0.000 \\ 
+  Posture-Sit & 1.943 & 0.108 & 18.000 & 0.000 \\ 
+  Posture-Stand  & 2.175 & 0.107 & 20.260 & 0.000 \\ 
+  Orient.-Close  & 0.608 & 0.059 & 10.371 & 0.000 \\ 
+  Orient.-Far & 2.244 & 0.060 & 37.222 & 0.000 \\ 
+   \hline
+\end{tabular}
+\caption{Results from GLMM model prediting the presence/absence of hands (OpenPose-Hands) across the entire dataset.} 
+\end{table}
 
 \section{General Discussion}\label{general-discussion}
 
