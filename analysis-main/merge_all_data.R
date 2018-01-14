@@ -14,12 +14,12 @@ dets <- read_csv("../data/final_output/mtcnn3.csv") %>%
   mutate(faceMT = as.logical(is_face)) %>%
   distinct(video,frame,.keep_all=TRUE)   
 
-# open pose detectors
+# open pose detectorsa
 detsOpenPose <- read_csv("../data/final_output/openpose_results_truncated_2.csv") 
 detsOpenPose <- detsOpenPose %>%
   mutate(video = name) %>%
   distinct(video,frame,.keep_all=TRUE)  %>%
-  mutate(frame = as.numeric(frame)) %>%
+  mutate(frame = as.numeric(frame) + 1) %>%
   mutate(faceOP = Nose_conf!=0 & REye_conf!=0 | LEye_conf!=0 )  %>%
   mutate(wristOP = LWrist_conf!=0 | RWrist_conf!=0 )   
 

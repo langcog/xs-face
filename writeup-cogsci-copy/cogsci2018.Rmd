@@ -152,7 +152,29 @@ The second algorithm was based on the work by (CITEXX) using multi-task cascaded
 The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc) (CITEXX). The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose). We operationalized face detections as any frames containing a nose and either the left or right eye; we operationalized hand detections as any frames containing any of the 21 points detected on either the left or the right hand, and we operationalized wrist detections any frames containing either the left or the right wrist.  
 
 ### Detector evaluation
+<<<<<<< HEAD
 In order to evaluate the performance of these detectors, we constructed a "gold set" of frames
+=======
+
+Evaluating face detectors (text here about how gold standard was selected)
+
+\begin{table}[t]
+  \caption{Model performance on gold standard generalization training set dataset. P, R, and F denote precision, recall, and F-score for each of the two samples. \label{tab:model_eval}}
+  \begin{center}
+    \begin{tabular}{l|ccc|ccc}
+      \hline
+       &  \multicolumn{3}{c|}{High-density} &  \multicolumn{3}{c}{Random} \\
+      % \null Model & P & R & F & P & R & F  \\
+      \hline
+      % MTCNN & .84  & 1 &  .91 & .95 & .75 & .85   \\
+      % OpenPose & .99 & .87 & .93 & .71 & .92 & .8 \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+Evaluating hand/wrist detectors (text here about how gold standard was selected)
+>>>>>>> 3d846208091bef5dccd95e52b1c9656477c36ec5
 
 \begin{table}[H]
 \centering
