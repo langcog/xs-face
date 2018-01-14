@@ -55,7 +55,7 @@ alldets<-arrange(alldets,video,frame)
 
 ## OpenPose doesn't get all frames. Let's check out the frames it deleted somehow.
 missingInd=is.na(alldets$faceOP)
-assert_that(sum(is.na(alldets$faceOP))==57)
+assert_that(sum(is.na(alldets$faceOP))==45)
 
 missingOP<-alldets %>% 
   filter(missingInd) 
