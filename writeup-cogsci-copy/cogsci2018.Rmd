@@ -347,12 +347,12 @@ To formalize these observations, we fit a generalized logistic mixed-effect mode
 <!-- print(tab2, type="latex", comment = F, table.placement = "H") -->
 <!-- ``` -->
 
-# ```{r xtable, results="asis"}
-# tab3 <- xtable::xtable(summary(fullModelminsInt_Handd)$coef, digits=3,
-#                       caption = "Results from GLMM model prediting the presence/absence of hands (OpenPose-Hands) across the entire dataset.")
-# 
-# print(tab3, type="latex", comment = F, table.placement = "H")
-# ```
+<!-- ```{r xtable, results="asis"} -->
+<!--  tab3 <- xtable::xtable(summary(fullModelminsInt_Handd)$coef, digits=3, -->
+<!--                        caption = "Results from GLMM model prediting the presence/absence of hands (OpenPose-Hands) across the entire dataset.") -->
+
+<!--  print(tab3, type="latex", comment = F, table.placement = "H") -->
+<!-- ``` -->
 
 \begin{table}[H]
 \centering
@@ -394,7 +394,7 @@ To formalize these observations, we fit a generalized logistic mixed-effect mode
 # General Discussion
 We use a head-mounted camera to explore how children's postural and locomotive development directly impacts their access to social information relevant for word-learning, here operationalized as the presence of the faces and hands of their caregiver. We found that children's posture and orientation towards their caregiver changed systematically across age, and that all three of these factors dramatically impacted the proportion of faces and hands that were avaliable in the child's visual field. Thus, infants postural development is mediating factor that explains age-related changes in the proportion of faces and hands avaliable in infants' visual field.
 
-This work also deploys novel advancements in computer vision to the study of developmental psychology. The field of object detection and recognition has advanced dramatically in the past five years since the re-birth of deep learning algorithms (Krihevsky et al., 2012), creating a new generation of algorithmic tools that both are substantially better equipped to deal with noisier, more complicated datasets and that can  extract richer and more detailed information. Indeed, these videos from the infant perspective provided sustantial challenges (e.g., partially occluded faces) for the classc models of face detedction (e.g., viola jones).   Further, as the headcam technologies employed here were inexpensive (~$60 a camera) and the computer vision algorithms freely avaliable, this method is a promising avenue for quanitfying the visual and social information avaliable to new infant learners. 
+This work also deploys novel advancements in computer vision to the study of developmental psychology. The field of object detection and recognition has advanced dramatically in the past five years since the re-birth of deep learning algorithms @krizhevsky2012imagenet, creating a new generation of algorithmic tools. These tools are both substantially better equipped to deal with noisier, more complicated datasets and that can extract richer and more detailed information. Videos from the infant perspective provided sustantial challenges (e.g., partially occluded faces) for the classc models of face detedction (e.g., ViolaJones, @viola2004robust).   urther, as the headcam technologies employed here were inexpensive (~$60 a camera) and the computer vision algorithms freely avaliable, this method is a promising avenue for quanitfying the visual and social information avaliable to infant learners. 
 
 Thus, we suggest that the combined use of these new tools can be leveraged to understand the changing infant perspecive on the visual world and the implications of these changes for both linguistic, cognitive, and social development.
 
