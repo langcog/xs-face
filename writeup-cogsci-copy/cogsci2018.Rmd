@@ -256,7 +256,7 @@ Next, we turned to our hypothesis of interest, examinig the impact of postural a
 
 We next examined how the child's orientation relative to their caregiver impacted their visual access to faces and hands. Overlal, we saw that children who were far away from their caregiver were more likely to see faces and hands than children who were close to their caregiver; this was true within all age groups and for all detectors. 
 
-```{r detByAge, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=2, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset." }
+```{r detByAge, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=6, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age."  }
 detectionsByAge <- dlong %>%
   filter(!is.na(age.at.test)) %>%
   group_by(subid, age.at.test, detectorType) %>%
@@ -264,19 +264,16 @@ detectionsByAge <- dlong %>%
   left_join(inc_subs) %>%
   mutate(len = as.numeric(len.min))
 
-ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorType, size=len.min)) +
+p1=ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorType, size=len.min)) +
     geom_jitter(width = .25) +
     geom_smooth(size=1) +
     scale_x_continuous(breaks=c(8,12,16)) +
     scale_size_continuous(range=c(.01,2),name = "Video Length (mins)") +
-    ylab("Proportion Detections") +
-    xlab("Age (months)") +
+    labs(y = "Prop. detected", x = element_blank()) +
+    theme_bw() + 
+    theme(legend.position="none") +
     scale_color_manual(values=c("#1F618D", "#7FB3D5", "#C70039", "#FF5733")) +
     facet_grid(~detectorType, scales = "free_y") 
-    # theme_bw()
-```
-
-```{r faceByPostureFig, fig.env="figure*", fig.pos = "h", fig.align = "center", num.cols.cap=2, fig.width=7, fig.height=6, fig.cap = "Proportion of face/hand detections as a function of infant's posture (top panels) and orientation (bottom panels), using the MTCNN3 face detections and OpenPose face detections (left two panels) and using OpenPose hand detections and the OpenPose wrist detections (right two panels)."}
 
 detectionsByPosture <- dlong %>%
   filter(!is.na(posture)) %>%
@@ -284,12 +281,13 @@ detectionsByPosture <- dlong %>%
   summarise(face = mean(detection)) %>%
   group_by(age.grp)
 
-p1=ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
-  geom_boxplot() + 
-  ylab("Proportion  Detections") + 
-  xlab("Age (months)") + 
-  facet_grid(~detectorType) +
-  theme_bw() 
+p2=ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
+  geom_boxplot(outlier.size = 0.5) + 
+  labs(y = "Prop. detected", x = element_blank()) +
+  facet_grid(~detectorType, scales="free_y") +
+  theme_bw() +
+  theme(legend.position="top", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm"))
+
 
 detectionsByOrientation <- dlong %>%
   filter(!is.na(orientation)) %>%
@@ -297,14 +295,15 @@ detectionsByOrientation <- dlong %>%
   summarise(detections = mean(detection)) %>%
   group_by(age.grp)
 
-p2=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col = orientation)) + 
-  geom_boxplot() + 
-  ylab("Proportion  Detections") + 
-  xlab("Age (months)") + 
-  facet_grid(~detectorType) +
-  theme_bw() 
-
-grid.arrange(p1,p2, nrow=2)
+p3=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col = orientation)) + 
+  geom_boxplot(outlier.size = 0.5) + 
+  labs(y = "Prop. detected", x = element_blank()) +
+  facet_grid(~detectorType, scales="free_y") +
+  theme_bw() +
+  theme(legend.position="top", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) +
+  labs(y = "Prop. detected", x = element_blank()) 
+  
+grid.arrange(p1, p2, p3, nrow=3)
 
 ```
 
@@ -338,7 +337,7 @@ grid.arrange(p1,p2, nrow=2)
 
 <!-- ``` -->
 
-To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame (as detected by the MTCNN3 model) as the dependent variable, and participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table {ref}. While age remained a significant predictor even when accounting for the effects of infants' posture and caregiver's oirentation, it held relativley less predictive power. Overall, these results confirm that infant's access to faces is heavily infleunced by their own posture and their caregivers orientation towards them.
+For our anlaysis, we fit models to the two models that the had the highest F-scores (i.e., highest performance on detecting faces and hands, respectively). To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame as the dependent variable, and participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table XX.  While age remained a significant predictor even when accounting for the effects of infants' posture and caregiver's oirentation, it held relativley less predictive power. Overall, these results confirm that infant's access to faces is heavily infleunced by their own posture and their caregivers orientation towards them.
 
 <!-- ```{r xtable, results="asis"} -->
 <!-- tab2 <- xtable::xtable(summary(fullModelminsInt_Faces)$coef, digits=3, -->
@@ -369,7 +368,7 @@ To formalize these observations, we fit a generalized logistic mixed-effect mode
   Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\ 
    \hline
 \end{tabular}
-\caption{Results from GLMM model prediting the presence/absence of a face across  the entire dataset.} 
+\caption{Results from GLMM model prediting the presence/absence of a face across the entire dataset (MTCNN detectors).} 
 \end{table}
 
 \begin{table}[H]
