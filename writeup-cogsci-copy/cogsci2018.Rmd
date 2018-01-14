@@ -156,6 +156,22 @@ The third algorithm was a CNN-based pose detector that provided the locations of
 ### Detector evaluation
 
 Evaluating face detectors (text here about how gold standard was selected)
+
+\begin{table}[t]
+  \caption{Model performance on gold standard generalization training set dataset. P, R, and F denote precision, recall, and F-score for each of the two samples. \label{tab:model_eval}}
+  \begin{center}
+    \begin{tabular}{l|ccc|ccc}
+      \hline
+       &  \multicolumn{3}{c|}{High-density} &  \multicolumn{3}{c}{Random} \\
+      % \null Model & P & R & F & P & R & F  \\
+      \hline
+      % MTCNN & .84  & 1 &  .91 & .95 & .75 & .85   \\
+      % OpenPose & .99 & .87 & .93 & .71 & .92 & .8 \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
 Evaluating hand/wrist detectors (text here about how gold standard was selected)
 
 \begin{table}[H]
