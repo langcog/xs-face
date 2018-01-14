@@ -41,9 +41,9 @@ library(lme4)
 library(gridExtra)
 ```
 # Introduction
-Children are remarkably skilled language learners, connecting arbitrary labels (“cup”) with specific visual concepts at a rapid pace through the first two years of life. However, children do not learn words in a vacuum but rather in a rich social environment, where social cues provided by speakers (e.g., eye-gaze) provide strong scaffolding for this learning process. Further, children’s ability to effectively process these social cues may be a key factor in their early language development.  In a longitudinal study, children’s level of joint engagement with their mother was found to predict both their receptive and productive vocabularies (@carpenter1998).  More recently, 10 month-olds who follow an adult’s gaze in an experimental context have larger vocabularies at 18 months (@brooks2005) and throughout the second year of life (@brooks2008). 
+Children are remarkably skilled language learners, connecting arbitrary labels (“cup”) with specific visual concepts at a rapid pace through the first two years of life. However, children do not learn words in a vacuum but in a rich social environment, where social cues provided by speakers (e.g., eye-gaze) provide strong scaffolding for this learning process. Indeed, children’s ability to effectively process these social cues may be a key factor in their early language development. For example,in a longitudinal study, children’s level of joint engagement with their mother was found to predict both their receptive and productive vocabularies (@carpenter1998).  More recently, 10 month-olds who follow an adult’s gaze in an experimental context have larger vocabularies at 18 months (@brooks2005) and throughout the second year of life (@brooks2008). 
 
-However, as children are learning their first words, their view of the world is also changing radically [@adolph2007]. Infant’s motor abilities improve dramatically near the end of the first year of life,  allowing them to locomote independently and to determine what they see. During spontaneous play in a laboratory playroom, toddlers are more likely to look at the floor while crawling than while walking (Franchak et al., 2011), when they have full visual access to their environment and the people in it (Kretch, Franchak, and Adolph, 2014). 
+However, as children are learning their first words, their view of the world is also changing radically [@adolph2007]. Infant’s motor abilities improve dramatically near the end of the first year of life,  allowing them to locomote independently and to determine what they see. These motor changes have drastic consequences for what children see: crawling and walking infants have radically different views of the world. During spontaneous play in a laboratory playroom, toddlers are more likely to look at the floor while crawling than while walking (Franchak et al., 2011); walking vs. crawling infants tend to have full visual access to their environment and the people in it (Kretch, Franchak, and Adolph, 2014). 
 
 One possibility is that these motor improvements have strong developmental cascades, impacting children’s emerging social, cognitive, and linguistic abilities (Iverson, 2010). Indeed, these postural changes also impact how children interact with their mothers;  walking infants make different kinds of object-related bids for attention from their mothers than crawling infants, and tend to hear more action directed statements (e.g., “open it”).  (Karasik et al., 2014).  More directly, in an observational study, @walle2014 found that children who were able to walk had both higher receptive and productive vocabularies.  On their account, children’s ability to stand and independently locomote may fundamentally change their ability to access the social information (e.g., faces, gaze) relative to children who are still crawling and sitting. In other words, the ability to access more detailed social information may allow infants to learn words quicker and more efficiently, facilitating language growth.
 
@@ -82,6 +82,7 @@ all_subs %>%
   xtable %>%
   print(digits = 2, include.rownames=FALSE,table.placement = "H", type="latex", comment = F)
 ```
+
 Our final sample consisted of 36 infants and children, with 8 participants in three age groups: 8 months (6 females), 12 months (7 females), and 16 months (6 females). Participants were recruited from the surrounding community via state birth records, had no documented disabilities, and were reported to hear at least 80\% English at home. Demographics and exclusion rates are given in Table \ref{tab:pop}. 
 \begin{table}[H]
 \centering
@@ -115,8 +116,6 @@ We used a small, head-mounted camera ("headcam") that was constructed from a MD8
 
 Even with the fish-eye lens, the vertical field of view of the camera is still considerably reduced compared to the child's approximate vertical field of view, which spans around 100--120$^{\circ}$ in the vertical dimension by 6-7 months of age [@mayer1988;@cummings1988]. As we were primarily interested in the presence of faces in the child's field of view, we chose to orient the camera upwards to capture the entirely of the child's upper visual field where the child is likely to see the faces of adults around them. This allowed us to maximize our chances of capturing faces that the child would have seen during the play session.
 
-
-
 ## Procedure
 
 First, all parents signed consent documents in a waiting room  where children were fitted with the headcam. After the child was comfortable in the waiting room and with the experimenter, the experimenter placed the headcam on the child's head. If the child was uninterested in wearing the headcam or tried to take it off, the experimenter presented engaging toys to try to draw the child's focus away from the headcam [@yoshida2008].
@@ -138,7 +137,6 @@ Headcam videos were trimmed such that they excluded the instruction phase when t
 (min = `r round(min(inc_subs$len.min), digits = 2)`, max = `r round(max(inc_subs$len.min), digits = 2)`).
 
 ### Posture and Orientation Annotation
-
 We created a set of custom annotations that described the child's physical posture (e.g. standing) and the orientation of the caregiver relative to the child (e.g. far away). The child's posture was categorized as being held/carried, prone (crawling or lying), sitting, or standing. The caregiver's orientation was characterized as being close to the child, farther from the child, and a global category of caregiver behind the child. For the first two annotationes (close/far from the child), the caregiver could either be to the the front or to the side of the child. All annontations were made using OpenSHAPA/Datavyu software  [@adolph2012], and times when the child was out of view of the tripod camera was marked as uncodable and was excluded from these annotations. 
 
 ## Face Detection
@@ -149,14 +147,12 @@ The second of these algorithms (OpenPose) also captures information about the "s
 ### Face Detection Algorithms
 The first face detection system made use of a series of Haar feature-based cascade classifiers (Viola-Jones, CITEXX) applied to each individual frame. This detector provided information about the presence of a face as well as its size and position. 
 
-The second algorithm was based on the work by (CITEXX) using multi-task cascaded convolutional neural networks (MTCNNs). The system was built using a novel cascaded CNN-based framework for joint detection and alignment, built to perform well in real-world environments where varying illuminations and occlusions are present. We used a Tensorflow implementation of this algorithm provided by (https://github.com/davidsandberg/facenet). Like Viola-Jones, this detector provided ifnormation about the presence of a face as well as it's size and position.
+The second algorithm was based on the work by (CITEXX) using multi-task cascaded convolutional neural networks (MTCNNs). The system was built using a novel cascaded CNN-based framework for joint detection and alignment, built to perform well in real-world environments where varying illuminations and occlusions are present. We used a Tensorflow implementation of this algorithm provided by (https://github.com/davidsandberg/facenet). Like Viola-Jones, this detector provided information about the presence of a face as well as it's size and position.
 
-The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc) (CITEXX). The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose). We operationalized face detections as ....., we operationalized hand detedctions as ..... we operationalized wrist detections as.....
+The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc) (CITEXX). The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose). We operationalized face detections as any frames containing a nose and either the left or right eye; we operationalized hand detections as any frames containing any of the 21 points detected on either the left or the right hand, and we operationalized wrist detections any frames containing either the left or the right wrist.  
 
 ### Detector evaluation
-
-Evaluating face detectors (text here about how gold standard was selected)
-Evaluating hand/wrist detectors (text here about how gold standard was selected)
+In order to evaluate the performance of these detectors, we constructed a "gold set" of frames
 
 \begin{table}[H]
 \centering
@@ -252,14 +248,14 @@ detectionsByAge <- dlong %>%
 
 ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorType, size=len.min)) +
     geom_jitter(width = .25) +
-    geom_smooth() +
+    geom_smooth(size=1) +
     scale_x_continuous(breaks=c(8,12,16)) +
-    scale_size_continuous(range=c(.2,2),name = "Video Length (mins)") +
+    scale_size_continuous(range=c(.01,2),name = "Video Length (mins)") +
     ylab("Proportion Detections") +
     xlab("Age (months)") +
     scale_color_manual(values=c("#1F618D", "#7FB3D5", "#C70039", "#FF5733")) +
-    facet_grid(~detectorType, scales = "free") +
-    theme_bw()
+    facet_grid(~detectorType, scales = "free_y") 
+    # theme_bw()
 ```
 
 ```{r faceByPostureFig, fig.env="figure*", fig.pos = "h", fig.align = "center", num.cols.cap=2, fig.width=7, fig.height=6, fig.cap = "Proportion of face/hand detections as a function of infant's posture (top panels) and orientation (bottom panels), using the MTCNN3 face detections and OpenPose face detections (left two panels) and using OpenPose hand detections and the OpenPose wrist detections (right two panels)."}
