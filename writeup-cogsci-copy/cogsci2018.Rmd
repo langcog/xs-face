@@ -155,20 +155,90 @@ The third algorithm was a CNN-based pose detector that provided the locations of
 In order to evaluate the performance of these detectors, we constructed a "gold set" of frames
 Evaluating face detectors (text here about how gold standard was selected)
 
-\begin{table}[t]
-  \caption{Model performance on gold standard generalization training set dataset. P, R, and F denote precision, recall, and F-score for each of the two samples. \label{tab:model_eval}}
-  \begin{center}
-    \begin{tabular}{l|ccc|ccc}
-      \hline
-       &  \multicolumn{3}{c|}{High-density} &  \multicolumn{3}{c}{Random} \\
-      % \null Model & P & R & F & P & R & F  \\
-      \hline
-      % MTCNN & .84  & 1 &  .91 & .95 & .75 & .85   \\
-      % OpenPose & .99 & .87 & .93 & .71 & .92 & .8 \\
-    \hline
-    \end{tabular}
-  \end{center}
-\end{table}
+```{r, message=FALSE, warning=FALSE, results='asis'}
+data_mtcnn <- read_csv("../data/final_output/mtcnn3.csv") %>%
+  distinct(video, frame, .keep_all = TRUE)
+
+data_openpose <- read_csv("../data/final_output/openpose_results_truncated_2.csv") %>%
+  distinct(name, frame, .keep_all = TRUE) %>%
+  mutate(frame = sprintf("%05d", as.numeric(frame) + 1)) %>%
+  mutate(is_face = ifelse(Nose_conf != 0, "True", "False")) %>%
+  select(group, name, frame, is_face) %>%
+  rename(video = name)
+
+original_candidates <- read_csv("../data/ground_truth/gold_set_candidates2.csv") %>%
+  arrange(video, frame)
+
+ground_truth_data <- read_csv("../data/ground_truth/ground_truth3.csv") %>%
+  select(-angle) %>%
+  arrange(video, frame) %>%
+  cbind(original_candidates %>%
+          select(sample_type))
+
+evaluate <- function(a, b) {
+  if (a == "True") {
+    if (a == b) return ("TP")
+    else return("FN")
+  }
+  else {
+    if (a == b) return("TN")
+    else return("FP")
+  }
+}
+
+mtcnn_results <- data_mtcnn %>%
+  rename(detector_is_face = is_face) %>%
+  inner_join(ground_truth_data, by = c("group", "video", "frame")) %>%
+  rowwise() %>%
+  mutate(result = evaluate(is_face, detector_is_face))
+
+openpose_results <- data_openpose %>%
+  rename(detector_is_face = is_face) %>%
+  inner_join(ground_truth_data, by = c("group", "video", "frame")) %>%
+  rowwise() %>%
+  mutate(result = evaluate(is_face, detector_is_face))
+
+get_prf <- function(df) {
+  tp <- sum(df$result == "TP")
+  fp <- sum(df$result == "FP")
+  fn <- sum(df$result == "FN")
+  
+  p <- tp / (tp + fp)
+  r <- tp / (tp + fn)
+  f <- 2 * p * r / (p + r)
+  return(c(p, r, f))
+}
+
+render_table <- function(df, detector) {
+  hd <- df %>%
+    filter(sample_type == "high_density")
+  
+  prf_vec <- get_prf(hd)
+  
+  xtable::xtable(tibble(P = prf_vec[1], R = prf_vec[2], F = prf_vec[3]), caption=paste(detector, "High Density Sample")) %>%
+    print(type="latex", comment = F, table.placement = "H")
+  
+  r <- df %>%
+    filter(sample_type == "random")
+  
+  prf_vec <- get_prf(r)
+  
+  xtable::xtable(tibble(P = prf_vec[1], R = prf_vec[2], F = prf_vec[3]), caption=paste(detector, "Random Sample")) %>%
+    print(type="latex", comment = F, table.placement = "H")
+}
+
+render_table(mtcnn_results, "MTCNN")
+render_table(openpose_results, "OpenPose")
+
+```
+
+```{r xtable, eval=FALSE, include=FALSE, results="asis"}
+  tab3 <- xtable::xtable(summary(fullModelminsInt_Handd)$coef, digits=3,
+                        caption = "Results from GLMM model prediting the presence/absence of hands (OpenPose-Hands) across the entire dataset.")
+
+  print(tab3, type="latex", comment = F, table.placement = "H")
+```
+
 
 Evaluating hand/wrist detectors (text here about how gold standard was selected)
 

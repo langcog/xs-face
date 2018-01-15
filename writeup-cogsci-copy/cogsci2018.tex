@@ -61,22 +61,26 @@
 \maketitle
 
 \begin{abstract}
-The ability to process social cues (e.g., eye gaze) is a critical
+The ability to process social cues--including eye gaze--is a critical
 component of children's early language and cognitive development.
 However, as children reach their first birthday, they begin to locomote
-themselves, exploring their visual environment in an entirely new way.
-How do these postural changes affect children's access to the social
-information relevant for word-learning? Here, explore this question by
-using head-mounted cameras to record infants' (8-16 months of age)
-egocentric visual perspective and by using computer-vision algorithms to
-detect the proportion of faces and hands in infants' environments. We
-find that infant's postural changes largely mediate infants' accesses to
-both faces and hands, suggesting that these postural and locomotive
-developments facilitate infants' emerging linguistic and social
-capacities.
+themselves, walking and exploring their visual environment in an
+entirely new way. How do these postural and locomotive changes affect
+children's access to the social information relevant for word-learning?
+Here, explore this question by using head-mounted cameras to record
+infants' (8-16 months of age) egocentric visual perspective and then
+using modern computer-vision algorithms to detect the proportion of
+faces and hands in infants' environments. We find that infant's postural
+changes largely mediate infants' acess to both faces and hands,
+suggesting that these postural and locomotive developments facilitate
+infants' emerging linguistic and social capacities. Broadly, we suggest
+that the combined use of head-mounted cameras and the application of
+novel deep learning algorithms is a promising avenue for understanding
+the statistics of infants' visual and linguistic experience.
 
 \textbf{Keywords:}
-social cognition; face-perception; infancy; locomotion; head-cameras
+social cognition; face-perception; infancy; locomotion; head-cameras;
+deep learning
 \end{abstract}
 
 \section{Introduction}\label{introduction}
@@ -92,20 +96,21 @@ example,in a longitudinal study, children's level of joint engagement
 with their mother was found to predict both their receptive and
 productive vocabularies (Carpenter, Nagell, \& Tomasello (1998)). More
 recently, 10 month-olds who follow an adult's gaze in an experimental
-context have larger vocabularies at 18 months (Brooks \& Meltzoff
-(2005)) and throughout the second year of life (({\textbf{???}})).
+context have larger vocabularies at 18 months (R. Brooks \& Meltzoff
+(2005)) and throughout the second year of life (Rechele Brooks \&
+Meltzoff (2008)).
 
 However, as children are learning their first words, their view of the
-world is also changing radically (Adolph \& Berger, 2007). Infant's
+world is also changing radically (K. Adolph \& Berger, 2007). Infant's
 motor abilities improve dramatically near the end of the first year of
 life, allowing them to locomote independently and to determine what they
 see. These motor changes have drastic consequences for what children
 see: crawling and walking infants have radically different views of the
 world. During spontaneous play in a laboratory playroom, toddlers are
-more likely to look at the floor while crawling than while walking
-(Franchak et al., 2011); walking vs.~crawling infants tend to have full
-visual access to their environment and the people in it (Kretch,
-Franchak, and Adolph, 2014).
+more likely to look at the floor while crawling than while walking (J.
+Franchak, Kretch, Soska, \& Adolph, 2011); walking vs.~crawling infants
+tend to have full visual access to their environment and the people in
+it (K. S. Kretch, Franchak, \& Adolph, 2014).
 
 One possibility is that these motor improvements have strong
 developmental cascades, impacting children's emerging social, cognitive,
@@ -113,31 +118,31 @@ and linguistic abilities (Iverson, 2010). Indeed, these postural changes
 also impact how children interact with their mothers; walking infants
 make different kinds of object-related bids for attention from their
 mothers than crawling infants, and tend to hear more action directed
-statements (e.g., ``open it''). (Karasik et al., 2014). More directly,
-in an observational study, Walle \& Campos (2014) found that children
-who were able to walk had both higher receptive and productive
-vocabularies. On their account, children's ability to stand and
-independently locomote may fundamentally change their ability to access
-the social information (e.g., faces, gaze) relative to children who are
-still crawling and sitting. In other words, the ability to access more
-detailed social information may allow infants to learn words quicker and
-more efficiently, facilitating language growth.
+statements (e.g., ``open it'') (Karasik, Tamis-LeMonda, \& Adolph,
+2014). More directly, in an observational study, Walle \& Campos (2014)
+found that children who were able to walk had both higher receptive and
+productive vocabularies. On their account, children's ability to stand
+and independently locomote may fundamentally change their ability to
+access the social information (e.g., faces, gaze) relative to children
+who are still crawling and sitting. In other words, the ability to
+access more detailed social information may allow infants to learn words
+quicker and more efficiently, facilitating language growth.
 
 Recent work has begun to use egocentric, head-mounted cameras to
 document the visual experiences of infants and children --- which even
 for walking children are radically different than the adult perspective
-(and not easily predicted by our own adult intuitions; Franchak, Kretch,
-Soska, \& Adolph (2011), Yoshida \& Smith (2008); ({\textbf{???}})).
-Children's views tend to be restricted and to be dominated by objects
-and hands much more than that of adults (Yoshida \& Smith, 2008), and
-both computational and empirical work suggest that this restricted
-viewpoint may be more effective for learning what objects and their
-labels than the comparable adult perspective (D. Yurovsky, Smith, \& Yu,
-in press, ({\textbf{???}})). Further, recent work also suggests dramatic
-changes in the child's perspective over the first two years of life, as
-views transition from primarily containing close up view of faces to
-capturing views of hands paired with the objects they are acting on
-({\textbf{???}}).
+(and not easily predicted by our own adult intuitions; J. Franchak et
+al. (2011), Yoshida \& Smith (2008); Clerkin, Hart, Rehg, Yu, \& Smith
+(2017)). Children's views tend to be restricted and to be dominated by
+objects and hands much more than that of adults (Yoshida \& Smith,
+2008), and both computational and empirical work suggest that this
+restricted viewpoint may be more effective for learning what objects and
+their labels than the comparable adult perspective (D. Yurovsky, Smith,
+\& Yu, in press, Bambach, Crandall, Smith, \& Yu (2017)). Further,
+recent work also suggests dramatic changes in the child's perspective
+over the first two years of life, as views transition from primarily
+containing close up view of faces to capturing views of hands paired
+with the objects they are acting on (Fausey, Jayaraman, \& Smith, 2016).
 
 Here, we directly ask whether the postural changes that infants'
 experience as they reach their first birthday change the availability of
@@ -146,10 +151,11 @@ the visual experience of a group of infants and children using
 head-mounted cameras during a brief laboratory free-play session;
 children's posture and their orientation to their caregiver were also
 recorded from a third-person perspective and hand-annotated. We
-capitalize on recent improvements in computer vision algorithms
-(({\textbf{???}}), ({\textbf{???}})) that allow the automated detection
-of both faces and hands, and we analyze the frequency of both faces and
-hands in the child's visual environment.
+capitalize on recent improvements in computer vision algorithms (K.
+Zhang, Zhang, Li, \& Qiao (2016), Cao, Simon, Wei, \& Sheikh (2017))
+that allow the automated detection of both faces and hands, and we
+analyze the frequency of both faces and hands in the child's visual
+environment.
 
 \section{Methods}\label{methods}
 
@@ -267,7 +273,7 @@ close to the child, farther from the child, and a global category of
 caregiver behind the child. For the first two annotationes (close/far
 from the child), the caregiver could either be to the the front or to
 the side of the child. All annontations were made using
-OpenSHAPA/Datavyu software (Adolph, Gilmore, Freeman, Sanderson, \&
+OpenSHAPA/Datavyu software (K. Adolph, Gilmore, Freeman, Sanderson, \&
 Millman, 2012), and times when the child was out of view of the tripod
 camera was marked as uncodable and was excluded from these annotations.
 
@@ -280,11 +286,11 @@ hand-annotating every frame. We first measure the performance of the
 most commonly-used and widely avlaialbe face detection algorithmsm
 (Viola-Jones). We use this as a benchmark for performance, as while it
 can achieve impressive accuracy in some situations, it is is notoriously
-bad at dealing with occluded faces (({\textbf{???}})). We next
-capitalized on recent improvements in computer vision, testing the
-performance of two other algorithms that extract face information in
-distinct ways. Rsults for the evaluation of these three systems are
-shown in Table XX.
+bad at dealing with occluded faces (Scheirer, Anthony, Nakayama, \& Cox
+(2014)). We next capitalized on recent improvements in computer vision,
+testing the performance of two other algorithms that extract face
+information in distinct ways. Rsults for the evaluation of these three
+systems are shown in Table XX.
 
 The second of these algorithms (OpenPose) also captures information
 about the ``skeleton'' of people in a given frame, outputting
@@ -305,22 +311,25 @@ be (as it is occluded by the toy).
 Algorithms}\label{face-detection-algorithms}
 
 The first face detection system made use of a series of Haar
-feature-based cascade classifiers (Viola-Jones, CITEXX) applied to each
-individual frame. This detector provided information about the presence
-of a face as well as its size and position.
+feature-based cascade classifiers (Viola-Jones, Viola \& Jones (2004))
+applied to each individual frame. This detector provided information
+about the presence of a face as well as its size and position.
 
-The second algorithm was based on the work by (CITEXX) using multi-task
-cascaded convolutional neural networks (MTCNNs). The system was built
-using a novel cascaded CNN-based framework for joint detection and
-alignment, built to perform well in real-world environments where
-varying illuminations and occlusions are present. We used a Tensorflow
-implementation of this algorithm provided by
+The second algorithm was based on the work by K. Zhang et al. (2016)
+using multi-task cascaded convolutional neural networks (MTCNNs). The
+system was built using a novel cascaded CNN-based framework for joint
+detection and alignment, built to perform well in real-world
+environments where varying illuminations and occlusions are present. We
+used a Tensorflow implementation of this algorithm provided by
 (\url{https://github.com/davidsandberg/facenet}). Like Viola-Jones, this
 detector provided information about the presence of a face as well as
 it's size and position.
 
 The third algorithm was a CNN-based pose detector that provided the
-locations of 18 body parts (ears, nose, wrists, etc) (CITEXX). The
+locations of 18 body parts (ears, nose, wrists, etc) (Cao et al. (2017),
+Simon, Joo, Matthews, \& Sheikh (2017), Wei, Ramakrishna, Kanade, \&
+Sheikh (2016)) avaliable at
+\url{https://github.com/CMU-Perceptual-Computing-Lab/openpose}. The
 system uses a CNN for initial anatomical detection and subsequently
 applies part affinity fields (PAFs) for part association, producing a
 series of body part candidates. The candidates are then matched to a
@@ -339,19 +348,46 @@ In order to evaluate the performance of these detectors, we constructed
 a ``gold set'' of frames Evaluating face detectors (text here about how
 gold standard was selected)
 
-\begin{table}[t]
-  \caption{Model performance on gold standard generalization training set dataset. P, R, and F denote precision, recall, and F-score for each of the two samples. \label{tab:model_eval}}
-  \begin{center}
-    \begin{tabular}{l|ccc|ccc}
-      \hline
-       &  \multicolumn{3}{c|}{High-density} &  \multicolumn{3}{c}{Random} \\
-      % \null Model & P & R & F & P & R & F  \\
-      \hline
-      % MTCNN & .84  & 1 &  .91 & .95 & .75 & .85   \\
-      % OpenPose & .99 & .87 & .93 & .71 & .92 & .8 \\
-    \hline
-    \end{tabular}
-  \end{center}
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrr}
+  \hline
+ & P & R & F \\ 
+  \hline
+1 & 0.84 & 1.00 & 0.91 \\ 
+   \hline
+\end{tabular}
+\caption{MTCNN High Density Sample} 
+\end{table}\begin{table}[H]
+\centering
+\begin{tabular}{rrrr}
+  \hline
+ & P & R & F \\ 
+  \hline
+1 & 0.95 & 0.75 & 0.84 \\ 
+   \hline
+\end{tabular}
+\caption{MTCNN Random Sample} 
+\end{table}\begin{table}[H]
+\centering
+\begin{tabular}{rrrr}
+  \hline
+ & P & R & F \\ 
+  \hline
+1 & 0.99 & 0.87 & 0.93 \\ 
+   \hline
+\end{tabular}
+\caption{OpenPose High Density Sample} 
+\end{table}\begin{table}[H]
+\centering
+\begin{tabular}{rrrr}
+  \hline
+ & P & R & F \\ 
+  \hline
+1 & 0.71 & 0.92 & 0.80 \\ 
+   \hline
+\end{tabular}
+\caption{OpenPose Random Sample} 
 \end{table}
 
 Evaluating hand/wrist detectors (text here about how gold standard was
@@ -457,34 +493,25 @@ was true within all age groups and for all detectors.
 
 }
 
-\caption[Proportion face (left) and hand (right) detections as a function of participant's age]{Proportion face (left) and hand (right) detections as a function of participant's age. Note that the axes are different; hands were detected overall much less frequently in this dataset.}\label{fig:detByAge}
-\end{figure*}
-\end{CodeChunk}
-
-\begin{CodeChunk}
-\begin{figure*}[h]
-
-{\centering \includegraphics{figs/faceByPostureFig-1} 
-
-}
-
-\caption[Proportion of face/hand detections as a function of infant's posture (top panels) and orientation (bottom panels), using the MTCNN3 face detections and OpenPose face detections (left two panels) and using OpenPose hand detections and the OpenPose wrist detections (right two panels)]{Proportion of face/hand detections as a function of infant's posture (top panels) and orientation (bottom panels), using the MTCNN3 face detections and OpenPose face detections (left two panels) and using OpenPose hand detections and the OpenPose wrist detections (right two panels).}\label{fig:faceByPostureFig}
+\caption[Proportion face (left) and hand (right) detections as a function of participant's age]{Proportion face (left) and hand (right) detections as a function of participant's age.}\label{fig:detByAge}
 \end{figure*}
 \end{CodeChunk}
 
 \subsection{Model}\label{model}
 
-To formalize these observations, we fit a generalized logistic
-mixed-effect model to all with the presence/absence of a face on every
-frame (as detected by the MTCNN3 model) as the dependent variable, and
-participant's age, orientation, and posture as predictors. Interactions
-between predictors were not included as this maximal model failed to
-converge. A summary of the coefficients of this model can be found in
-Table \{ref\}. While age remained a significant predictor even when
-accounting for the effects of infants' posture and caregiver's
-oirentation, it held relativley less predictive power. Overall, these
-results confirm that infant's access to faces is heavily infleunced by
-their own posture and their caregivers orientation towards them.
+For our anlaysis, we fit models to the two models that the had the
+highest F-scores (i.e., highest performance on detecting faces and
+hands, respectively). To formalize these observations, we fit a
+generalized logistic mixed-effect model to all with the presence/absence
+of a face on every frame as the dependent variable, and participant's
+age, orientation, and posture as predictors. Interactions between
+predictors were not included as this maximal model failed to converge. A
+summary of the coefficients of this model can be found in Table XX.
+While age remained a significant predictor even when accounting for the
+effects of infants' posture and caregiver's oirentation, it held
+relativley less predictive power. Overall, these results confirm that
+infant's access to faces is heavily infleunced by their own posture and
+their caregivers orientation towards them.
 
 \begin{table}[H]
 \centering
@@ -501,7 +528,7 @@ their own posture and their caregivers orientation towards them.
   Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\ 
    \hline
 \end{tabular}
-\caption{Results from GLMM model prediting the presence/absence of a face across  the entire dataset.} 
+\caption{Results from GLMM model prediting the presence/absence of a face across the entire dataset (MTCNN detectors).} 
 \end{table}
 
 \begin{table}[H]
@@ -538,17 +565,17 @@ proportion of faces and hands avaliable in infants' visual field.
 This work also deploys novel advancements in computer vision to the
 study of developmental psychology. The field of object detection and
 recognition has advanced dramatically in the past five years since the
-re-birth of deep learning algorithms (Krihevsky et al., 2012), creating
-a new generation of algorithmic tools that both are substantially better
-equipped to deal with noisier, more complicated datasets and that can
-extract richer and more detailed information. Indeed, these videos from
-the infant perspective provided sustantial challenges (e.g., partially
-occluded faces) for the classc models of face detedction (e.g., viola
-jones). Further, as the headcam technologies employed here were
-inexpensive (\textasciitilde{}\$60 a camera) and the computer vision
-algorithms freely avaliable, this method is a promising avenue for
-quanitfying the visual and social information avaliable to new infant
-learners.
+re-birth of deep learning algorithms Krizhevsky, Sutskever, \& Hinton
+(2012), creating a new generation of algorithmic tools. These tools are
+both substantially better equipped to deal with noisier, more
+complicated datasets and that can extract richer and more detailed
+information. Videos from the infant perspective provided sustantial
+challenges (e.g., partially occluded faces) for the classc models of
+face detedction (e.g., ViolaJones, Viola \& Jones (2004)). urther, as
+the headcam technologies employed here were inexpensive
+(\textasciitilde{}\$60 a camera) and the computer vision algorithms
+freely avaliable, this method is a promising avenue for quanitfying the
+visual and social information avaliable to infant learners.
 
 Thus, we suggest that the combined use of these new tools can be
 leveraged to understand the changing infant perspecive on the visual
@@ -580,10 +607,27 @@ Adolph, K., Gilmore, R., Freeman, C., Sanderson, P., \& Millman, D.
 (2012). Toward open behavioral science. \emph{Psychological Inquiry},
 \emph{23}(3), 244--247.
 
+\hypertarget{ref-bambach2017}{}
+Bambach, S., Crandall, D. J., Smith, L. B., \& Yu, C. (2017). An
+egocentric perspective on active vision and visual object learning in
+toddlers. In \emph{Proceedings of the seventh joint ieee conference on
+development and learning and on epigenetic robotics}.
+
 \hypertarget{ref-brooks2005}{}
 Brooks, R., \& Meltzoff, A. (2005). The development of gaze following
 and its relation to language. \emph{Developmental Science}, \emph{8}(6),
 535--543.
+
+\hypertarget{ref-brooks2008}{}
+Brooks, R., \& Meltzoff, A. N. (2008). Infant gaze following and
+pointing predict accelerated vocabulary growth through two years of age:
+A longitudinal, growth curve modeling study. \emph{Journal of Child
+Language}, \emph{35}(1), 207--220.
+
+\hypertarget{ref-cao2017realtime}{}
+Cao, Z., Simon, T., Wei, S.-E., \& Sheikh, Y. (2017). Realtime
+multi-person 2D pose estimation using part affinity fields. In
+\emph{CVPR}.
 
 \hypertarget{ref-carpenter1998}{}
 Carpenter, M., Nagell, K., \& Tomasello, M. (1998). Social cognition,
@@ -591,10 +635,20 @@ joint attention, and communicative competence from 9 to 15 months of
 age. \emph{Monographs of the Society for Research in Child Development},
 \emph{63}(4).
 
+\hypertarget{ref-clerkin2017}{}
+Clerkin, E. M., Hart, E., Rehg, J. M., Yu, C., \& Smith, L. B. (2017).
+Real-world visual statistics and infants' first-learned object names.
+\emph{Phil. Trans. R. Soc. B}, \emph{372}(1711), 20160055.
+
 \hypertarget{ref-cummings1988}{}
 Cummings, M., Van Hof-Van Duin, J., Mayer, D., Hansen, R., \& Fulton, A.
 (1988). Visual fields of young children. \emph{Behavioural and Brain
 Research}, \emph{29}(1), 7--16.
+
+\hypertarget{ref-fausey2016}{}
+Fausey, C. M., Jayaraman, S., \& Smith, L. B. (2016). From faces to
+hands: Changing visual input in the first two years. \emph{Cognition},
+\emph{152}, 101--107.
 
 \hypertarget{ref-franchak2011}{}
 Franchak, J., Kretch, K., Soska, K., \& Adolph, K. (2011). Head-mounted
@@ -607,15 +661,50 @@ Developmental and postural changes in childrens visual access to faces.
 In \emph{Proceedings of the 35th annual meeting of the cognitive science
 society} (pp. 454--459).
 
+\hypertarget{ref-karasik2014}{}
+Karasik, L. B., Tamis-LeMonda, C. S., \& Adolph, K. E. (2014). Crawling
+and walking infants elicit different verbal responses from mothers.
+\emph{Developmental Science}, \emph{17}(3), 388--395.
+
+\hypertarget{ref-kretch2014}{}
+Kretch, K. S., Franchak, J. M., \& Adolph, K. E. (2014). Crawling and
+walking infants see the world differently. \emph{Child Development},
+\emph{85}(4), 1503--1518.
+
+\hypertarget{ref-krizhevsky2012imagenet}{}
+Krizhevsky, A., Sutskever, I., \& Hinton, G. E. (2012). Imagenet
+classification with deep convolutional neural networks. In
+\emph{Advances in neural information processing systems} (pp.
+1097--1105).
+
 \hypertarget{ref-mayer1988}{}
 Mayer, D., Fulton, A., \& Cummings, M. (1988). Visual fields of infants
 assessed with a new perimetric technique. \emph{Investigative
 Ophthalmology \& Visual Science}, \emph{29}(3), 452--459.
 
+\hypertarget{ref-scheirer2014perceptual}{}
+Scheirer, W. J., Anthony, S. E., Nakayama, K., \& Cox, D. D. (2014).
+Perceptual annotation: Measuring human vision to improve computer
+vision. \emph{IEEE Transactions on Pattern Analysis and Machine
+Intelligence}, \emph{36}(8), 1679--1686.
+
+\hypertarget{ref-simon2017hand}{}
+Simon, T., Joo, H., Matthews, I., \& Sheikh, Y. (2017). Hand keypoint
+detection in single images using multiview bootstrapping. In
+\emph{CVPR}.
+
+\hypertarget{ref-viola2004robust}{}
+Viola, P., \& Jones, M. J. (2004). Robust real-time face detection.
+\emph{International Journal of Computer Vision}, \emph{57}(2), 137--154.
+
 \hypertarget{ref-walle2014}{}
 Walle, E. A., \& Campos, J. J. (2014). Infant language development is
 related to the acquisition of walking. \emph{Developmental Psychology},
 \emph{50}(2), 336.
+
+\hypertarget{ref-wei2016cpm}{}
+Wei, S.-E., Ramakrishna, V., Kanade, T., \& Sheikh, Y. (2016).
+Convolutional pose machines. In \emph{CVPR}.
 
 \hypertarget{ref-yoshida2008}{}
 Yoshida, H., \& Smith, L. (2008). What's in view for toddlers? Using a
@@ -625,5 +714,10 @@ head camera to study visual experience. \emph{Infancy}, \emph{13},
 \hypertarget{ref-yurovsky2012}{}
 Yurovsky, D., Smith, L., \& Yu, C. (in press). Statistical word learning
 at scale: The baby's view is better. \emph{Developmental Science}.
+
+\hypertarget{ref-zhang2016}{}
+Zhang, K., Zhang, Z., Li, Z., \& Qiao, Y. (2016). Joint face detection
+and alignment using multitask cascaded convolutional networks.
+\emph{IEEE Signal Processing Letters}, \emph{23}(10), 1499--1503.
 
 \end{document}
