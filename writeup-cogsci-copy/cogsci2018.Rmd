@@ -186,7 +186,7 @@ data_openpose_hands <- read_csv("../data/final_output/openpose_results_with_deta
   select(group, video,frame,ends_with("conf")) %>%
   mutate(confLeft=rowSums(.[grep("hand_left", names(.))])/21)  %>%
   mutate(confRight=rowSums(.[grep("hand_right", names(.))])/21)  %>%
-  mutate(is_hand = ifelse(confRight>=.5 | confLeft>=.5, "True", "False"))
+  mutate(is_hand = ifelse(confRight>=.05 | confLeft>=.05, "True", "False"))
 
 ground_truth_data_hands <- read_csv("../data/ground_truth/ground_truth_hands.csv") %>%
   rename(is_hand = is_face) %>%
