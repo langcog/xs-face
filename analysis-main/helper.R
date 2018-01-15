@@ -162,7 +162,7 @@ summarize.naming <- function (x, window = c(-2,2)) {
   }
   
   namings$age.grp <- x$age.grp[1]
-
+  namings$age.at.test <- x$age.at.test[1]
   return(namings)
 }
 
