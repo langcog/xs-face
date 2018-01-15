@@ -31,7 +31,7 @@ library(lubridate)
 Note that the dataset here is now the complete data (N=36); all pass length sanity checks.
 
 ```{r}
-d <- read_csv("../data/consolidateddata/consolidated_data_3dets.csv") %>%
+d <- read_csv("../data/consolidateddata/consolidated_data_4dets.csv") %>%
   mutate(posture = factor(posture), 
          orientation = factor(orientation))
 demo <- read_csv("../data/demographics/demographics.csv")
@@ -124,9 +124,9 @@ Using automated face detection results.
 
 ```{r}
 #d$face=d$faceVJ
-#d$face=d$faceMT
+d$face=d$faceMT
 #d$face=d$faceOP
-d$face=d$handOP
+#d$face=d$handOP
 
 mss <- d %>%
   group_by(age.grp, subid) %>%
