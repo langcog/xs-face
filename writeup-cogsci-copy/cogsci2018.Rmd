@@ -166,13 +166,34 @@ data_openpose <- read_csv("../data/final_output/openpose_results_truncated_2.csv
   select(group, name, frame, is_face) %>%
   rename(video = name)
 
-original_candidates <- read_csv("../data/ground_truth/gold_set_candidates2.csv") %>%
-  arrange(video, frame)
-
 ground_truth_data <- read_csv("../data/ground_truth/ground_truth3.csv") %>%
   select(-angle) %>%
   arrange(video, frame) %>%
-  cbind(original_candidates %>%
+  cbind(read_csv("../data/ground_truth/gold_set_candidates2.csv") %>%
+          arrange(video, frame) %>%
+          select(sample_type))
+
+data_openpose_wrists <- read_csv("../data/final_output/openpose_results_truncated_2.csv") %>%
+  distinct(name, frame, .keep_all = TRUE) %>%
+  mutate(is_hand = ifelse(LWrist_conf != 0 | RWrist_conf != 0, "True", "False")) %>%
+  select(group, name, frame, is_hand) %>%
+  rename(video = name)
+
+data_openpose_hands <- read_csv("../data/final_output/openpose_results_with_detail_hands.csv") %>%
+  distinct(name, frame, .keep_all = TRUE) %>%
+  mutate(video = name) %>%
+  distinct(video,frame,.keep_all=TRUE)  %>%
+  select(group, video,frame,ends_with("conf")) %>%
+  mutate(confLeft=rowSums(.[grep("hand_left", names(.))])/21)  %>%
+  mutate(confRight=rowSums(.[grep("hand_right", names(.))])/21)  %>%
+  mutate(is_hand = ifelse(confRight>=.5 | confLeft>=.5, "True", "False"))
+
+ground_truth_data_hands <- read_csv("../data/ground_truth/ground_truth_hands.csv") %>%
+  rename(is_hand = is_face) %>%
+  select(-angle) %>%
+  arrange(video, frame) %>%
+  cbind(read_csv("../data/ground_truth/gold_set_hand_candidates.csv") %>%
+          arrange(video, frame) %>%
           select(sample_type))
 
 evaluate <- function(a, b) {
@@ -197,6 +218,18 @@ openpose_results <- data_openpose %>%
   inner_join(ground_truth_data, by = c("group", "video", "frame")) %>%
   rowwise() %>%
   mutate(result = evaluate(is_face, detector_is_face))
+
+openpose_wrist_results <- data_openpose_wrists %>%
+  rename(detector_is_hand = is_hand) %>%
+  inner_join(ground_truth_data_hands, by = c("group", "video", "frame")) %>%
+  rowwise() %>%
+  mutate(result = evaluate(is_hand, detector_is_hand))
+
+openpose_hand_results <- data_openpose_hands %>%
+  rename(detector_is_hand = is_hand) %>%
+  inner_join(ground_truth_data_hands, by = c("group", "video", "frame")) %>%
+  rowwise() %>%
+  mutate(result = evaluate(is_hand, detector_is_hand))
 
 get_prf <- function(df) {
   tp <- sum(df$result == "TP")
@@ -229,6 +262,8 @@ render_table <- function(df, detector) {
 
 render_table(mtcnn_results, "MTCNN")
 render_table(openpose_results, "OpenPose")
+render_table(openpose_wrist_results, "OpenPose Wrist")
+render_table(openpose_hand_results, "OpenPose Hand")
 
 ```
 
