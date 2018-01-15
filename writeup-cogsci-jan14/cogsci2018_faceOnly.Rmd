@@ -5,7 +5,7 @@ csl: apa6.csl
 document-params: "10pt, letterpaper"
 
 author-information: > 
-    \author{{\large \bf Alessandro Sanchez} \\ \texttt{author1@university.edu} \\ Department of Psychology \\ Stanford University
+    \author{{\large \bf Alessandro Sanchez} \\ \texttt{sanchez7@stanford.edu} \\ Department of Psychology \\ Stanford University
     \And {\large \bf Bria Long} \\ \texttt{bria@stanford.edu} \\ Department of Psychology \\ Stanford University
         \And {\large \bf Ally Kraus} \\ \texttt{bria@stanford.edu} \\ Department of Psychology \\ Stanford University
         \And {\large \bf Michael C. Frank} \\ \texttt{mcfrank@stanford.edu} \\ Department of Psychology \\ Stanford University}
@@ -153,8 +153,8 @@ The third algorithm was a CNN-based pose detector that provided the locations of
 <!-- we operationalized hand detections as any frames containing any of the 21 points detected on either the left or the right hand, and we operationalized wrist detections any frames containing either the left or the right wrist.   -->
 
 ### Detector evaluation
-In order to evaluate the performance of these detectors, we constructed a "gold set" of frames
-Evaluating face detectors (text here about how gold standard was selected)
+In order to evaluate the performance of these detectors, we constructed a "gold set" of frames by hand labeling both a sample of frames with a high density of faces (as reported by the detectors) and a random sample from the remaining frames. This was done so as to not bias our evaluation by the relatively rare appearance of faces in the dataset. A face was present in a frame if at least half of the face was showing. Precision (hits / hits + false alarms), recall (hits / hits + misses), and F-score (harmonic mean of previous measures) were calculated and are reported in Table 2.
+Both detectors performed relatively well on the gold set, with MTCNN outperforming OpenPose on the random sample but trailing behind in the high density sample. Due to high performance of these two detectors we have included the results of both in the analyses to follow.
 
 ```{r, message=FALSE, warning=FALSE, results='asis'}
 data_mtcnn <- read_csv("../data/final_output/mtcnn3.csv") %>%
