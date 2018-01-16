@@ -157,21 +157,6 @@ In order to evaluate the performance of these detectors, we constructed a "gold 
 Both OpenPose and MTCNN detectors performed relatively well on the gold set, with MTCNN outperforming OpenPose on the random sample but trailing behind in the high density sample. Due to the high performance of these two detectors we have included the results of both in the analyses to follow. The ViolaJones detector did not perform as well on either gold set, so the results associated with this detector were not included.
 
 ```{r, message=FALSE, warning=FALSE, results='asis'}
-### Needs to be consolidated so that we're aren't rereading all of these files here...
-# data_vj<- read_csv("../data/final_output/viola.csv") %>%
-#   distinct(video, frame, .keep_all = TRUE)
-# 
-# data_mtcnn <- read_csv("../data/final_output/mtcnn3.csv") %>%
-#   distinct(video, frame, .keep_all = TRUE)
-# 
-# data_openpose <- read_csv("../data/final_output/openpose_results_truncated_2.csv")%>%
-#   distinct(name, frame, .keep_all = TRUE) %>%
-#   mutate(frame = sprintf("%05d", as.numeric(frame) + 1)) %>%
-#   mutate(is_face = ifelse(Nose_conf != 0, "True", "False")) %>%
-#   select(group, name, frame, is_face) %>%
-#   rename(video = name)
-
-
 d <- read_csv("../data/consolidateddata/consolidated_data_4dets.csv") %>%
   mutate(posture = factor(posture), orientation = factor(orientation))
 
@@ -180,8 +165,6 @@ dlong <- d %>%
   mutate(id = paste(subid,frame)) %>%
   gather(key = detectorType, value = detection, faceMT, faceOP, faceVJ) %>%
   mutate(detectorType=as.factor(detectorType)) 
-
-## couple of helper functions
 
 evaluate <- function(a, b) {
   if (a == TRUE) {
@@ -194,8 +177,6 @@ evaluate <- function(a, b) {
   }
 }
 
-
-## okay, big long tidyr chunk
 ground_truth_data <- read_csv("../data/ground_truth/ground_truth3.csv") %>%
   select(-angle) %>%
   arrange(video, frame) %>%
@@ -203,6 +184,7 @@ ground_truth_data <- read_csv("../data/ground_truth/ground_truth3.csv") %>%
           arrange(video, frame) %>%
           select(sample_type)) 
 
+## evaluate detectors
 performance <- ground_truth_data  %>%
   mutate(frame=as.numeric(frame), subid=video) %>%
   left_join(dlong)   %>%
@@ -213,49 +195,38 @@ performance <- ground_truth_data  %>%
   summarise(tp=sum(result == "TP"), fp=sum(result == "FP"), fn=sum(result=="FN")) %>%
   group_by(detectorType,sample_type) %>%
   summarise(p = tp / (tp + fp), r = tp / (tp + fn), f=( 2 * p * r )/ (p + r))
+
 ```
 
-
-```{r xtable, results="asis"}
- tab2 <- xtable::xtable(performance, digits=3, caption = "Detector performance")
-```
-
-
-<!-- \begin{table}[H] -->
-<!-- \centering -->
-<!-- \begin{tabular}{rrrr} -->
-<!--   \hline -->
-<!--   & P & R & F \\  -->
-<!-- \hline -->
-<!-- ViolaJones High Density Sample & 0.99 & 0.50 & 0.66 \\ -->
-<!-- ViolaJones Random Sample & 0.39 & 0.29 & 0.33 \\ -->
-<!-- OpenPose High Density Sample & 0.99 & 0.87 & 0.93 \\  -->
-<!-- OpenPose Random Sample & 0.71 & 0.92 & 0.80 \\ -->
-<!-- MTCNN High Density Sample & 0.84 & 1.00 & 0.91 \\  -->
-<!-- MTCNN Random Sample & 0.95 & 0.75 & 0.84 \\  -->
-<!--    \hline -->
-<!-- \end{tabular} -->
-<!-- \caption{Face detector performance}  -->
-<!-- \end{table} -->
-
+\begin{table}[ht]
+\centering
+\begin{tabular}{rllrrr}
+  \hline
+ & detectorType & sample\_type & p & r & f \\ 
+  \hline
+1 & MTCNN & high\_density & 0.841 & 1.000 & 0.914 \\ 
+  2 & MTCNN & random & 0.947 & 0.750 & 0.837 \\ 
+  3 & OpenPose & high\_density & 0.995 & 0.863 & 0.924 \\ 
+  4 & OpenPose & random & 0.710 & 0.917 & 0.800 \\ 
+  5 & ViolaJones & high\_density & 0.991 & 0.495 & 0.660 \\ 
+  6 & ViolaJones & random & 0.389 & 0.292 & 0.333 \\ 
+   \hline
+\end{tabular}
+\caption{Detector performance} 
+\end{table}
 
 # Results
 First, we report developmental shifts in infants' posture and their orientation relative to their caregiver. Then, we explore how these changes influence children's visual access to faces across this developmental time range. Finally, we explore how these changes impact the accessibility of faces during labeling events.
 
 ```{r echo=FALSE, include=FALSE}
-d <- read_csv("../data/consolidateddata/consolidated_data_4dets.csv") %>%
-  mutate(posture = factor(posture), orientation = factor(orientation))
-
-## make long form version for plotting both face detections on same graph
-dlong <- d %>%
-  mutate(id = paste(subid,frame)) %>%
-  gather(key = detectorType, value = detection, faceMT, faceOP) %>%
-  mutate(detectorType=as.factor(detectorType))  
+# get rid of violajones
+dlong <- dlong %>%
+  filter(detectorType!="faceVJ")
 
 # for better plotting names
 #levels(dlong$detectorType) 
 #[1] "faceMT"  "faceOP"  "handOP"  "wristOP"
-levels(dlong$detectorType) <- c("MTCNN-Faces", "OpenPose-Faces") 
+  levels(dlong$detectorType) <- c("MTCNN-Faces", "OpenPose-Faces","ViolaJones-Faces") 
 ```
 
 ## Changes in Posture and Orientation

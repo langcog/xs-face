@@ -341,6 +341,23 @@ of both in the analyses to follow. The ViolaJones detector did not
 perform as well on either gold set, so the results associated with this
 detector were not included.
 
+\begin{table}[ht]
+\centering
+\begin{tabular}{rllrrr}
+  \hline
+ & detectorType & sample\_type & p & r & f \\ 
+  \hline
+1 & MTCNN & high\_density & 0.841 & 1.000 & 0.914 \\ 
+  2 & MTCNN & random & 0.947 & 0.750 & 0.837 \\ 
+  3 & OpenPose & high\_density & 0.995 & 0.863 & 0.924 \\ 
+  4 & OpenPose & random & 0.710 & 0.917 & 0.800 \\ 
+  5 & ViolaJones & high\_density & 0.991 & 0.495 & 0.660 \\ 
+  6 & ViolaJones & random & 0.389 & 0.292 & 0.333 \\ 
+   \hline
+\end{tabular}
+\caption{Detector performance} 
+\end{table}
+
 \section{Results}\label{results}
 
 First, we report developmental shifts in infants' posture and their
