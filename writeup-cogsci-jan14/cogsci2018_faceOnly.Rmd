@@ -195,12 +195,12 @@ performance <- ground_truth_data  %>%
   summarise(tp=sum(result == "TP"), fp=sum(result == "FP"), fn=sum(result=="FN")) %>%
   group_by(detectorType,sample_type) %>%
   summarise(p = tp / (tp + fp), r = tp / (tp + fn), f=( 2 * p * r )/ (p + r))
-```
 
 # ```{r xtable, results="asis"}
 #  tab2 <- xtable::xtable(performance, digits=3, caption = "Detector performance", type="latex", comment = F, table.placement = "H")
 # ```
 
+```
 
 \begin{table}[ht]
 \centering
