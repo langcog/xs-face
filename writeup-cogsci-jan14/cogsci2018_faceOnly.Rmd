@@ -164,7 +164,7 @@ dlong <- d %>%
   gather(key = detectorType, value = detection, faceMT, faceOP, faceVJ) %>%
   mutate(detectorType=as.factor(detectorType)) 
 
-## couple of helper functions
+## helper function
 evaluate <- function(a, b) {
   if (a == TRUE) {
     if (a == b) return ("TP") # was face, said face
@@ -176,7 +176,7 @@ evaluate <- function(a, b) {
   }
 }
 
-## okay, big long tidyr chunk
+## read in ground truth detectors
 ground_truth_data <- read_csv("../data/ground_truth/ground_truth3.csv") %>%
   select(-angle) %>%
   arrange(video, frame) %>%
@@ -197,9 +197,9 @@ performance <- ground_truth_data  %>%
   summarise(p = tp / (tp + fp), r = tp / (tp + fn), f=( 2 * p * r )/ (p + r))
 ```
 
-```{r xtable, results="asis"}
- tab2 <- xtable::xtable(performance, digits=3, caption = "Detector performance", type="latex", comment = F, table.placement = "H")
-```
+# ```{r xtable, results="asis"}
+#  tab2 <- xtable::xtable(performance, digits=3, caption = "Detector performance", type="latex", comment = F, table.placement = "H")
+# ```
 
 
 \begin{table}[ht]
@@ -232,7 +232,7 @@ dlong <- dlong %>%
 # for better plotting names
 #levels(dlong$detectorType) 
 #[1] "faceMT"  "faceOP"  "handOP"  "wristOP"
-  levels(dlong$detectorType) <- c("MTCNN-Faces", "OpenPose-Faces") 
+  levels(dlong$detectorType) <- c("MTCNN-Faces", "OpenPose-Faces","ViolaJones-Faces") 
 ```
 
 ## Changes in Posture and Orientation
