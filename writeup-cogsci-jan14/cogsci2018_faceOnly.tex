@@ -68,15 +68,15 @@ themselves, walking and exploring their visual environment in an
 entirely new way. How do these postural and locomotive changes affect
 children's access to the social information relevant for word-learning?
 Here, we explore this question by using head-mounted cameras to record
-infants' (8-16 months of age) egocentric visual perspective and modern
-computer vision algorithms to detect the proportion of faces in infants'
-environments. We find that infants' postural changes largely mediate
-infants' access to faces, suggesting that these postural and locomotive
-developments facilitate infants' emerging linguistic and social
-capacities. Broadly, we suggest that the combined use of head-mounted
-cameras and the application of novel deep learning algorithms is a
-promising avenue for understanding the statistics of infants' visual and
-linguistic experience.
+infants' (8-16 months of age) egocentric visual perspective and use
+state-of-the-art computer vision algorithms to detect the proportion of
+faces in infants' environments. We find that infants' postural changes
+largely mediate infants' access to faces, hinting that these postural
+and locomotive developments facilitate infants' emerging linguistic and
+social capacities. Broadly, we suggest that the combined use of
+head-mounted cameras and the application of novel deep learning
+algorithms is a promising avenue for understanding the statistics of
+infants' visual and linguistic experience.
 
 \textbf{Keywords:}
 social cognition; face-perception; infancy; locomotion; head-cameras;
@@ -101,39 +101,39 @@ context have larger vocabularies at 18 months (R. Brooks \& Meltzoff,
 Meltzoff, 2008).
 
 However, as children are learning their first words, their view of the
-world is also changing radically (K. Adolph \& Berger, 2007). Infants'
+world is also radically changing (K. Adolph \& Berger, 2007). Infants'
 motor abilities improve dramatically near the end of the first year of
-life, allowing them to locomote independently and to determine what they
-see. These motor changes have drastic consequences for what children
-see: crawling and walking infants have radically different views of the
-world. During spontaneous play in a laboratory playroom, toddlers are
-more likely to look at the floor while crawling than while walking (J.
-Franchak, Kretch, Soska, \& Adolph, 2011); walking vs.~crawling infants
-tend to have full visual access to their environment and the people in
-it (K. S. Kretch, Franchak, \& Adolph, 2014).
+life, allowing them to locomote independently. These motor changes have
+drastic consequences for what children see; crawling and walking infants
+have radically different views of the world. For example, during
+spontaneous play in a laboratory playroom, toddlers are more likely to
+look at the floor while crawling than while walking (J. Franchak,
+Kretch, Soska, \& Adolph, 2011); in general, walking infants tend to
+have full visual access to their environment and the people in it, while
+crawling infants do not (K. S. Kretch, Franchak, \& Adolph, 2014).
 
 One possibility is that these motor improvements have strong
 developmental cascades, impacting children's emerging social, cognitive,
 and linguistic abilities (Iverson, 2010). Indeed, these postural changes
-also impact how children interact with their mothers; walking infants
-make different kinds of object-related bids for attention from their
-mothers than crawling infants, and tend to hear more action directed
+also impact how children interact with their mothers; walking
+(vs.~crawling) infants make different kinds of object-related bids for
+attention from their mothers and tend to hear more action directed
 statements (e.g., ``open it'') (Karasik, Tamis-LeMonda, \& Adolph,
-2014). More directly, in an observational study, Walle \& Campos (2014)
-found that children who were able to walk had both higher receptive and
+2014). Further, in an observational study, Walle \& Campos (2014) found
+that children who were able to walk had both higher receptive and
 productive vocabularies. On their account, children's ability to stand
 and independently locomote may fundamentally change their ability to
-access the social information (e.g., faces, gaze) relative to children
-who are still crawling and sitting. In other words, the ability to
-access more detailed social information may allow infants to learn words
+access social information (e.g., faces, gaze) relative to children who
+are still crawling and sitting. In other words, the ability to access
+more detailed social information may allow infants to learn words
 quicker and more efficiently, facilitating language growth.
 
 Recent work has begun to use egocentric, head-mounted cameras to
 document the visual experiences of infants and children --- which even
 for walking children are radically different from the adult perspective
-(and not easily predicted by our own adult intuitions (Clerkin, Hart,
-Rehg, Yu, \& Smith, 2017; J. Franchak et al., 2011, Yoshida \& Smith
-(2008))). Children's views tend to be restricted and to be dominated by
+(and not easily predicted by our own adult intuitions) (Clerkin, Hart,
+Rehg, Yu, \& Smith, 2017; J. Franchak et al., 2011; Yoshida \& Smith,
+2008). Children's views tend to be restricted and to be dominated by
 objects and hands much more than that of adults (Yoshida \& Smith,
 2008), and both computational and empirical work suggest that this
 restricted viewpoint may be more effective for learning objects and
@@ -144,16 +144,17 @@ over the first two years of life, as views transition from primarily
 containing a close up view of faces to capturing views of hands paired
 with the objects they are acting on (Fausey, Jayaraman, \& Smith, 2016).
 
-Here, we directly ask whether the postural changes that infants
-experience as they reach their first birthday change the availability of
-the social information relevant for word learning. To do so, we recorded
-the visual experience of a group of infants and children using
-head-mounted cameras during a brief laboratory free-play session;
-children's posture and orientation relative to their caregiver were also
-recorded from a third-person perspective and hand-annotated. We
-capitalize on recent improvements in face detection algorithms (K.
-Zhang, Zhang, Li, \& Qiao, 2016, Cao, Simon, Wei, \& Sheikh (2017)) to
-analyze the frequences of faces in the child's visual environment.
+Here, we directly ask whether the postural and locomotive developments
+change the availability of the social information relevant for word
+learning. To do so, we recorded the visual experience of a group of
+infants and children using head-mounted cameras during a brief
+laboratory free-play session; children's posture and orientation
+relative to their caregiver were also recorded from a third-person
+perspective and hand-annotated. We capitalize on recent improvements in
+face detection algorithms (Cao, Simon, Wei, \& Sheikh, 2017; K. Zhang,
+Zhang, Li, \& Qiao, 2016) to analyze the frequencies of faces in the
+child's visual environment, both overall and relative to naming events
+by their caregivers.
 
 \section{Methods}\label{methods}
 
@@ -340,23 +341,6 @@ of both in the analyses to follow. The ViolaJones detector did not
 perform as well on either gold set, so the results associated with this
 detector were not included.
 
-\begin{table}[H]
-\centering
-\begin{tabular}{rrrr}
-  \hline
-  & P & R & F \\ 
-\hline
-ViolaJones High Density Sample & 0.99 & 0.50 & 0.66 \\
-ViolaJones Random Sample & 0.39 & 0.29 & 0.33 \\
-OpenPose High Density Sample & 0.99 & 0.87 & 0.93 \\ 
-OpenPose Random Sample & 0.71 & 0.92 & 0.80 \\
-MTCNN High Density Sample & 0.84 & 1.00 & 0.91 \\ 
-MTCNN Random Sample & 0.95 & 0.75 & 0.84 \\ 
-   \hline
-\end{tabular}
-\caption{Face detector performance} 
-\end{table}
-
 \section{Results}\label{results}
 
 First, we report developmental shifts in infants' posture and their
@@ -415,12 +399,12 @@ postural and locomotive developments on children's visual access to
 faces. Overall, we found that children's posture was a major factor both
 in how many faces they saw during the play session. Infants who were
 sitting saw more faces than infants who were lying down or being
-carried, while infants who were standing saw the most faces. We next
+carried, while infants who were standing saw the most faces. We also
 examined how the child's orientation relative to their caregiver
-impacted their visual access to faces. Overall, we saw that children who
-were far away from their caregiver were more likely to see faces than
-children who were close to their caregiver; this was true within all age
-groups and for all detectors.
+impacted their visual access to faces: children who were far away from
+their caregiver were more likely to see faces than children who were
+close to their caregiver; this was true within all age groups and for
+both face detectors.
 
 \begin{CodeChunk}
 \begin{figure*}[h]
@@ -465,6 +449,17 @@ towards them.
 \caption{Results from GLMM model predicting the presence/absence of a face across the entire dataset (MTCNN detectors).} 
 \end{table}
 
+\begin{CodeChunk}
+\begin{figure}[H]
+
+{\centering \includegraphics{figs/detByNaming-1} 
+
+}
+
+\caption[Proportion face detections as a function of infants's posture]{Proportion face detections as a function of infants's posture}\label{fig:detByNaming}
+\end{figure}
+\end{CodeChunk}
+
 \subsection{Access to Faces During Labeling
 Events}\label{access-to-faces-during-labeling-events}
 
@@ -477,17 +472,6 @@ We again found that infant's posture impacted the degree to which they
 saw their caregiver's face during a labeling event; infants who were
 sitting or standing were more likely to have access to their caregiver's
 face.
-
-\begin{CodeChunk}
-\begin{figure}[H]
-
-{\centering \includegraphics{figs/detByNaming-1} 
-
-}
-
-\caption[Proportion face detections as a function of infants's posture]{Proportion face detections as a function of infants's posture}\label{fig:detByNaming}
-\end{figure}
-\end{CodeChunk}
 
 \section{General Discussion}\label{general-discussion}
 
