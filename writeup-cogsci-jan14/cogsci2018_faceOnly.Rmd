@@ -140,7 +140,7 @@ Headcam videos were trimmed such that they excluded the instruction phase when t
 We created a set of custom annotations that described the child's physical posture (e.g. standing) and the orientation of the caregiver relative to the child (e.g. far away). The child's posture was categorized as being held/carried, prone (crawling or lying), sitting, or standing. The caregiver's orientation was characterized as being close to the child, far from the child, and a global category of caregiver behind the child. For the first two annotations (close/far from the child), the caregiver could either be to the the front or to the side of the child. All annotations were made using OpenSHAPA/Datavyu software  [@adolph2012], and times when the child was out of view of the tripod camera were marked as uncodable and were excluded from these annotations. 
 
 ## Face Detection
-Measuring the availability of caregiver’s faces across development was an important goal of this study. We used a total of three face detection systems to explore infants' changing access to social information and to avoid the cost of hand-annotating every frame. We first measured the performance of the most commonly-used and widely available face detection algorithms (Viola-Jones). We used this as a benchmark for performance, and while it can achieve impressive accuracy in some situations, it is notoriously bad at dealing with occluded faces (@scheirer2014perceptual). We next capitalized on recent improvements in computer vision, testing the performance of two state-of-the-art face detectors that both made use of Convolutional Neural Networks (CNNs) to extract face information. 
+We used a total of three face detection systems to explore infants' changing access to social information and to avoid the cost of hand-annotating every frame. We first measured the performance of the most commonly-used and widely available face detection algorithms (Viola-Jones). We used this as a benchmark for performance, and while it can achieve impressive accuracy in some situations, it is notoriously bad at dealing with occluded faces (@scheirer2014perceptual). We next capitalized on recent improvements in computer vision, testing the performance of two state-of-the-art face detectors that both made use of Convolutional Neural Networks (CNNs) to extract face information. 
 
 <!-- The second of these algorithms (OpenPose) also captures information about the "skeleton" of people in a given frame, outputting information about the entire set of body parts that were detected. This allowed us to extract hand information as well as wrist information. We analyze wrist detections as a good proxy for the presence of a hand. We do so first because we did not capture the entire visual field experienced by the infants/children. Thus evne though the video may only show the presence of a wrist, the caregiver's hand may be within the child's field of view. Second, we do so because hands are often occluded by objects when caregivers are interacting with children, yet still visually accessible by the child and part of their joint interaction. For example,if a caregiver was holding a toy and presenting it to the infant, their wrists may be visible but their hand may not necessarily be (as it is occluded by the toy).  -->
 
@@ -321,8 +321,6 @@ p3=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col 
 grid.arrange(p1, p2, p3, nrow=3)
 
 ```
-
-## Model
 
 <!-- ```{r echo=FALSE, include=FALSE} -->
 <!-- d$faceNum=as.numeric(d$faceMT) -->
