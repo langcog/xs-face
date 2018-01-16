@@ -206,7 +206,6 @@ performance <- ground_truth_data  %>%
 \centering
 \begin{tabular}{rllrrr}
   \hline
- & detectorType & sample\_type & p & r & f \\ 
  & Algorithm & Sample\ Type & P & R & F \\ 
   \hline
 1 & MTCNN & high\_density & 0.841 & 1.000 & 0.914 \\ 
@@ -409,9 +408,9 @@ aroundNamings <- aroundNamings %>%
 
 ```
 
+```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections around a naming window as a function of infants's posture"  }
 ggplot(aroundNamings, aes(x = factor(posture), y = face, color=posture)) + 
   geom_boxplot() + 
-  ylab("Proportion of face detections within naming window") + 
   ylab("Prop. face detections in naming window") + 
   xlab("Posture") + 
   theme_bw() 
