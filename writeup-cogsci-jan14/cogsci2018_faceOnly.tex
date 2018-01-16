@@ -101,7 +101,7 @@ context have larger vocabularies at 18 months (R. Brooks \& Meltzoff,
 Meltzoff, 2008).
 
 However, as children are learning their first words, their view of the
-world is also changing radically (K. Adolph \& Berger, 2007). Infant's
+world is also changing radically (K. Adolph \& Berger, 2007). Infants'
 motor abilities improve dramatically near the end of the first year of
 life, allowing them to locomote independently and to determine what they
 see. These motor changes have drastic consequences for what children
@@ -130,7 +130,7 @@ quicker and more efficiently, facilitating language growth.
 
 Recent work has begun to use egocentric, head-mounted cameras to
 document the visual experiences of infants and children --- which even
-for walking children are radically different than the adult perspective
+for walking children are radically different from the adult perspective
 (and not easily predicted by our own adult intuitions (Clerkin, Hart,
 Rehg, Yu, \& Smith, 2017; J. Franchak et al., 2011, Yoshida \& Smith
 (2008))). Children's views tend to be restricted and to be dominated by
@@ -278,27 +278,37 @@ uncodable and were excluded from these annotations.
 \subsection{Face Detection}\label{face-detection}
 
 Measuring the availability of caregiver's faces across development was
-an important goal of this study. We used a total of two face detection
+an important goal of this study. We used a total of three face detection
 systems to explore infants' changing access to social information and to
-avoid the cost of hand-annotating every frame. We capitalized on recent
-improvements in computer vision algorithms, testing the performance of
-two state-of-the-art face detectors that used novel methods to extract
-face information.
+avoid the cost of hand-annotating every frame. We first measured the
+performance of the most commonly-used and widely available face
+detection algorithms (Viola-Jones). We used this as a benchmark for
+performance, and while it can achieve impressive accuracy in some
+situations, it is notoriously bad at dealing with occluded faces
+(Scheirer, Anthony, Nakayama, \& Cox (2014)). We next capitalized on
+recent improvements in computer vision, testing the performance of two
+state-of-the-art face detectors that both made use of Convolutional
+Neural Networks (CNNs) to extract face information.
 
 \subsubsection{Face Detection
 Algorithms}\label{face-detection-algorithms}
 
-The first algorithm was based on the work by K. Zhang et al. (2016)
+The first face detection system made use of a series of Haar
+feature-based cascade classifiers (Viola-Jones, Viola \& Jones (2004))
+applied to each individual frame. This detector provided information
+about the presence of a face as well as its size and position.
+
+The second algorithm was based on the work by K. Zhang et al. (2016)
 using multi-task cascaded convolutional neural networks (MTCNNs). The
 system was built using a novel cascaded CNN-based framework for joint
 detection and alignment, built to perform well in real-world
 environments where varying illuminations and occlusions are present. We
 used a Tensorflow implementation of this algorithm provided by
-(\url{https://github.com/davidsandberg/facenet}). This detector provided
-information about the presence of a face as well as its size and
-position.
+(\url{https://github.com/davidsandberg/facenet}). Like Viola-Jones, this
+detector provided information about the presence of a face as well as
+its size and position.
 
-The second algorithm was a CNN-based pose detector that provided the
+The third algorithm was a CNN-based pose detector that provided the
 locations of 18 body parts (ears, nose, wrists, etc.) (Cao et al.
 (2017), Simon, Joo, Matthews, \& Sheikh (2017), Wei, Ramakrishna,
 Kanade, \& Sheikh (2016)) avaliable at
@@ -322,11 +332,13 @@ evaluation by the relatively rare appearance of faces in the dataset. A
 face was present in a frame if at least half of the face was showing.
 Precision (hits / hits + false alarms), recall (hits / hits + misses),
 and F-score (harmonic mean of previous measures) were calculated and are
-reported in Table 2. Both detectors performed relatively well on the
-gold set, with MTCNN outperforming OpenPose on the random sample but
-trailing behind in the high density sample. Due to the high performance
-of these two detectors we've included the results of both in the
-analyses to follow.
+reported in Table 2. Both OpenPose and MTCNN detectors performed
+relatively well on the gold set, with MTCNN outperforming OpenPose on
+the random sample but trailing behind in the high density sample. Due to
+the high performance of these two detectors we have included the results
+of both in the analyses to follow. The ViolaJones detector did not
+perform as well on either gold set, so the results associated with this
+detector were not included.
 
 \begin{table}[H]
 \centering
@@ -334,6 +346,8 @@ analyses to follow.
   \hline
   & P & R & F \\ 
 \hline
+ViolaJones High Density Sample & 0.99 & 0.50 & 0.66 \\
+ViolaJones Random Sample & 0.39 & 0.29 & 0.33 \\
 OpenPose High Density Sample & 0.99 & 0.87 & 0.93 \\ 
 OpenPose Random Sample & 0.71 & 0.92 & 0.80 \\
 MTCNN High Density Sample & 0.84 & 1.00 & 0.91 \\ 
@@ -346,10 +360,10 @@ MTCNN Random Sample & 0.95 & 0.75 & 0.84 \\
 \section{Results}\label{results}
 
 First, we report developmental shifts in infants' posture and their
-orientation to their caregiver. Then, we explore how these changes
-influence children's visual access to faces across this developmental
-time range. Finally, we explore how these changes impact the
-accessibility of faces during labeling events.
+orientation relative to their caregiver. Then, we explore how these
+changes influence children's visual access to faces across this
+developmental time range. Finally, we explore how these changes impact
+the accessibility of faces during labeling events.
 
 \subsection{Changes in Posture and
 Orientation}\label{changes-in-posture-and-orientation}
@@ -361,7 +375,7 @@ Orientation}\label{changes-in-posture-and-orientation}
 
 }
 
-\caption[Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)]{Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel).}\label{fig:orientation}
+\caption[Proportion time that infants in each age group spent in each orientation relative to their caregiver]{Proportion time that infants in each age group spent in each orientation relative to their caregiver.}\label{fig:orientation}
 \end{figure}
 \end{CodeChunk}
 
@@ -384,7 +398,7 @@ behind them supporting their sitting positions (see Figure
 
 }
 
-\caption[Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel)]{Proportion time that infants in each age group spent in each posture (left panel) and orientation relative to their caregiver (right  panel).}\label{fig:posture}
+\caption[Proportion time that infants in each age group spent in each posture]{Proportion time that infants in each age group spent in each posture.}\label{fig:posture}
 \end{figure}
 \end{CodeChunk}
 
@@ -429,9 +443,9 @@ as this maximal model failed to converge. A summary of the coefficients
 of this model can be found in Table 3. While age remained a significant
 predictor even when accounting for the effects of infants' posture and
 caregivers' orientation, it held relatively less predictive power.
-Overall, these results confirm that infant's access to faces is heavily
-infleunced by their own posture and their caregivers orientation towards
-them.
+Overall, these results confirm that infants' access to faces is heavily
+infleunced by their own posture and their caregiver's orientation
+towards them.
 
 \begin{table}[H]
 \centering
@@ -460,7 +474,7 @@ we analyzed a four-second window around each labeling event (e.g.,
 ``Look at the {[}zem{]}!''); these labeling events were hand-annotated
 and automatically synchronized with the frame-by-frame face detections.
 We again found that infant's posture impacted the degree to which they
-saw their caregivers face during a labeling event; infants who were
+saw their caregiver's face during a labeling event; infants who were
 sitting or standing were more likely to have access to their caregiver's
 face.
 
@@ -612,6 +626,12 @@ classification with deep convolutional neural networks. In
 Mayer, D., Fulton, A., \& Cummings, M. (1988). Visual fields of infants
 assessed with a new perimetric technique. \emph{Investigative
 Ophthalmology \& Visual Science}, \emph{29}(3), 452--459.
+
+\hypertarget{ref-scheirer2014perceptual}{}
+Scheirer, W. J., Anthony, S. E., Nakayama, K., \& Cox, D. D. (2014).
+Perceptual annotation: Measuring human vision to improve computer
+vision. \emph{IEEE Transactions on Pattern Analysis and Machine
+Intelligence}, \emph{36}(8), 1679--1686.
 
 \hypertarget{ref-simon2017hand}{}
 Simon, T., Joo, H., Matthews, I., \& Sheikh, Y. (2017). Hand keypoint

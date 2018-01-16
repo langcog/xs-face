@@ -140,19 +140,21 @@ Headcam videos were trimmed such that they excluded the instruction phase when t
 We created a set of custom annotations that described the child's physical posture (e.g. standing) and the orientation of the caregiver relative to the child (e.g. far away). The child's posture was categorized as being held/carried, prone (crawling or lying), sitting, or standing. The caregiver's orientation was characterized as being close to the child, far from the child, and a global category of caregiver behind the child. For the first two annotations (close/far from the child), the caregiver could either be to the the front or to the side of the child. All annotations were made using OpenSHAPA/Datavyu software  [@adolph2012], and times when the child was out of view of the tripod camera were marked as uncodable and were excluded from these annotations. 
 
 ## Face Detection
-Measuring the availability of caregiver’s faces across development was an important goal of this study. We used a total of two face detection systems to explore infants' changing access to social information and to avoid the cost of hand-annotating every frame. We capitalized on recent improvements in computer vision algorithms, testing the performance of two state-of-the-art face detectors that used novel methods to extract face information.
+Measuring the availability of caregiver’s faces across development was an important goal of this study. We used a total of three face detection systems to explore infants' changing access to social information and to avoid the cost of hand-annotating every frame. We first measured the performance of the most commonly-used and widely available face detection algorithms (Viola-Jones). We used this as a benchmark for performance, and while it can achieve impressive accuracy in some situations, it is notoriously bad at dealing with occluded faces (@scheirer2014perceptual). We next capitalized on recent improvements in computer vision, testing the performance of two state-of-the-art face detectors that both made use of Convolutional Neural Networks (CNNs) to extract face information. 
 
 <!-- The second of these algorithms (OpenPose) also captures information about the "skeleton" of people in a given frame, outputting information about the entire set of body parts that were detected. This allowed us to extract hand information as well as wrist information. We analyze wrist detections as a good proxy for the presence of a hand. We do so first because we did not capture the entire visual field experienced by the infants/children. Thus evne though the video may only show the presence of a wrist, the caregiver's hand may be within the child's field of view. Second, we do so because hands are often occluded by objects when caregivers are interacting with children, yet still visually accessible by the child and part of their joint interaction. For example,if a caregiver was holding a toy and presenting it to the infant, their wrists may be visible but their hand may not necessarily be (as it is occluded by the toy).  -->
 
 ### Face Detection Algorithms
-The first algorithm was based on the work by @zhang2016 using multi-task cascaded convolutional neural networks (MTCNNs). The system was built using a novel cascaded CNN-based framework for joint detection and alignment, built to perform well in real-world environments where varying illuminations and occlusions are present. We used a Tensorflow implementation of this algorithm provided by (https://github.com/davidsandberg/facenet). This detector provided information about the presence of a face as well as its size and position.
+The first face detection system made use of a series of Haar feature-based cascade classifiers (Viola-Jones, @viola2004robust) applied to each individual frame. This detector provided information about the presence of a face as well as its size and position. 
 
-The second algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc.) (@cao2017realtime, @simon2017hand, @wei2016cpm) avaliable at https://github.com/CMU-Perceptual-Computing-Lab/openpose. The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose). We operationalized face detections as any frames containing a nose, as any half of a face necessarily contains a nose.  
+The second algorithm was based on the work by @zhang2016 using multi-task cascaded convolutional neural networks (MTCNNs). The system was built using a novel cascaded CNN-based framework for joint detection and alignment, built to perform well in real-world environments where varying illuminations and occlusions are present. We used a Tensorflow implementation of this algorithm provided by (https://github.com/davidsandberg/facenet). Like Viola-Jones, this detector provided information about the presence of a face as well as its size and position.
+
+The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc.) (@cao2017realtime, @simon2017hand, @wei2016cpm) avaliable at https://github.com/CMU-Perceptual-Computing-Lab/openpose. The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose). We operationalized face detections as any frames containing a nose, as any half of a face necessarily contains a nose.  
 <!-- we operationalized hand detections as any frames containing any of the 21 points detected on either the left or the right hand, and we operationalized wrist detections any frames containing either the left or the right wrist.   -->
 
 ### Detector evaluation
 In order to evaluate the performance of these detectors, we constructed a "gold set" of frames by hand labeling both a sample of frames with a high density of faces (as reported by the detectors) and a random sample from the remaining frames. This was done so as to not bias our evaluation by the relatively rare appearance of faces in the dataset. A face was present in a frame if at least half of the face was showing. Precision (hits / hits + false alarms), recall (hits / hits + misses), and F-score (harmonic mean of previous measures) were calculated and are reported in Table 2.
-Both detectors performed relatively well on the gold set, with MTCNN outperforming OpenPose on the random sample but trailing behind in the high density sample. Due to the high performance of these two detectors we have included the results of both in the analyses to follow.
+Both OpenPose and MTCNN detectors performed relatively well on the gold set, with MTCNN outperforming OpenPose on the random sample but trailing behind in the high density sample. Due to the high performance of these two detectors we have included the results of both in the analyses to follow. The ViolaJones detector did not perform as well on either gold set, so the results associated with this detector were not included.
 
 ```{r, message=FALSE, warning=FALSE, results='asis'}
 data_mtcnn <- read_csv("../data/final_output/mtcnn3.csv") %>%
@@ -165,6 +167,9 @@ data_openpose <- read_csv("../data/final_output/openpose_results_truncated_2.csv
   select(group, name, frame, is_face) %>%
   rename(video = name)
 
+data_viola <- read_csv("../data/final_output/viola.csv") %>%
+  distinct(video, frame, .keep_all = TRUE)
+  
 ground_truth_data <- read_csv("../data/ground_truth/ground_truth3.csv") %>%
   select(-angle) %>%
   arrange(video, frame) %>%
@@ -205,6 +210,12 @@ evaluate <- function(a, b) {
     else return("FP")
   }
 }
+
+viola_results <- data_viola %>%
+  rename(detector_is_face = is_face) %>%
+  inner_join(ground_truth_data, by = c("group", "video", "frame")) %>%
+  rowwise() %>%
+  mutate(result = evaluate(is_face, detector_is_face))
 
 mtcnn_results <- data_mtcnn %>%
   rename(detector_is_face = is_face) %>%
@@ -259,6 +270,7 @@ render_table <- function(df, detector) {
     print(type="latex", comment = F, table.placement = "H")
 }
 
+# render_table(viola_results, "Viola")
 # render_table(mtcnn_results, "MTCNN")
 # render_table(openpose_results, "OpenPose")
 
@@ -271,6 +283,8 @@ render_table <- function(df, detector) {
   \hline
   & P & R & F \\ 
 \hline
+ViolaJones High Density Sample & 0.99 & 0.50 & 0.66 \\
+ViolaJones Random Sample & 0.39 & 0.29 & 0.33 \\
 OpenPose High Density Sample & 0.99 & 0.87 & 0.93 \\ 
 OpenPose Random Sample & 0.71 & 0.92 & 0.80 \\
 MTCNN High Density Sample & 0.84 & 1.00 & 0.91 \\ 
