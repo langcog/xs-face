@@ -11,7 +11,7 @@ author-information: >
         \And {\large \bf Michael C. Frank} \\ \texttt{mcfrank@stanford.edu} \\ Department of Psychology \\ Stanford University}
 
 abstract: 
-  "The ability to process social cues--including eye gaze--is a critical component of children's early language and cognitive development. However, as children reach their first birthday, they begin to locomote themselves, walking and exploring their visual environment in an entirely new way. How do these postural and locomotive changes affect children's access to the social information relevant for word-learning? Here, we explore this question by using head-mounted cameras to record infants' (8-16 months of age) egocentric visual perspective and modern computer vision algorithms to detect the proportion of faces in infants' environments.  We find that infants' postural changes largely mediate infants' access to faces, suggesting that these postural and locomotive developments facilitate infants' emerging linguistic and social capacities. Broadly, we suggest that the combined use of head-mounted cameras and the application of novel deep learning algorithms is a promising avenue for understanding the statistics of infants' visual and linguistic experience."
+  "The ability to process social cues--including eye gaze--is a critical component of children's early language and cognitive development. However, as children reach their first birthday, they begin to locomote themselves, walking and exploring their visual environment in an entirely new way. How do these postural and locomotive changes affect children's access to the social information relevant for word-learning? Here, we explore this question by using head-mounted cameras to record infants' (8-16 months of age) egocentric visual perspective and use state-of-the-art computer vision algorithms to detect the proportion of faces in infants' environments.  We find that infants' postural changes largely mediate infants' access to faces, hinting that these postural and locomotive developments facilitate infants' emerging linguistic and social capacities. Broadly, we suggest that the combined use of head-mounted cameras and the application of novel deep learning algorithms is a promising avenue for understanding the statistics of infants' visual and linguistic experience."
 
 keywords:
     "social cognition; face-perception; infancy; locomotion; head-cameras; deep learning"
@@ -43,13 +43,13 @@ library(gridExtra)
 # Introduction
 Children are remarkably skilled language learners, connecting arbitrary labels (“cup”) with specific visual concepts at a rapid pace through the first two years of life. However, children do not learn words in a vacuum but in a rich social environment, where social cues provided by speakers (e.g., eye-gaze) provide strong scaffolding for this learning process. Indeed, children’s ability to effectively process these social cues may be a key factor in their early language development. For example, in a longitudinal study, children’s level of joint engagement with their mother was found to predict both their receptive and productive vocabularies [@carpenter1998].  More recently, 10 month-olds who follow an adult’s gaze in an experimental context have larger vocabularies at 18 months [@brooks2005] and throughout the second year of life [@brooks2008]. 
 
-However, as children are learning their first words, their view of the world is also changing radically [@adolph2007]. Infants' motor abilities improve dramatically near the end of the first year of life,  allowing them to locomote independently and to determine what they see. These motor changes have drastic consequences for what children see: crawling and walking infants have radically different views of the world. During spontaneous play in a laboratory playroom, toddlers are more likely to look at the floor while crawling than while walking [@franchak2011]; walking vs. crawling infants tend to have full visual access to their environment and the people in it [@kretch2014].
+However, as children are learning their first words, their view of the world is also radically changing [@adolph2007]. Infants' motor abilities improve dramatically near the end of the first year of life, allowing them to locomote independently. These motor changes have drastic consequences for what children see; crawling and walking infants have radically different views of the world. For example, during spontaneous play in a laboratory playroom, toddlers are more likely to look at the floor while crawling than while walking [@franchak2011]; in general, walking infants tend to have full visual access to their environment and the people in it, while crawling infants do not [@kretch2014].
 
-One possibility is that these motor improvements have strong developmental cascades, impacting children’s emerging social, cognitive, and linguistic abilities [@iverson2010]. Indeed, these postural changes also impact how children interact with their mothers;  walking infants make different kinds of object-related bids for attention from their mothers than crawling infants, and tend to hear more action directed statements (e.g., “open it”) [@karasik2014].  More directly, in an observational study, @walle2014 found that children who were able to walk had both higher receptive and productive vocabularies. On their account, children’s ability to stand and independently locomote may fundamentally change their ability to access the social information (e.g., faces, gaze) relative to children who are still crawling and sitting. In other words, the ability to access more detailed social information may allow infants to learn words quicker and more efficiently, facilitating language growth.
+One possibility is that these motor improvements have strong developmental cascades, impacting children’s emerging social, cognitive, and linguistic abilities [@iverson2010]. Indeed, these postural changes also impact how children interact with their mothers;  walking (vs. crawling) infants make different kinds of object-related bids for attention from their mothers and tend to hear more action directed statements (e.g., “open it”) [@karasik2014].  Further, in an observational study, @walle2014 found that children who were able to walk had both higher receptive and productive vocabularies. On their account, children’s ability to stand and independently locomote may fundamentally change their ability to access social information (e.g., faces, gaze) relative to children who are still crawling and sitting. In other words, the ability to access more detailed social information may allow infants to learn words quicker and more efficiently, facilitating language growth.
 
-Recent work has begun to use egocentric, head-mounted cameras to document the visual experiences of infants and children — which even for walking children are radically different from the adult perspective (and not easily predicted by our own adult intuitions [@clerkin2017;@franchak2011, @yoshida2008]). Children’s views tend to be restricted and to be dominated by objects and hands much more than that of adults [@yoshida2008], and both computational and empirical work suggest that this restricted viewpoint may be more effective for learning objects and their labels than the comparable adult perspective [ @bambach2017;@yurovsky2012]. Further, recent work also suggests dramatic changes in the child’s perspective over the first two years of life, as views transition from primarily containing a close up view of faces to capturing views of hands paired with the objects they are acting on [@fausey2016].
+Recent work has begun to use egocentric, head-mounted cameras to document the visual experiences of infants and children — which even for walking children are radically different from the adult perspective (and not easily predicted by our own adult intuitions) [@clerkin2017;@franchak2011; @yoshida2008]. Children’s views tend to be restricted and to be dominated by objects and hands much more than that of adults [@yoshida2008], and both computational and empirical work suggest that this restricted viewpoint may be more effective for learning objects and their labels than the comparable adult perspective [@bambach2017;@yurovsky2012]. Further, recent work also suggests dramatic changes in the child’s perspective over the first two years of life, as views transition from primarily containing a close up view of faces to capturing views of hands paired with the objects they are acting on [@fausey2016].
 
-Here, we directly ask whether the postural changes that infants experience as they reach their first birthday change the availability of the social information relevant for word learning. To do so, we recorded the visual experience of a group of infants and children using head-mounted cameras during a brief laboratory free-play session; children’s posture and orientation relative to their caregiver were also recorded from a third-person perspective and hand-annotated. We capitalize on recent improvements in face detection algorithms [@zhang2016, @cao2017realtime] to analyze the frequences of faces in the child’s visual environment. 
+Here, we directly ask whether the postural and locomotive developments change the availability of the social information relevant for word learning. To do so, we recorded the visual experience of a group of infants and children using head-mounted cameras during a brief laboratory free-play session; children’s posture and orientation relative to their caregiver were also recorded from a third-person perspective and hand-annotated. We capitalize on recent improvements in face detection algorithms [@zhang2016; @cao2017realtime] to analyze the frequencies of faces in the child’s visual environment, both overall and relative to naming events by their caregivers.
 
 # Methods
 ## Participants
@@ -155,133 +155,84 @@ In order to evaluate the performance of these detectors, we constructed a "gold 
 Both detectors performed relatively well on the gold set, with MTCNN outperforming OpenPose on the random sample but trailing behind in the high density sample. Due to the high performance of these two detectors we have included the results of both in the analyses to follow.
 
 ```{r, message=FALSE, warning=FALSE, results='asis'}
-data_mtcnn <- read_csv("../data/final_output/mtcnn3.csv") %>%
-  distinct(video, frame, .keep_all = TRUE)
+### Needs to be consolidated so that we're aren't rereading all of these files here...
+# data_vj<- read_csv("../data/final_output/viola.csv") %>%
+#   distinct(video, frame, .keep_all = TRUE)
+# 
+# data_mtcnn <- read_csv("../data/final_output/mtcnn3.csv") %>%
+#   distinct(video, frame, .keep_all = TRUE)
+# 
+# data_openpose <- read_csv("../data/final_output/openpose_results_truncated_2.csv")%>%
+#   distinct(name, frame, .keep_all = TRUE) %>%
+#   mutate(frame = sprintf("%05d", as.numeric(frame) + 1)) %>%
+#   mutate(is_face = ifelse(Nose_conf != 0, "True", "False")) %>%
+#   select(group, name, frame, is_face) %>%
+#   rename(video = name)
 
-data_openpose <- read_csv("../data/final_output/openpose_results_truncated_2.csv") %>%
-  distinct(name, frame, .keep_all = TRUE) %>%
-  mutate(frame = sprintf("%05d", as.numeric(frame) + 1)) %>%
-  mutate(is_face = ifelse(Nose_conf != 0, "True", "False")) %>%
-  select(group, name, frame, is_face) %>%
-  rename(video = name)
 
+d <- read_csv("../data/consolidateddata/consolidated_data_4dets.csv") %>%
+  mutate(posture = factor(posture), orientation = factor(orientation))
+
+## make long form version for plotting both face detections on same graph
+dlong <- d %>%
+  mutate(id = paste(subid,frame)) %>%
+  gather(key = detectorType, value = detection, faceMT, faceOP, faceVJ) %>%
+  mutate(detectorType=as.factor(detectorType)) 
+
+## couple of helper functions
+
+
+  
+evaluate <- function(a, b) {
+  if (a == TRUE) {
+    if (a == b) return ("TP") # was face, said face
+    else return("FN") # was face, missed face
+  }
+  else {
+    if (a == b) return("TN") # was not face, said not face
+    else return("FP") # was not face, said face
+  }
+}
+
+## okay, big long tidyr chunk
 ground_truth_data <- read_csv("../data/ground_truth/ground_truth3.csv") %>%
   select(-angle) %>%
   arrange(video, frame) %>%
   cbind(read_csv("../data/ground_truth/gold_set_candidates2.csv") %>%
           arrange(video, frame) %>%
-          select(sample_type))
+          select(sample_type)) 
 
-data_openpose_wrists <- read_csv("../data/final_output/openpose_results_truncated_2.csv") %>%
-  distinct(name, frame, .keep_all = TRUE) %>%
-  mutate(is_hand = ifelse(LWrist_conf != 0 | RWrist_conf != 0, "True", "False")) %>%
-  select(group, name, frame, is_hand) %>%
-  rename(video = name)
-
-data_openpose_hands <- read_csv("../data/final_output/openpose_results_with_detail_hands.csv") %>%
-  distinct(name, frame, .keep_all = TRUE) %>%
-  mutate(video = name) %>%
-  distinct(video,frame,.keep_all=TRUE)  %>%
-  select(group, video,frame,ends_with("conf")) %>%
-  mutate(confLeft=rowSums(.[grep("hand_left", names(.))])/21)  %>%
-  mutate(confRight=rowSums(.[grep("hand_right", names(.))])/21)  %>%
-  mutate(is_hand = ifelse(confRight>=.05 | confLeft>=.05, "True", "False"))
-
-ground_truth_data_hands <- read_csv("../data/ground_truth/ground_truth_hands.csv") %>%
-  rename(is_hand = is_face) %>%
-  select(-angle) %>%
-  arrange(video, frame) %>%
-  cbind(read_csv("../data/ground_truth/gold_set_hand_candidates.csv") %>%
-          arrange(video, frame) %>%
-          select(sample_type))
-
-evaluate <- function(a, b) {
-  if (a == "True") {
-    if (a == b) return ("TP")
-    else return("FN")
-  }
-  else {
-    if (a == b) return("TN")
-    else return("FP")
-  }
-}
-
-mtcnn_results <- data_mtcnn %>%
-  rename(detector_is_face = is_face) %>%
-  inner_join(ground_truth_data, by = c("group", "video", "frame")) %>%
+performance <- ground_truth_data  %>%
+  mutate(frame=as.numeric(frame), subid=video) %>%
+  left_join(dlong)   %>%
+  mutate(detector_is_face = detection, is_face = as.logical(is_face)) %>%
   rowwise() %>%
-  mutate(result = evaluate(is_face, detector_is_face))
+  mutate(result = evaluate(is_face, detector_is_face)) %>%
+  group_by(detectorType,sample_type) %>%
+  summarise(tp=sum(result == "TP"), fp=sum(result == "FP"), fn=sum(result=="FN")) %>%
+  group_by(detectorType,sample_type) %>%
+  summarise(p = tp / (tp + fp), r = tp / (tp + fn), f=( 2 * p * r )/ (p + r))
+```
 
-openpose_results <- data_openpose %>%
-  rename(detector_is_face = is_face) %>%
-  inner_join(ground_truth_data, by = c("group", "video", "frame")) %>%
-  rowwise() %>%
-  mutate(result = evaluate(is_face, detector_is_face))
-
-openpose_wrist_results <- data_openpose_wrists %>%
-  rename(detector_is_hand = is_hand) %>%
-  inner_join(ground_truth_data_hands, by = c("group", "video", "frame")) %>%
-  rowwise() %>%
-  mutate(result = evaluate(is_hand, detector_is_hand))
-
-openpose_hand_results <- data_openpose_hands %>%
-  rename(detector_is_hand = is_hand) %>%
-  inner_join(ground_truth_data_hands, by = c("group", "video", "frame")) %>%
-  rowwise() %>%
-  mutate(result = evaluate(is_hand, detector_is_hand))
-
-get_prf <- function(df) {
-  tp <- sum(df$result == "TP")
-  fp <- sum(df$result == "FP")
-  fn <- sum(df$result == "FN")
-  
-  p <- tp / (tp + fp)
-  r <- tp / (tp + fn)
-  f <- 2 * p * r / (p + r)
-  return(c(p, r, f))
-}
-
-render_table <- function(df, detector) {
-  hd <- df %>%
-    filter(sample_type == "high_density")
-  
-  prf_vec <- get_prf(hd)
-  
-  xtable::xtable(tibble(P = prf_vec[1], R = prf_vec[2], F = prf_vec[3]), caption=paste(detector, "High Density Sample")) %>%
-    print(type="latex", comment = F, table.placement = "H")
-  
-  r <- df %>%
-    filter(sample_type == "random")
-  
-  prf_vec <- get_prf(r)
-  
-  xtable::xtable(tibble(P = prf_vec[1], R = prf_vec[2], F = prf_vec[3]), caption=paste(detector, "Random Sample")) %>%
-    print(type="latex", comment = F, table.placement = "H")
-}
-
-# render_table(mtcnn_results, "MTCNN")
-# render_table(openpose_results, "OpenPose")
-
+```{r xtable, results="asis"}
+ tab2 <- xtable::xtable(performance, digits=3, caption = "Detector performance")
 ```
 
 
-\begin{table}[H]
-\centering
-\begin{tabular}{rrrr}
-  \hline
-  & P & R & F \\ 
-\hline
-OpenPose High Density Sample & 0.99 & 0.87 & 0.93 \\ 
-OpenPose Random Sample & 0.71 & 0.92 & 0.80 \\
-MTCNN High Density Sample & 0.84 & 1.00 & 0.91 \\ 
-MTCNN Random Sample & 0.95 & 0.75 & 0.84 \\ 
-   \hline
-\end{tabular}
-\caption{Face detector performance} 
-\end{table}
-
-
-
+<!-- \begin{table}[H] -->
+<!-- \centering -->
+<!-- \begin{tabular}{rrrr} -->
+<!--   \hline -->
+<!--   & P & R & F \\  -->
+<!-- \hline -->
+<!-- OpenPose High Density Sample & 0.99 & 0.87 & 0.93 \\  -->
+<!-- OpenPose Random Sample & 0.71 & 0.92 & 0.80 \\ -->
+<!-- MTCNN High Density Sample & 0.84 & 1.00 & 0.91 \\  -->
+<!-- MTCNN Random Sample & 0.95 & 0.75 & 0.84 \\  -->
+<!--    \hline -->
+<!-- \end{tabular} -->
+<!-- \caption{Face detector performance}  -->
+<!-- \end{table} -->
 
 
 # Results
@@ -343,7 +294,7 @@ ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) +
 
 We first examined the proportion of face detections across age; a full summary can be seen in Figure \ref{fig:detByAge}. We observed  a slight U-shaped function both when analyzing the output of the MTCNN and OpenPose detectors, such that 12-month-olds appeared to experience slighly fewer faces faces than 8 or 16-month-olds. 
  
-Next, we turned to our hypothesis of interest, examining the impact of postural and locomotive developments on children's visual access to faces. Overall, we found that children's posture was a major factor both in how many faces they saw during the play session. Infants who were sitting saw more faces than infants who were lying down or being carried, while infants who were standing saw the most faces. We next examined how the child's orientation relative to their caregiver impacted their visual access to faces. Overall, we saw that children who were far away from their caregiver were more likely to see faces than children who were close to their caregiver; this was true within all age groups and for all detectors. 
+Next, we turned to our hypothesis of interest, examining the impact of postural and locomotive developments on children's visual access to faces. Overall, we found that children's posture was a major factor both in how many faces they saw during the play session. Infants who were sitting saw more faces than infants who were lying down or being carried, while infants who were standing saw the most faces. We also examined how the child's orientation relative to their caregiver impacted their visual access to faces: children who were far away from their caregiver were more likely to see faces than children who were close to their caregiver; this was true within all age groups and for both face  detectors. 
 
 ```{r detByAge, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=6, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age."  }
 detectionsByAge <- dlong %>%
@@ -460,9 +411,6 @@ To formalize these observations, we fit a generalized logistic mixed-effect mode
 \caption{Results from GLMM model predicting the presence/absence of a face across the entire dataset (MTCNN detectors).} 
 \end{table}
 
-## Access to Faces During Labeling Events
-Finally, we analyzed how face detections changed during object labeling events as a function of infant's posture and orientation.  Specfically, we analyzed a four-second window around each labeling event (e.g., "Look at the [zem]!"); these labeling events were hand-annotated and automatically synchronized with the frame-by-frame face detections. We again found that infant's posture impacted the degree to which they saw their caregiver's face during a labeling event; infants who were sitting or standing were more likely to have access to their caregiver's face.
-
 ```{r echo=FALSE, include=FALSE }
 source("helper.R")
 d$face=d$faceMT
@@ -478,7 +426,6 @@ aroundNamings <- aroundNamings %>%
 #          data = aroundNamings) 
 
 ```
-
 ```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections as a function of infants's posture"  }
 ggplot(aroundNamings, aes(x = factor(posture), y = face, color=posture)) + 
   geom_boxplot() + 
@@ -486,6 +433,8 @@ ggplot(aroundNamings, aes(x = factor(posture), y = face, color=posture)) +
   xlab("Posture") + 
   theme_bw() 
 ```
+## Access to Faces During Labeling Events
+Finally, we analyzed how face detections changed during object labeling events as a function of infant's posture and orientation.  Specfically, we analyzed a four-second window around each labeling event (e.g., "Look at the [zem]!"); these labeling events were hand-annotated and automatically synchronized with the frame-by-frame face detections. We again found that infant's posture impacted the degree to which they saw their caregiver's face during a labeling event; infants who were sitting or standing were more likely to have access to their caregiver's face.
 
 
 # General Discussion
