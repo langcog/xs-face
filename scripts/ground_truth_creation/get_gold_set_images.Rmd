@@ -40,7 +40,7 @@ gold_set_candidates <- high_density_faces_sample %>%
   mutate(path = paste0(video, "/image-", frame, ".jpg")) %>%
   arrange(video, frame)
 
-write_csv(gold_set_candidates, "data/ground_truth/gold_set_candidates.csv")
+write_csv(gold_set_candidates, "data/ground_truth/gold_set_candidates2.csv")
 ```
 
 

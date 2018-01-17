@@ -1,5 +1,12 @@
 tmp/
 data/final_output/openpose_results.csv
+*_cache/
+.DS_Store
+data/consolidated_data.csv
+data/.DS_Store
+data/final_output/*
+data/consolidateddata/*
+data/final_output/openpose_results*
 .Rhistory
 .Rproj.user/
 xs-face.Rproj
@@ -10,3 +17,8 @@ slurm-*
 *.html
 cdi/
 cdi_summary.csv
+writeup-cogsci-copy/cogsci2018_cache/*
+analysis-main/main_analyses_bll_cache/*
+analysis-main/main_analyses_bll_files/*
+figs/
+

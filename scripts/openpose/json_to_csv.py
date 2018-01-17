@@ -6,6 +6,13 @@ import ntpath
 
 CSV_OUTPUT_DIR = os.path.expandvars("$HOME/xs-face/scripts/openpose/tmp")
 
+<<<<<<< HEAD
+=======
+# TODO 1 index
+# TODO 1229 is weird because title contains "cropped"
+# TODO if no face or hand or whatever, fill in with 0s!!! first check if, and if not, extend with 0s
+
+>>>>>>> 9a4186c0e9d6512bfab90963cec0765de442f88a
 if __name__ == "__main__":
     video_full_path = sys.argv[1]
     video_filename = ntpath.basename(video_full_path)

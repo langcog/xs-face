@@ -12,27 +12,39 @@ dets <- read_csv("../data/final_output/mtcnn3.csv") %>%
   mutate(subid = video) %>%
   mutate(frame = as.numeric(frame)) %>%
   mutate(faceMT = as.logical(is_face)) %>%
-  distinct(video,frame,.keep_all=TRUE) 
+  distinct(video,frame,.keep_all=TRUE)   
 
-# open pose detectors
-detsOpenPose <- read_csv("../data/final_output/openpose_results_truncated.csv") 
+# open pose detectorsa
+detsOpenPose <- read_csv("../data/final_output/openpose_results_truncated_2.csv") 
 detsOpenPose <- detsOpenPose %>%
   mutate(video = name) %>%
   distinct(video,frame,.keep_all=TRUE)  %>%
-  mutate(frame = as.numeric(frame)) %>%
+  mutate(frame = as.numeric(frame) + 1) %>%
   mutate(faceOP = Nose_conf!=0 & REye_conf!=0 | LEye_conf!=0 )  %>%
-  mutate(handOP = LWrist_conf!=0 | RWrist_conf!=0 )   
-  
+  mutate(wristOP = LWrist_conf!=0 | RWrist_conf!=0 )   
+
+# open pose detectors
+detsOpenPose_Hands <- read_csv("../data/final_output/openpose_results_with_detail_hands.csv") 
+detsOpenPose_HandConf <- detsOpenPose_Hands %>%
+  mutate(video = name) %>%
+  distinct(video,frame,.keep_all=TRUE)  %>%
+  mutate(frame = as.numeric(frame)) %>%
+  select(video,frame,ends_with("conf")) %>%
+  mutate(confLeft=rowSums(.[grep("hand_left", names(.))])/21)  %>%
+  mutate(confRight=rowSums(.[grep("hand_right", names(.))])/21)  %>%
+  mutate(handOP = confRight>0 | confLeft>0 )
+
 # viola jones detectors
 detsViola <- read_csv("../data/final_output/viola.csv") 
 detsViola <- detsViola %>%
   distinct(video,frame,.keep_all=TRUE)  %>%
   mutate(faceVJ = as.logical(is_face))  %>%
-  mutate(frame = as.numeric(frame))
+  mutate(frame = as.numeric(frame)) 
 
 # merge all three detectors
 alldets=left_join(dets,detsViola[,c("video","frame","faceVJ")]) 
-alldets=left_join(alldets,detsOpenPose[,c("video","frame","faceOP","handOP")]) 
+alldets=left_join(alldets,detsOpenPose[,c("video","frame","faceOP","wristOP")]) 
+alldets=left_join(alldets,detsOpenPose_HandConf[,c("video","frame","handOP")]) 
 
 # load demographics and pose / orientation / timing
 demo.data <- read_csv("../data/demographics/demographics.csv") %>% 
@@ -41,9 +53,22 @@ demo.data <- read_csv("../data/demographics/demographics.csv") %>%
 # rearrange so we make sure it is in the order of the frames
 alldets<-arrange(alldets,video,frame) 
 
+## OpenPose doesn't get all frames. Let's check out the frames it deleted somehow.
+missingInd=is.na(alldets$faceOP)
+assert_that(sum(is.na(alldets$faceOP))==45)
+
+missingOP<-alldets %>% 
+  filter(missingInd) 
+
+# None of the missing frames are faces. Replace OP "NAN" detections with "FALSE"
+alldets$faceOP[missingInd]=FALSE
+alldets$handOP[missingInd]=FALSE
+alldets$wristOP[missingInd]=FALSE
+
 # calls helper functions in helper.r to get times and posture coding integrated
 d <- alldets %>%
   distinct(video,frame,.keep_all=TRUE)  %>%
+  select(-c(is_face,video)) %>% # redudant with faceMT & subid, dropping
   left_join(demo.data) %>%
   group_by(subid) %>%
   do(add.times(.)) %>% 
@@ -53,17 +78,17 @@ d <- alldets %>%
 # Complete the data frame so that zeros get counted: expands so that each subid
 # includes a zero length row for each posture and orientation.
 # this was annoying.
+
 ages <- d %>%
   group_by(subid) %>%
-  summarise(age.grp = mean(age.grp))
+  summarise(age.grp = mean(age.grp)) 
 
-complete_combos <- expand(d, nesting(posture, orientation), 
-                          subid) %>% 
-  mutate(dt = 0, face = FALSE) %>%
+complete_combos <- expand(d, nesting(posture, orientation), subid) %>% 
+  mutate(dt = 0, faceMT = FALSE, faceVJ = FALSE, faceOP = FALSE, handOP = FALSE, wristOP = FALSE) %>%
   left_join(ages)
 
 d <- bind_rows(d, complete_combos)
 
 ## save it out
-write_csv(d, "../data/consolidated_data.csv")
+write_csv(d, "../data/consolidateddata/consolidated_data_4dets.csv")
 
