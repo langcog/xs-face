@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for vid in $PI_HOME/openpose_output4/*; do
+for vid in $PI_HOME/openpose_output6/*; do
 	if [[ $vid == *1205* || $vid == *1211* || $vid == *1225* || $vid == *1628*  ]]; then
 	    echo "Large video (> 10GB): $vid"
 	    time=3:00:00

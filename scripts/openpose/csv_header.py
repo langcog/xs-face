@@ -4,7 +4,7 @@ import csv
 TOTAL_POSE_POINTS = 18
 TOTAL_FACE_POINTS = 70
 TOTAL_HAND_POINTS = 21
-CSV_OUTPUT_DIR = os.path.expandvars("$HOME/xs-face/scripts/openpose/tmp2")
+CSV_OUTPUT_DIR = os.path.expandvars("$HOME/xs-face/scripts/openpose/tmp")
 # https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/src/openpose/pose/poseParameters.cpp
 
 def chunker(seq, size):
