@@ -347,11 +347,11 @@ fullModelminsInt_Faces_OP <- glmer(faceNum_OP ~ scale(age.at.test) + posture + o
 
 ```
 
-To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame as the dependent variable, and participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table 3 for the MTCNN detections, though we found the same pattern of results for the OpenPose detections.  While age remained a significant predictor even when accounting for the effects of infants' posture and  orientation, it accounted for the least amount of variance. Overall, these results suggest that, instead, infants' access to faces is heavily infleunced by their own posture and theirorientation towards their caregiver. 
+To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame as the dependent variable, and participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table 3 for the MTCNN detections, though we found the same pattern of results for the OpenPose detections.  While age remained a significant predictor even when accounting for the effects of infants' posture and  orientation, it accounted for the least amount of variance. Overall, these results suggest that, instead, infants' access to faces is heavily infleunced by their own posture and their orientation towards their caregiver. 
 
 ```{r MTCNNModel, results="asis"}
 tab2 <- xtable::xtable(summary(fullModelminsInt_Faces_MTCNN)$coef, digits=3,
-                      caption = "Results from GLMM model prediting the presence/absence of a face (MTCNN-Faces) across the entire dataset.")
+                      caption = "Results from GLMM model predicting the presence/absence of a face (MTCNN-Faces) across the entire dataset.")
 
 print(tab2, type="latex", comment = F, table.placement = "H")
 ```
@@ -397,7 +397,7 @@ aroundNamings <- aroundNamings %>%
 
 ```
 
-```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utternace) as a function of infants's posture. Each point represents a naming instance for each child in the dataset."}
+```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture. Each point represents a naming instance for each child in the dataset."}
 ggplot(aroundNamings, aes(x = factor(posture), y = face, color=posture)) + 
   geom_boxplot() + 
   ylab("Prop. face detections") + 
