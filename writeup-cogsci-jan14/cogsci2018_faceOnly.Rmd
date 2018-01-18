@@ -169,11 +169,11 @@ dlong <- d %>%
 
 evaluate <- function(a, b) {
   if (a == TRUE) {
-    if (a == b) return ("TP") # was face, said face
+    if (a == b) return ("TP") # was face, detected face
     else return("FN") # was face, missed face
   }
   else {
-    if (a == b) return("TN") # was not face, said not face
+    if (a == b) return("TN") # was not face, detected face
     else return("FP") # was not face, said face
   }
 }
@@ -248,6 +248,16 @@ posture <- d %>%
   group_by(subid, age.grp, posture) 
 ```
 
+```{r posture, fig.env="figure", fig.pos = "h", fig.align = "center", fig.width=3, fig.height=2, fig.cap = "Proportion time that infants in each age group spent in each posture." }
+ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) + 
+  geom_boxplot() + 
+  ylab("Proportion Time") + 
+  xlab("Age (months)") + 
+  theme_bw()
+```
+We noted characteristic changes in infants' posture and orientation across this developmental time range. The proportion of time infants spent sitting decreased with age, and the proportion of time infants spent standing increased with age. Both 8-month-olds and 12-month-olds spent equivalent amounts of time either lying/crawling, which was markedly decreased in the 16-month-olds, who spent most of their time either sitting or standing (see Figure \ref{fig:posture}).  We also observed characteristic changes in children's orientation relative to their caregivers: the 8-month-olds spent more time with their caregiver behind them supporting their sitting positions (see Figure \ref{fig:orientation}). 
+
+
 ```{r orientation, fig.env="figure", fig.pos = "h", fig.align = "center", fig.width=3, fig.height=2, fig.cap = "Proportion time that infants in each age group spent in each orientation relative to their caregiver." }
 
 ggplot(orientation, aes(x = factor(age.grp), y = prop.time, col = orientation)) + 
@@ -256,23 +266,9 @@ ggplot(orientation, aes(x = factor(age.grp), y = prop.time, col = orientation)) 
   xlab("Age (months)") + 
   theme_bw()
 ```
-We noted characteristic changes in infants' posture and orientation across this developmental time range. The proportion of time infants spent sitting decreased with age, and the proportion of time infants spent standing increased with age. Both 8-month-olds and 12-month-olds spent equivalent amounts of time either lying/crawling, which was markedly decreased in the 16-month-olds, who spent most of their time either sitting or standing (see Figure \ref{fig:posture}).  We also observed characteristic changes in children's orientation relative to their caregivers: the 8-month-olds spent more time with their caregiver behind them supporting their sitting positions (see Figure \ref{fig:orientation}). 
-
-```{r posture, fig.env="figure", fig.pos = "h", fig.align = "center", fig.width=3, fig.height=2, fig.cap = "Proportion time that infants in each age group spent in each posture." }
-ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) + 
-  geom_boxplot() + 
-  ylab("Proportion Time") + 
-  xlab("Age (months)") + 
-  theme_bw()
-```
 
 # Changes in Access to Faces 
-
-We first examined the proportion of face detections across age; a full summary can be seen in Figure \ref{fig:detByAge}. We observed  a slight U-shaped function both when analyzing the output of the MTCNN and OpenPose detectors, such that 12-month-olds appeared to experience slighly fewer faces faces than 8 or 16-month-olds.
-
-However, we found that any age related effects were much smaller compared to the impact of postural and locomotive changes on children's visual access to faces. Children's posture was a major factor both in how many faces they saw during the play session.  Infants who were sitting saw more faces than infants who were lying down or being carried, while infants who were standing saw the most faces. We also examined how the child's orientation relative to their caregiver impacted their visual access to faces: children who were far away from their caregiver were more likely to see faces than children who were close to their caregiver; this was true within all age groups and for both face detectors. 
-
-```{r detByAge, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=6, fig.cap = "Proportion face (left) and hand (right) detections as a function of participant's age."  }
+```{r detByAge, fig.env="figure", fig.pos = "h", fig.align = "center", fig.width=3, fig.height=2, fig.cap = "Proportion of faces detected by the MTCNN model (left) and the OpenPose model (right panel) as a function of child's age. Larger dots indicate children who had longer playsessions and thus for whom there was more data"}
 detectionsByAge <- dlong %>%
   filter(!is.na(age.at.test)) %>%
   group_by(subid, age.at.test, detectorType) %>%
@@ -280,7 +276,7 @@ detectionsByAge <- dlong %>%
   left_join(inc_subs) %>%
   mutate(len = as.numeric(len.min))
 
-p1=ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorType, size=len.min)) +
+ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorType, size=len.min)) +
     geom_jitter(width = .25) +
     geom_smooth(size=1) +
     scale_x_continuous(breaks=c(8,12,16)) +
@@ -290,20 +286,30 @@ p1=ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detector
     theme(legend.position="none") +
     scale_color_manual(values=c("#1F618D", "#7FB3D5", "#C70039", "#FF5733")) +
     facet_grid(~detectorType, scales = "free_y") 
+```
+
+
+
+We first examined the proportion of face detections across age; a full summary can be seen in Figure \ref{fig:detByAge}. We observed  a slight U-shaped function both when analyzing the output of the MTCNN and OpenPose detectors, such that 12-month-olds appeared to experience slighly fewer faces faces than 8 or 16-month-olds.
+
+However, we found that any age related effects were much smaller compared to the impact of postural and locomotive changes on children's visual access to faces. Children's posture was a major factor both in how many faces they saw during the play session.  Infants who were sitting saw more faces than infants who were lying down or being carried, while infants who were standing saw the most faces. We also examined how the child's orientation relative to their caregiver impacted their visual access to faces: children who were far away from their caregiver were more likely to see faces than children who were close to their caregiver; this was true within all age groups and for both face detectors. 
+
+
+```{r detByPosOrient, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=4, fig.cap = "Proportion face detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant."}
 
 detectionsByPosture <- dlong %>%
   filter(!is.na(posture)) %>%
   group_by(age.grp, posture, subid,detectorType) %>%
   summarise(face = mean(detection)) %>%
-  group_by(age.grp)
+  group_by(age.grp) %%
+  
 
-p2=ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
+p1=ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
   geom_boxplot(outlier.size = 0.5) + 
-  labs(y = "Prop. detected", x = element_blank()) +
+  labs(y = "Prop. faces detected", x = element_blank()) +
   facet_grid(~detectorType, scales="free_y") +
   theme_bw() +
-  theme(legend.position="top", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm"))
-
+  theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm"))
 
 detectionsByOrientation <- dlong %>%
   filter(!is.na(orientation)) %>%
@@ -311,98 +317,113 @@ detectionsByOrientation <- dlong %>%
   summarise(detections = mean(detection)) %>%
   group_by(age.grp)
 
-p3=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col = orientation)) + 
+p2=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col = orientation)) + 
   geom_boxplot(outlier.size = 0.5) + 
-  labs(y = "Prop. detected", x = element_blank()) +
+  labs(y = "Prop. faces detected", x = element_blank()) +
   facet_grid(~detectorType, scales="free_y") +
   theme_bw() +
-  theme(legend.position="top", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) +
-  labs(y = "Prop. detected", x = element_blank()) 
+  theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) +
+  labs(y = "Prop. faces detected", x = element_blank()) 
   
-grid.arrange(p1, p2, p3, nrow=3)
+grid.arrange(p1, p1, nrow=2)
 
 ```
 
-```{r echo=FALSE, include=FALSE}
-d$faceNum_MT=as.numeric(d$faceMT)
-d$faceNum_OP=as.numeric(d$faceMT)
+<!-- # ```{r echo=FALSE, include=FALSE} -->
+<!-- d$faceNum_MT=as.numeric(d$faceMT) -->
+<!-- d$faceNum_OP=as.numeric(d$faceOP) -->
 
-# Fails to converge
-# fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid),
-#       data = d,
-#       family = "binomial")
+<!-- # Fails to converge -->
+<!-- # fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid), -->
+<!-- #       data = d, -->
+<!-- #       family = "binomial") -->
 
-# Fails to converge
-# agexOrientation <- glmer(faceNum ~ scale(age.at.test) * orientation + (1|subid),
-#       data = d,
-#       family = "binomial")
+<!-- # Fails to converge -->
+<!-- # agexOrientation <- glmer(faceNum ~ scale(age.at.test) * orientation + (1|subid), -->
+<!-- #       data = d, -->
+<!-- #       family = "binomial") -->
 
-fullModelminsInt_Faces_MTCNN <- glmer(faceNum_MT ~ scale(age.at.test) + posture + orientation + (1|subid),
-       data = d,
-       family = "binomial")
+<!-- fullModelminsInt_Faces_MTCNN <- glmer(faceNum_MT ~ scale(age.at.test) + posture + orientation + (1|subid), -->
+<!--        data = d, -->
+<!--        family = "binomial") -->
 
-fullModelminsInt_Faces_OP <- glmer(faceNum_OP ~ scale(age.at.test) + posture + orientation + (1|subid),
-       data = d,
-       family = "binomial")
+<!-- fullModelminsInt_Faces_OP <- glmer(faceNum_OP ~ scale(age.at.test) + posture + orientation + (1|subid), -->
+<!--        data = d, -->
+<!--        family = "binomial") -->
 
-```
+<!-- ``` -->
 
 To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame as the dependent variable, and participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table 3 for the MTCNN detections, though we found the same pattern of results for the OpenPose detections.  While age remained a significant predictor even when accounting for the effects of infants' posture and  orientation, it accounted for the least amount of variance. Overall, these results suggest that, instead, infants' access to faces is heavily infleunced by their own posture and their orientation towards their caregiver. 
 
-```{r MTCNNModel, results="asis"}
-tab2 <- xtable::xtable(summary(fullModelminsInt_Faces_MTCNN)$coef, digits=3,
-                      caption = "Results from GLMM model predicting the presence/absence of a face (MTCNN-Faces) across the entire dataset.")
+<!-- ```{r MTCNNModel, results="asis"} -->
+<!-- tab2 <- xtable::xtable(summary(fullModelminsInt_Faces_MTCNN)$coef, digits=3, -->
+<!--                       caption = "Results from GLMM model predicting the presence/absence of a face (MTCNN-Faces) across the entire dataset.") -->
 
-print(tab2, type="latex", comment = F, table.placement = "H")
-```
+<!-- print(tab2, type="latex", comment = F, table.placement = "H") -->
+<!-- ``` -->
 
-```{r OPModel, results="asis"}
- tab3 <- xtable::xtable(summary(fullModelminsInt_Faces_OP)$coef, digits=3,
-                       caption = "Results from GLMM model prediting the presence/absence of faces (OpenPose-Faces) across the entire dataset.")
+<!-- ```{r OPModel, results="asis"} -->
+<!--  tab3 <- xtable::xtable(summary(fullModelminsInt_Faces_OP)$coef, digits=3, -->
+<!--                        caption = "Results from GLMM model prediting the presence/absence of faces (OpenPose-Faces) across the entire dataset.") -->
 
- print(tab3, type="latex", comment = F, table.placement = "H")
-```
+<!--  print(tab3, type="latex", comment = F, table.placement = "H") -->
+<!-- ``` -->
 
-<!-- \begin{table}[H] -->
-<!-- \centering -->
-<!-- \begin{tabular}{rrrrr} -->
-<!--   \hline -->
-<!--  & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\  -->
-<!--   \hline -->
-<!-- (Intercept) & -4.846 & 0.077 & -62.682 & 0.000 \\  -->
-<!--   Age & 0.170 & 0.061 & 2.766 & 0.006 \\  -->
-<!--   Posture-Prone & -0.513 & 0.036 & -14.045 & 0.000 \\  -->
-<!--   Posture-Sit & 0.648 & 0.034 & 18.853 & 0.000 \\  -->
-<!--   Posture-Stand & 1.005 & 0.035 & 28.402 & 0.000 \\  -->
-<!--   Orient.-Close & 1.549 & 0.021 & 72.757 & 0.000 \\  -->
-<!--   Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\  -->
-<!--    \hline -->
-<!-- \end{tabular} -->
-<!-- \caption{Results from GLMM model predicting the presence/absence of a face across the entire dataset (MTCNN detectors).}  -->
-<!-- \end{table} -->
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\
+  \hline
+(Intercept) & -4.846 & 0.077 & -62.682 & 0.000 \\
+  Age & 0.170 & 0.061 & 2.766 & 0.006 \\
+  Posture-Prone & -0.513 & 0.036 & -14.045 & 0.000 \\
+  Posture-Sit & 0.648 & 0.034 & 18.853 & 0.000 \\
+  Posture-Stand & 1.005 & 0.035 & 28.402 & 0.000 \\
+  Orient.-Close & 1.549 & 0.021 & 72.757 & 0.000 \\
+  Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\
+   \hline
+\end{tabular}
+\caption{Results from GLMM model predicting the presence/absence of a face across the entire dataset (MTCNN detectors).}
+\end{table}
 
 ```{r echo=FALSE, include=FALSE }
 source("helper.R")
-d$face=d$faceMT
+# d$face=d$faceMT # just choosing one here, but both look the same
+d$face=d$faceOP
+
+# for boxplot
 aroundNamings <- d %>%
   group_by(subid) %>%
-  do(summarize.naming(.))  
+  do(summarize.naming(.))   %>%
+  filter(!is.na(posture))
 
-aroundNamings <- aroundNamings %>%
+# for pointrange with CI - could include instead?
+aroundNamings_subAvg <- d %>%
+  group_by(subid) %>%
+  do(summarize.naming(.)) %>%
+  group_by(subid, posture) %>%
+  summarize(propFacesDetected = mean(face)) %>%
+  filter(!is.na(propFacesDetected)) %>%
   filter(!is.na(posture)) %>%
-  filter(!is.na(orientation))
-
-# aroundNamingsModel <- lmer(face ~ scale(age.at.test) + posture + orientation + (1|subid), 
-#          data = aroundNamings) 
+  group_by(posture) %>%
+  multi_boot_standard(col = "propFacesDetected")  
 
 ```
 
 ```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture. Each point represents a naming instance for each child in the dataset."}
+#boxplot
 ggplot(aroundNamings, aes(x = factor(posture), y = face, color=posture)) + 
   geom_boxplot() + 
-  ylab("Prop. face detections") + 
+  ylab("Prop. faces detedcted") + 
   xlab("Posture") + 
   theme_bw() 
+
+# ggplot(aroundNamings_subAvg, aes(x = posture, y = mean, col = posture)) +
+#   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
+#   ylab("Prop. faces detected") +
+#   xlab("Posture") +
+#   theme_bw()
 ```
 ## Access to Faces During Labeling Events
 Finally, we analyzed how face detections changed during object labeling events as a function of infant's posture and orientation.  Specfically, we analyzed a four-second window around each labeling event (e.g., "Look at the [zem]!"); these labeling events were hand-annotated and automatically synchronized with the frame-by-frame face detections. We again found that infant's posture impacted the degree to which they saw their caregiver's face during a labeling event; infants who were sitting or standing were more likely to have access to their caregiver's face.
