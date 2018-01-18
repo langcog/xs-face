@@ -349,37 +349,37 @@ fullModelminsInt_Faces_OP <- glmer(faceNum_OP ~ scale(age.at.test) + posture + o
 
 To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame as the dependent variable, and participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table 3 for the MTCNN detections, though we found the same pattern of results for the OpenPose detections.  While age remained a significant predictor even when accounting for the effects of infants' posture and  orientation, it accounted for the least amount of variance. Overall, these results suggest that, instead, infants' access to faces is heavily infleunced by their own posture and theirorientation towards their caregiver. 
 
-```{r xtable, results="asis"}
+```{r MTCNNModel, results="asis"}
 tab2 <- xtable::xtable(summary(fullModelminsInt_Faces_MTCNN)$coef, digits=3,
                       caption = "Results from GLMM model prediting the presence/absence of a face (MTCNN-Faces) across the entire dataset.")
 
 print(tab2, type="latex", comment = F, table.placement = "H")
 ```
 
-```{r xtable, results="asis"}
+```{r OPModel, results="asis"}
  tab3 <- xtable::xtable(summary(fullModelminsInt_Faces_OP)$coef, digits=3,
                        caption = "Results from GLMM model prediting the presence/absence of faces (OpenPose-Faces) across the entire dataset.")
 
  print(tab3, type="latex", comment = F, table.placement = "H")
 ```
 
-\begin{table}[H]
-\centering
-\begin{tabular}{rrrrr}
-  \hline
- & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
-  \hline
-(Intercept) & -4.846 & 0.077 & -62.682 & 0.000 \\ 
-  Age & 0.170 & 0.061 & 2.766 & 0.006 \\ 
-  Posture-Prone & -0.513 & 0.036 & -14.045 & 0.000 \\ 
-  Posture-Sit & 0.648 & 0.034 & 18.853 & 0.000 \\ 
-  Posture-Stand & 1.005 & 0.035 & 28.402 & 0.000 \\ 
-  Orient.-Close & 1.549 & 0.021 & 72.757 & 0.000 \\ 
-  Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\ 
-   \hline
-\end{tabular}
-\caption{Results from GLMM model predicting the presence/absence of a face across the entire dataset (MTCNN detectors).} 
-\end{table}
+<!-- \begin{table}[H] -->
+<!-- \centering -->
+<!-- \begin{tabular}{rrrrr} -->
+<!--   \hline -->
+<!--  & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\  -->
+<!--   \hline -->
+<!-- (Intercept) & -4.846 & 0.077 & -62.682 & 0.000 \\  -->
+<!--   Age & 0.170 & 0.061 & 2.766 & 0.006 \\  -->
+<!--   Posture-Prone & -0.513 & 0.036 & -14.045 & 0.000 \\  -->
+<!--   Posture-Sit & 0.648 & 0.034 & 18.853 & 0.000 \\  -->
+<!--   Posture-Stand & 1.005 & 0.035 & 28.402 & 0.000 \\  -->
+<!--   Orient.-Close & 1.549 & 0.021 & 72.757 & 0.000 \\  -->
+<!--   Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\  -->
+<!--    \hline -->
+<!-- \end{tabular} -->
+<!-- \caption{Results from GLMM model predicting the presence/absence of a face across the entire dataset (MTCNN detectors).}  -->
+<!-- \end{table} -->
 
 ```{r echo=FALSE, include=FALSE }
 source("helper.R")
@@ -397,7 +397,7 @@ aroundNamings <- aroundNamings %>%
 
 ```
 
-```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections around a naming instance ("Look, a Zem"; +/- 2 seconds around each utternace) as a function of infants's posture. Each point represents a naming instance for each child in the dataset."  }
+```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utternace) as a function of infants's posture. Each point represents a naming instance for each child in the dataset."}
 ggplot(aroundNamings, aes(x = factor(posture), y = face, color=posture)) + 
   geom_boxplot() + 
   ylab("Prop. face detections") + 

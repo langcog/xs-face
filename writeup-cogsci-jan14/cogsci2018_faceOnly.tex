@@ -53,7 +53,7 @@
 
 
 \author{{\large \bf Alessandro Sanchez} \\ \texttt{sanchez7@stanford.edu} \\ Department of Psychology \\ Stanford University \And {\large \bf Bria Long} \\ \texttt{bria@stanford.edu} \\ Department of Psychology \\ Stanford University
-    \And {\large \bf Ally Kraus} \\ \texttt{bria@stanford.edu} \\ Department of Psychology \\ Stanford University
+    \And {\large \bf Ally Kraus} \\ \texttt{XX@XX} \\ Department of Psychology \\ Stanford University
     \And {\large \bf Michael C. Frank} \\ \texttt{mcfrank@stanford.edu} \\ Department of Psychology \\ Stanford University}
 
 \begin{document}
@@ -70,13 +70,13 @@ children's access to the social information relevant for word-learning?
 Here, we explore this question by using head-mounted cameras to record
 infants' (8-16 months of age) egocentric visual perspective and use
 state-of-the-art computer vision algorithms to detect the proportion of
-faces in infants' environments. We find that infants' postural changes
-largely mediate infants' access to faces, hinting that these postural
-and locomotive developments facilitate infants' emerging linguistic and
-social capacities. Broadly, we suggest that the combined use of
-head-mounted cameras and the application of novel deep learning
-algorithms is a promising avenue for understanding the statistics of
-infants' visual and linguistic experience.
+faces in infants' environments. We find that infants' posture and
+orientation to their caregiver largely mediate infants' access to faces,
+suggesting that these postural and locomotive developments facilitate
+infants' emerging linguistic and social capacities. Broadly, we suggest
+that the combined use of head-mounted cameras and the application of
+novel deep learning algorithms is a promising avenue for understanding
+the statistics of infants' visual and linguistic experience.
 
 \textbf{Keywords:}
 social cognition; face-perception; infancy; locomotion; head-cameras;
@@ -124,27 +124,30 @@ that children who were able to walk had both higher receptive and
 productive vocabularies. On their account, children's ability to stand
 and independently locomote may fundamentally change their ability to
 access social information (e.g., faces, gaze) relative to children who
-are still crawling and sitting. In other words, the ability to access
-more detailed social information may allow infants to learn words
-quicker and more efficiently, facilitating language growth.
+are still crawling and sitting. In other words, the ability to walk and
+move around independently and subsequently access more detailed social
+information may allow infants to learn words quicker and more
+efficiently, facilitating language growth.
 
-Recent work has begun to use egocentric, head-mounted cameras to
-document the visual experiences of infants and children --- which even
-for walking children are radically different from the adult perspective
-(and not easily predicted by our own adult intuitions) (Clerkin, Hart,
-Rehg, Yu, \& Smith, 2017; J. Franchak et al., 2011; Yoshida \& Smith,
-2008). Children's views tend to be restricted and to be dominated by
-objects and hands much more than that of adults (Yoshida \& Smith,
-2008), and both computational and empirical work suggest that this
-restricted viewpoint may be more effective for learning objects and
-their labels than the comparable adult perspective (Bambach, Crandall,
-Smith, \& Yu, 2017; D. Yurovsky, Smith, \& Yu, in press). Further,
-recent work also suggests dramatic changes in the child's perspective
-over the first two years of life, as views transition from primarily
-containing a close up view of faces to capturing views of hands paired
-with the objects they are acting on (Fausey, Jayaraman, \& Smith, 2016).
+Recent technological developments allow for testing of this hypothesis
+by documenting the experiences of infants and children from their own
+perspective. By using head-mounted cameras, researchers have begun to
+document visual experiences of infants and children --- which even for
+walking children are radically different from the adult perspective (and
+not easily predicted by our own adult intuitions) (Clerkin, Hart, Rehg,
+Yu, \& Smith, 2017; J. Franchak et al., 2011; Yoshida \& Smith, 2008).
+Children's views tend to be restricted and to be dominated by objects
+and hands much more than that of adults (Yoshida \& Smith, 2008), and
+both computational and empirical work suggest that this restricted
+viewpoint may be more effective for learning objects and their labels
+than the comparable adult perspective (Bambach, Crandall, Smith, \& Yu,
+2017; D. Yurovsky, Smith, \& Yu, in press). Further, recent work also
+suggests dramatic changes in the child's perspective over the first two
+years of life, as views transition from primarily containing a close up
+view of faces to capturing views of hands paired with the objects they
+are acting on (Fausey, Jayaraman, \& Smith, 2016).
 
-Here, we directly ask whether the postural and locomotive developments
+Here, we directly ask whether postural and locomotive developments
 change the availability of the social information relevant for word
 learning. To do so, we recorded the visual experience of a group of
 infants and children using head-mounted cameras during a brief
@@ -271,31 +274,33 @@ or standing. The caregiver's orientation was characterized as being
 close to the child, far from the child, and a global category of
 caregiver behind the child. For the first two annotations (close/far
 from the child), the caregiver could either be to the the front or to
-the side of the child. All annotations were made using OpenSHAPA/Datavyu
-software (K. Adolph, Gilmore, Freeman, Sanderson, \& Millman, 2012), and
-times when the child was out of view of the tripod camera were marked as
-uncodable and were excluded from these annotations.
+the side of the child. All annotations were made by a trained coder
+using the OpenSHAPA/Datavyu software (K. Adolph, Gilmore, Freeman,
+Sanderson, \& Millman, 2012), and times when the child was out of view
+of the tripod camera were marked as uncodable and were excluded from
+these annotations.
 
 \subsection{Face Detection}\label{face-detection}
 
-Measuring the availability of caregiver's faces across development was
-an important goal of this study. We used a total of three face detection
-systems to explore infants' changing access to social information and to
-avoid the cost of hand-annotating every frame. We first measured the
-performance of the most commonly-used and widely available face
-detection algorithms (Viola-Jones). We used this as a benchmark for
-performance, and while it can achieve impressive accuracy in some
-situations, it is notoriously bad at dealing with occluded faces
-(Scheirer, Anthony, Nakayama, \& Cox (2014)). We next capitalized on
-recent improvements in computer vision, testing the performance of two
-state-of-the-art face detectors that both made use of Convolutional
-Neural Networks (CNNs) to extract face information.
+We used a total of three face detection systems to explore infants'
+changing access to social information and to avoid the cost of
+hand-annotating every frame. We first measured the performance of the
+most commonly-used and widely available face detection algorithms
+(Viola-Jones). We used this as a benchmark for performance, and while it
+can achieve impressive accuracy in some situations, it is notoriously
+bad at dealing with occluded faces (Scheirer, Anthony, Nakayama, \& Cox,
+2014). We next capitalized on recent improvements in computer vision,
+testing the performance of two state-of-the-art face detectors that both
+made use of Convolutional Neural Networks (CNNs) to extract face
+information. The first algorithm was specifically optimized for face
+detection, and the second algorithm was optimized to extract information
+about the position of agent's bodyparts.
 
 \subsubsection{Face Detection
 Algorithms}\label{face-detection-algorithms}
 
 The first face detection system made use of a series of Haar
-feature-based cascade classifiers (Viola-Jones, Viola \& Jones (2004))
+feature-based cascade classifiers (Viola-Jones, (Viola \& Jones, 2004))
 applied to each individual frame. This detector provided information
 about the presence of a face as well as its size and position.
 
@@ -310,9 +315,9 @@ detector provided information about the presence of a face as well as
 its size and position.
 
 The third algorithm was a CNN-based pose detector that provided the
-locations of 18 body parts (ears, nose, wrists, etc.) (Cao et al.
-(2017), Simon, Joo, Matthews, \& Sheikh (2017), Wei, Ramakrishna,
-Kanade, \& Sheikh (2016)) avaliable at
+locations of 18 body parts (ears, nose, wrists, etc.) called OpenPose
+(Cao et al., 2017; Simon, Joo, Matthews, \& Sheikh, 2017; Wei,
+Ramakrishna, Kanade, \& Sheikh, 2016) avaliable at
 \url{https://github.com/CMU-Perceptual-Computing-Lab/openpose}. The
 system uses a CNN for initial anatomical detection and subsequently
 applies part affinity fields (PAFs) for part association, producing a
@@ -346,17 +351,17 @@ so the results from this detector were not included.
 \centering
 \begin{tabular}{rllrrr}
   \hline
- & detectorType & sample\_type & p & r & f \\ 
+ & Algorithm & Sample\ Type & P & R & F \\ 
   \hline
-1 & MTCNN & high\_density & 0.841 & 1.000 & 0.914 \\ 
-  2 & MTCNN & random & 0.947 & 0.750 & 0.837 \\ 
-  3 & OpenPose & high\_density & 0.995 & 0.863 & 0.924 \\ 
-  4 & OpenPose & random & 0.710 & 0.917 & 0.800 \\ 
-  5 & ViolaJones & high\_density & 0.991 & 0.495 & 0.660 \\ 
-  6 & ViolaJones & random & 0.389 & 0.292 & 0.333 \\ 
+1 & MTCNN & High\ density & 0.841 & 1.000 & 0.914 \\ 
+  2 & MTCNN & Random & 0.947 & 0.750 & 0.837 \\ 
+  3 & OpenPose & High\ density & 0.995 & 0.863 & 0.924 \\ 
+  4 & OpenPose & Random & 0.710 & 0.917 & 0.800 \\ 
+  5 & ViolaJones & High\ Density & 0.991 & 0.495 & 0.660 \\ 
+  6 & ViolaJones & Random & 0.389 & 0.292 & 0.333 \\ 
    \hline
 \end{tabular}
-\caption{Detector performance} 
+\caption{Detector performance.} 
 \end{table}
 
 \section{Results}\label{results}
@@ -412,10 +417,10 @@ U-shaped function both when analyzing the output of the MTCNN and
 OpenPose detectors, such that 12-month-olds appeared to experience
 slighly fewer faces faces than 8 or 16-month-olds.
 
-Next, we turned to our hypothesis of interest, examining the impact of
-postural and locomotive developments on children's visual access to
-faces. Overall, we found that children's posture was a major factor both
-in how many faces they saw during the play session. Infants who were
+However, we found that any age related effects were much smaller
+compared to the impact of postural and locomotive changes on children's
+visual access to faces. Children's posture was a major factor both in
+how many faces they saw during the play session. Infants who were
 sitting saw more faces than infants who were lying down or being
 carried, while infants who were standing saw the most faces. We also
 examined how the child's orientation relative to their caregiver
@@ -435,19 +440,18 @@ both face detectors.
 \end{figure*}
 \end{CodeChunk}
 
-\subsection{Model}\label{model}
-
 To formalize these observations, we fit a generalized logistic
 mixed-effect model to all with the presence/absence of a face on every
 frame as the dependent variable, and participant's age, orientation, and
 posture as predictors. Interactions between predictors were not included
 as this maximal model failed to converge. A summary of the coefficients
-of this model can be found in Table 3. While age remained a significant
-predictor even when accounting for the effects of infants' posture and
-caregivers' orientation, it held relatively less predictive power.
-Overall, these results confirm that infants' access to faces is heavily
-infleunced by their own posture and their caregiver's orientation
-towards them.
+of this model can be found in Table 3 for the MTCNN detections, though
+we found the same pattern of results for the OpenPose detections. While
+age remained a significant predictor even when accounting for the
+effects of infants' posture and orientation, it accounted for the least
+amount of variance. Overall, these results suggest that, instead,
+infants' access to faces is heavily infleunced by their own posture and
+theirorientation towards their caregiver.
 
 \begin{table}[H]
 \centering
@@ -456,15 +460,33 @@ towards them.
  & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
   \hline
 (Intercept) & -4.846 & 0.077 & -62.682 & 0.000 \\ 
-  Age & 0.170 & 0.061 & 2.766 & 0.006 \\ 
-  Posture-Prone & -0.513 & 0.036 & -14.045 & 0.000 \\ 
-  Posture-Sit & 0.648 & 0.034 & 18.853 & 0.000 \\ 
-  Posture-Stand & 1.005 & 0.035 & 28.402 & 0.000 \\ 
-  Orient.-Close & 1.549 & 0.021 & 72.757 & 0.000 \\ 
-  Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\ 
+  scale(age.at.test) & 0.170 & 0.061 & 2.766 & 0.006 \\ 
+  postureprone & -0.513 & 0.036 & -14.045 & 0.000 \\ 
+  posturesit & 0.648 & 0.034 & 18.853 & 0.000 \\ 
+  posturestand & 1.005 & 0.035 & 28.402 & 0.000 \\ 
+  orientationclose & 1.549 & 0.021 & 72.757 & 0.000 \\ 
+  orientationfar & 2.258 & 0.022 & 101.138 & 0.000 \\ 
    \hline
 \end{tabular}
-\caption{Results from GLMM model predicting the presence/absence of a face across the entire dataset (MTCNN detectors).} 
+\caption{Results from GLMM model prediting the presence/absence of a face (MTCNN-Faces) across the entire dataset.} 
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
+  \hline
+(Intercept) & -4.846 & 0.077 & -62.682 & 0.000 \\ 
+  scale(age.at.test) & 0.170 & 0.061 & 2.766 & 0.006 \\ 
+  postureprone & -0.513 & 0.036 & -14.045 & 0.000 \\ 
+  posturesit & 0.648 & 0.034 & 18.853 & 0.000 \\ 
+  posturestand & 1.005 & 0.035 & 28.402 & 0.000 \\ 
+  orientationclose & 1.549 & 0.021 & 72.757 & 0.000 \\ 
+  orientationfar & 2.258 & 0.022 & 101.138 & 0.000 \\ 
+   \hline
+\end{tabular}
+\caption{Results from GLMM model prediting the presence/absence of faces (OpenPose-Faces) across the entire dataset.} 
 \end{table}
 
 \begin{CodeChunk}
@@ -474,7 +496,7 @@ towards them.
 
 }
 
-\caption[Proportion face detections as a function of infants's posture]{Proportion face detections as a function of infants's posture}\label{fig:detByNaming}
+\caption[Proportion face detections around a naming instance ('Look, a Zem']{Proportion face detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utternace) as a function of infants's posture. Each point represents a naming instance for each child in the dataset.}\label{fig:detByNaming}
 \end{figure}
 \end{CodeChunk}
 
