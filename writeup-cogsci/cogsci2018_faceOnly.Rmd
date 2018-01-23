@@ -299,7 +299,6 @@ detectionsByPosture <- dlong %>%
   group_by(age.grp, posture, subid,detectorType) %>%
   summarise(face = mean(detection)) %>%
   group_by(age.grp)
-  
 
 p1=ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
   geom_boxplot(outlier.size = 0.5) + 
@@ -322,7 +321,7 @@ p2=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col 
   theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) +
   labs(y = "Prop. faces detected", x = element_blank()) 
   
-grid.arrange(p1, p1, nrow=2)
+grid.arrange(p1, p2, nrow=2)
 
 ```
 
@@ -402,7 +401,7 @@ aroundNamings_subAvg <- d %>%
 
 ```
 
-```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture.""}
+```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture."}
 
 ggplot(aroundNamings_subAvg, aes(x = posture, y = mean, col = posture)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
