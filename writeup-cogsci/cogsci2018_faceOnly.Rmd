@@ -298,7 +298,7 @@ detectionsByPosture <- dlong %>%
   filter(!is.na(posture)) %>%
   group_by(age.grp, posture, subid,detectorType) %>%
   summarise(face = mean(detection)) %>%
-  group_by(age.grp) %%
+  group_by(age.grp)
   
 
 p1=ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
