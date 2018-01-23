@@ -83,7 +83,7 @@ all_subs %>%
   print(digits = 2, include.rownames=FALSE,table.placement = "H", type="latex", comment = F)
 ```
 
-Our final sample consisted of 36 infants and children, with 8 participants in three age groups: 8 months (6 females), 12 months (7 females), and 16 months (6 females). Participants were recruited from the surrounding community via state birth records, had no documented disabilities, and were reported to hear at least 80\% English at home. Demographics and exclusion rates are given in Table \ref{tab:pop}. 
+Our final sample consisted of 36 infants and children, with 12 participants in three age groups: 8 months (6 females), 12 months (7 females), and 16 months (6 females). Participants were recruited from the surrounding community via state birth records, had no documented disabilities, and were reported to hear at least 80\% English at home. Demographics and exclusion rates are given in Table \ref{tab:pop}. 
 \begin{table}[H]
 \centering
 \begin{tabular}{rrrrrr}
