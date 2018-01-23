@@ -259,7 +259,6 @@ We noted characteristic changes in infants' posture and orientation across this 
 
 
 ```{r orientation, fig.env="figure", fig.pos = "h", fig.align = "center", fig.width=3, fig.height=2, fig.cap = "Proportion time that infants in each age group spent in each orientation relative to their caregiver." }
-
 ggplot(orientation, aes(x = factor(age.grp), y = prop.time, col = orientation)) + 
   geom_boxplot() + 
   ylab("Proportion Time") + 
@@ -287,8 +286,6 @@ ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorTyp
     scale_color_manual(values=c("#1F618D", "#7FB3D5", "#C70039", "#FF5733")) +
     facet_grid(~detectorType, scales = "free_y") 
 ```
-
-
 
 We first examined the proportion of face detections across age; a full summary can be seen in Figure \ref{fig:detByAge}. We observed  a slight U-shaped function both when analyzing the output of the MTCNN and OpenPose detectors, such that 12-month-olds appeared to experience slighly fewer faces faces than 8 or 16-month-olds.
 
@@ -449,3 +446,7 @@ Thanks to Kaia Simmons, Kathy Woo, Aditi Maliwal, and other members of the Langu
 \setlength{\parindent}{-0.1in} 
 \setlength{\leftskip}{0.125in}
 \noindent
+
+```{r session_info, include=FALSE, echo=FALSE}
+devtools::session_info()
+```
