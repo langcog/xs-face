@@ -1,0 +1,26 @@
+---
+title: "merge_ground_truth"
+output: html_document
+---
+
+```{r}
+ground_truth_mtcnn <- read_csv("intermediate/ground_truth_mtcnn.csv")
+ground_truth_openpose <- read_csv("intermediate/ground_truth_openpose.csv")
+candidates_mtcnn <- read_csv("intermediate/candidates_mtcnn.csv")
+candidates_openpose <- read_csv("intermediate/candidates_openpose.csv")
+```
+
+```{r}
+df1 <- ground_truth_mtcnn %>%
+  inner_join(candidates_mtcnn %>%
+               select(group, video, frame, sample_type), by = c("group", "video", "frame")) %>%
+  mutate(detector_sample = "mtcnn")
+
+df2 <- ground_truth_openpose %>%
+  inner_join(candidates_openpose %>%
+               select(group, video, frame, sample_type), by = c("group", "video", "frame")) %>%
+  mutate(detector_sample = "openpose")
+
+write_csv(rbind(df1, df2), "ground_truth_faces.csv")
+```
+

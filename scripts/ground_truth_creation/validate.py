@@ -1,6 +1,7 @@
 import os
 import csv
 import ntpath
+import xml.etree.ElementTree as ET
 
 # TODO change folder name to sample or whatever in ~/xsface
 
@@ -24,9 +25,11 @@ if __name__ == "__main__":
         elif ntpath.basename(root) == "annotations": # inside annotations
             video = ntpath.basename(os.path.dirname(root))
             for filename in filenames:
-                arr = rows[video + filename.split(".")[0]]
-                arr[3] = "True"
-                rows[video + filename.split(".")[0]] = arr
+                xmlroot = ET.parse(os.path.join(root, filename)).getroot()
+                if xmlroot.findall("object"):
+                    arr = rows[video + filename.split(".")[0]]
+                    arr[3] = "True"
+                    rows[video + filename.split(".")[0]] = arr
 
     print(len(rows))
 

@@ -159,6 +159,7 @@ In order to evaluate the performance of these detectors, we constructed a "gold 
 Both OpenPose and MTCNN detectors performed relatively well on the gold set, with MTCNN outperforming OpenPose on the random sample but trailing behind in the high density sample. Due to the high performance of these two detectors we have included the results of both in the analyses to follow. The ViolaJones detector did not perform well on either gold set, so the results from this detector were not included.
 
 ```{r, message=FALSE, warning=FALSE, results='asis'}
+setwd("data")
 d <- read_csv("../data/consolidateddata/consolidated_data_4dets.csv") %>%
   mutate(posture = factor(posture), orientation = factor(orientation))
 
@@ -179,12 +180,7 @@ evaluate <- function(a, b) {
   }
 }
 
-ground_truth_data <- read_csv("../data/ground_truth/ground_truth4.csv") %>%
-  select(-angle) %>%
-  arrange(video, frame) %>%
-  cbind(read_csv("../data/ground_truth/gold_set_candidates2.csv") %>%
-          arrange(video, frame) %>%
-          select(sample_type)) 
+ground_truth_data <- read_csv("data/ground_truth/ground_truth_faces.csv")
 
 ## evaluate face detectors
 performance <- ground_truth_data  %>%
@@ -193,9 +189,9 @@ performance <- ground_truth_data  %>%
   mutate(detector_is_face = detection, is_face = as.logical(is_face)) %>%
   rowwise() %>%
   mutate(result = evaluate(is_face, detector_is_face)) %>%
-  group_by(detectorType,sample_type) %>%
+  group_by(detectorType, sample_type) %>%
   summarise(tp=sum(result == "TP"), fp=sum(result == "FP"), fn=sum(result=="FN")) %>%
-  group_by(detectorType,sample_type) %>%
+  group_by(detectorType, sample_type) %>%
   summarise(p = tp / (tp + fp), r = tp / (tp + fn), f=( 2 * p * r )/ (p + r))
 
 ```
