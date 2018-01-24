@@ -4,7 +4,7 @@ import ntpath
 
 # TODO change folder name to sample or whatever in ~/xsface
 
-BRIA_ANNOTATIONS = "/Users/alessandro/xsface/sample_hand_images"
+BRIA_ANNOTATIONS = "/Users/alessandro/Downloads/sample_hand_images_bll"
 
 if __name__ == "__main__":
 
@@ -19,7 +19,7 @@ if __name__ == "__main__":
                 group = str(int(video.split("_")[1][:2]))
                 frame = filename.split(".")[0].split("-")[1]
 
-                rows[video + filename.split(".")[0]] = [group, video, frame, "False", 0]
+                rows[video + filename.split(".")[0]] = [group, video, frame, "False"]
 
         elif ntpath.basename(root) == "annotations": # inside annotations
             video = ntpath.basename(os.path.dirname(root))
@@ -30,9 +30,9 @@ if __name__ == "__main__":
 
     print(len(rows))
 
-    with open("ground_truth_hands.csv", 'wb') as csvfile:
+    with open("ground_truth_wrists.csv", 'wb') as csvfile:
         wr = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        wr.writerow(['group', 'video', 'frame', 'is_face', 'angle'])
+        wr.writerow(['group', 'video', 'frame', 'is_face'])
         for key, val in rows.iteritems():
             wr.writerow(val)
 

@@ -48,6 +48,23 @@ ground_truth_data <- read_csv("data/ground_truth/ground_truth3.csv") %>%
           select(sample_type))
 ```
 
+OPENPOSE WRISTS
+```{r}
+data <- read_csv("data/final_output/openpose_results_truncated_2.csv") %>%
+  distinct(name, frame, .keep_all = TRUE)
+
+data %<>%
+  mutate(is_face = ifelse(LWrist_conf != 0 | RWrist_conf != 0, "True", "False"))%>%
+  select(group, name, frame, is_face) %>%
+  rename(video = name)
+
+ground_truth_data <- read_csv("data/ground_truth/ground_truth_wrists.csv") %>%
+  arrange(video, frame) %>%
+  cbind(read_csv("data/ground_truth/gold_set_candidates2.csv") %>%
+          arrange(video, frame) %>%
+          select(sample_type))
+```
+
 OPENPOSE HANDS
 ```{r}
 setwd("xs-face")
