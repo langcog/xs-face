@@ -154,9 +154,7 @@ The second algorithm was based on the work by @zhang2016 using multi-task cascad
 The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc.) called OpenPose [@cao2017realtime; @simon2017hand; @wei2016cpm] avaliable at https://github.com/CMU-Perceptual-Computing-Lab/openpose. The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose). We operationalized face detections as any frames containing a nose, as any half of a face necessarily contains a nose.  We operationalized wrist detections as any frames containing either the left or the right wrist.  
 
 ### Detector evaluation
-In order to evaluate the performance of these detectors, we constructed a "gold set" of frames by hand labeling both a sample of frames with a high density of faces (as reported by the detectors) and a random sample from the remaining frames. This was done so as to not bias our evaluation by the relatively rare appearance of faces in the dataset. A face was present in a frame if at least half of the face was showing. Precision (hits / hits + false alarms), recall (hits / hits + misses), and F-score (harmonic mean of previous measures) were calculated and are reported in Table 2.
 
-Both OpenPose and MTCNN detectors performed relatively well on the gold set, with MTCNN outperforming OpenPose on the random sample but trailing behind in the high density sample. Due to the high performance of these two detectors we have included the results of both in the analyses to follow. The ViolaJones detector did not perform well on either gold set, so the results from this detector were not included.
 
 ```{r, message=FALSE, warning=FALSE, results='asis'}
 d <- read_csv("../data/consolidateddata/consolidated_data_4dets.csv") %>%
@@ -179,7 +177,6 @@ evaluate <- function(a, b) {
   }
 }
 
-ground_truth_data <- read_csv("../data/ground_truth/ground_truth3.csv") %>%
   select(-angle) %>%
   arrange(video, frame) %>%
   cbind(read_csv("../data/ground_truth/gold_set_candidates2.csv") %>%
