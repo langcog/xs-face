@@ -154,7 +154,9 @@ The second algorithm was based on the work by @zhang2016 using multi-task cascad
 The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc.) called OpenPose [@cao2017realtime; @simon2017hand; @wei2016cpm] avaliable at https://github.com/CMU-Perceptual-Computing-Lab/openpose. The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose). We operationalized face detections as any frames containing a nose, as any half of a face necessarily contains a nose.  We operationalized wrist detections as any frames containing either the left or the right wrist.  
 
 ### Detector evaluation
+To evaluate detector performance, we constructed a "gold set" of frames by hand labeling both a sample of frames with a high density of faces (half reported by the MTCNN, half by OpenPose) and a random sample from the remaining frames; each sample was comprised of frames sampled from each participant (i.e., video). This was done so as to not bias our evaluation by the relatively rare appearance of faces in the dataset.  Faces were classifed as present in a frame if at least half of the face was showing. Precision (hits / hits + false alarms), recall (hits / hits + misses), and F-score (harmonic mean of previous measures) were calculated for all detectors and are reported in Table 2.
 
+Both OpenPose and MTCNN detectors performed relatively well on the gold set, with MTCNN outperforming OpenPose on the random sample but trailing behind in the high density sample. We found a clear tradeoff between recall and precision between the two models. That is, MTCNN almost always detected a face if it was present, but made more false alarms; conversely, OpenPose made less false alarms but overall detected fewer faces. ViolaJones performed quite poorly, missing many of the faces in the randomly sampled frames. 
 
 ```{r, message=FALSE, warning=FALSE, results='asis'}
 d <- read_csv("../data/consolidateddata/consolidated_data_4dets.csv") %>%
@@ -177,6 +179,7 @@ evaluate <- function(a, b) {
   }
 }
 
+ground_truth_data <- read_csv("../data/ground_truth/ground_truth4.csv") %>%
   select(-angle) %>%
   arrange(video, frame) %>%
   cbind(read_csv("../data/ground_truth/gold_set_candidates2.csv") %>%
