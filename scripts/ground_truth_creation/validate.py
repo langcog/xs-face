@@ -4,7 +4,7 @@ import ntpath
 
 # TODO change folder name to sample or whatever in ~/xsface
 
-BRIA_ANNOTATIONS = "/Users/alessandro/Downloads/sample_hand_images_bll"
+BRIA_ANNOTATIONS = "/Users/alessandro/Downloads/sample_face_images_openpose_bll"
 
 if __name__ == "__main__":
 
@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     print(len(rows))
 
-    with open("ground_truth_wrists.csv", 'wb') as csvfile:
+    with open("ground_truth_face_openpose.csv", 'wb') as csvfile:
         wr = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         wr.writerow(['group', 'video', 'frame', 'is_face'])
         for key, val in rows.iteritems():
