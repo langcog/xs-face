@@ -179,7 +179,7 @@ evaluate <- function(a, b) {
   }
 }
 
-ground_truth_data <- read_csv("../data/ground_truth/ground_truth3.csv") %>%
+ground_truth_data <- read_csv("../data/ground_truth/ground_truth4.csv") %>%
   select(-angle) %>%
   arrange(video, frame) %>%
   cbind(read_csv("../data/ground_truth/gold_set_candidates2.csv") %>%
