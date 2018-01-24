@@ -37,6 +37,8 @@ library(xtable)
 library(lubridate)
 library(langcog)
 library(ggplot2)
+library(ggthemes)
+library(egg) # plot arranging
 library(lme4)
 library(gridExtra)
 ```
@@ -184,7 +186,7 @@ ground_truth_data <- read_csv("../data/ground_truth/ground_truth3.csv") %>%
           arrange(video, frame) %>%
           select(sample_type)) 
 
-## evaluate detectors
+## evaluate face detectors
 performance <- ground_truth_data  %>%
   mutate(frame=as.numeric(frame), subid=video) %>%
   left_join(dlong)   %>%
@@ -226,7 +228,7 @@ dlong <- dlong %>%
 # for better plotting names
 levels(dlong$detectorType) 
 #[1] "faceMT"  "faceOP"  "handOP"  "wristOP"
-  levels(dlong$detectorType) <- c("MTCNN-Faces", "OpenPose-Faces","ViolaJones-Faces") 
+  levels(dlong$detectorType) <- c("MTCNN-Faces", "OpenPose-Faces","ViolaJones-Faces","OpenPose-Wrists") 
 ```
 
 ## Changes in Posture and Orientation
@@ -252,7 +254,7 @@ ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) +
   geom_boxplot() + 
   ylab("Proportion Time") + 
   xlab("Age (months)") + 
-  theme_bw()
+  theme_few()
 ```
 We noted characteristic changes in infants' posture and orientation across this developmental time range. The proportion of time infants spent sitting decreased with age, and the proportion of time infants spent standing increased with age. Both 8-month-olds and 12-month-olds spent equivalent amounts of time either lying/crawling, which was markedly decreased in the 16-month-olds, who spent most of their time either sitting or standing (see Figure \ref{fig:posture}).  We also observed characteristic changes in children's orientation relative to their caregivers: the 8-month-olds spent more time with their caregiver behind them supporting their sitting positions (see Figure \ref{fig:orientation}). 
 
@@ -262,12 +264,13 @@ ggplot(orientation, aes(x = factor(age.grp), y = prop.time, col = orientation)) 
   geom_boxplot() + 
   ylab("Proportion Time") + 
   xlab("Age (months)") + 
-  theme_bw()
+  theme_few()
 ```
 
 # Changes in Access to Faces 
 ```{r detByAge, fig.env="figure", fig.pos = "h", fig.align = "center", fig.width=3, fig.height=2, fig.cap = "Proportion of faces detected by the MTCNN model (left) and the OpenPose model (right panel) as a function of child's age. Larger dots indicate children who had longer playsessions and thus for whom there was more data"}
 detectionsByAge <- dlong %>%
+  filter(detectorType!='MTCNN-Faces') %>%
   filter(!is.na(age.at.test)) %>%
   group_by(subid, age.at.test, detectorType) %>%
   summarise(detections = mean(detection)) %>%
@@ -280,20 +283,21 @@ ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorTyp
     scale_x_continuous(breaks=c(8,12,16)) +
     scale_size_continuous(range=c(.01,2),name = "Video Length (mins)") +
     labs(y = "Prop. detected", x = element_blank()) +
-    theme_bw() + 
+    theme_few() + 
     theme(legend.position="none") +
-    scale_color_manual(values=c("#1F618D", "#7FB3D5", "#C70039", "#FF5733")) +
     facet_grid(~detectorType, scales = "free_y") 
 ```
 
-We first examined the proportion of face detections across age; a full summary can be seen in Figure \ref{fig:detByAge}. We observed  a slight U-shaped function both when analyzing the output of the MTCNN and OpenPose detectors, such that 12-month-olds appeared to experience slighly fewer faces faces than 8 or 16-month-olds.
+We first examined the proportion of face detections across age; a full summary can be seen in Figure \ref{fig:detByAge}. We observed a slight U-shaped function both when analyzing the output of the MTCNN and OpenPose detectors, such that 12-month-olds appeared to experience slighly fewer faces faces than 8 or 16-month-olds.
 
 However, we found that any age related effects were much smaller compared to the impact of postural and locomotive changes on children's visual access to faces. Children's posture was a major factor both in how many faces they saw during the play session.  Infants who were sitting saw more faces than infants who were lying down or being carried, while infants who were standing saw the most faces. We also examined how the child's orientation relative to their caregiver impacted their visual access to faces: children who were far away from their caregiver were more likely to see faces than children who were close to their caregiver; this was true within all age groups and for both face detectors. 
 
-
 ```{r detByPosOrient, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=4, fig.cap = "Proportion face detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant."}
 
-detectionsByPosture <- dlong %>%
+dlongPlot <-dlong %>%
+    filter(detectorType!="OpenPose-Faces") 
+
+detectionsByPosture <- dlongPlot %>%
   filter(!is.na(posture)) %>%
   group_by(age.grp, posture, subid,detectorType) %>%
   summarise(face = mean(detection)) %>%
@@ -301,12 +305,12 @@ detectionsByPosture <- dlong %>%
 
 p1=ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
   geom_boxplot(outlier.size = 0.5) + 
-  labs(y = "Prop. faces detected", x = element_blank()) +
+  labs(y = "Prop. detected", x = element_blank()) +
   facet_grid(~detectorType, scales="free_y") +
-  theme_bw() +
+  theme_few() +
   theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm"))
 
-detectionsByOrientation <- dlong %>%
+detectionsByOrientation <- dlongPlot %>%
   filter(!is.na(orientation)) %>%
   group_by(age.grp, orientation, subid,detectorType) %>%
   summarise(detections = mean(detection)) %>%
@@ -314,13 +318,14 @@ detectionsByOrientation <- dlong %>%
 
 p2=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col = orientation)) + 
   geom_boxplot(outlier.size = 0.5) + 
-  labs(y = "Prop. faces detected", x = element_blank()) +
+  labs(y = "Prop. detected", x = element_blank()) +
   facet_grid(~detectorType, scales="free_y") +
-  theme_bw() +
+  theme_few() +
   theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) +
   labs(y = "Prop. faces detected", x = element_blank()) 
-  
-grid.arrange(p1, p2, nrow=2)
+
+
+ggarrange(p1, p2)
 
 ```
 
@@ -387,8 +392,7 @@ source("helper.R")
 # d$face=d$faceMT # just choosing one here, but both look the same
 d$face=d$faceOP
 
-# for pointrange with CI - could include instead?
-aroundNamings_subAvg <- d %>%
+aroundNamings_subAvg_Posture <- d %>%
   group_by(subid) %>%
   do(summarize.naming(.)) %>%
   group_by(subid, posture) %>%
@@ -398,15 +402,36 @@ aroundNamings_subAvg <- d %>%
   group_by(posture) %>%
   multi_boot_standard(col = "propFacesDetected")  
 
+aroundNamings_subAvg_Orient <- d %>%
+  group_by(subid) %>%
+  do(summarize.naming(.)) %>%
+  group_by(subid, orientation) %>%
+  summarize(propFacesDetected = mean(face)) %>%
+  filter(!is.na(propFacesDetected)) %>%
+  filter(!is.na(orientation)) %>%
+  group_by(orientation) %>%
+  multi_boot_standard(col = "propFacesDetected")  
+
 ```
 
 ```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture."}
 
-ggplot(aroundNamings_subAvg, aes(x = posture, y = mean, col = posture)) +
+p1=ggplot(aroundNamings_subAvg_Posture, aes(x = posture, y = mean, col = posture)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   ylab("Prop. faces detected") +
   xlab("Posture") +
-  theme_bw()
+  theme_few() + 
+  theme(legend.position="none") 
+
+
+p2=ggplot(aroundNamings_subAvg_Orient, aes(x = orientation, y = mean, col = orientation)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
+  ylab("Prop. faces detected") +
+  xlab("Orientation") +
+  theme_few() +
+  theme(legend.position="none")
+
+ggarrange(p1,p2)
 ```
 ## Access to Faces During Labeling Events
 Finally, we analyzed how face detections changed during object labeling events as a function of infant's posture and orientation.  Specfically, we analyzed a four-second window around each labeling event (e.g., "Look at the [zem]!"); these labeling events were hand-annotated and automatically synchronized with the frame-by-frame face detections. We again found that infant's posture impacted the degree to which they saw their caregiver's face during a labeling event; infants who were sitting or standing were more likely to have access to their caregiver's face.
