@@ -43,15 +43,16 @@ library(lme4)
 library(gridExtra)
 ```
 # Introduction
-Children are remarkably skilled language learners, connecting arbitrary labels (“cup”) with specific visual concepts at a rapid pace through the first two years of life. However, children do not learn words in a vacuum but in a rich social environment, where social cues provided by speakers (e.g., eye-gaze) provide strong scaffolding for this learning process. Indeed, children’s ability to effectively process these social cues may be a key factor in their early language development. For example, in a longitudinal study, children’s level of joint engagement with their mother was found to predict both their receptive and productive vocabularies [@carpenter1998].  More recently, 10 month-olds who follow an adult’s gaze in an experimental context have larger vocabularies at 18 months [@brooks2005] and throughout the second year of life [@brooks2008]. 
 
-However, as children are learning their first words, their view of the world is also radically changing [@adolph2007]. Infants' motor abilities improve dramatically near the end of the first year of life, allowing them to locomote independently. These motor changes have drastic consequences for what children see; crawling and walking infants have radically different views of the world. For example, during spontaneous play in a laboratory playroom, toddlers are more likely to look at the floor while crawling than while walking [@franchak2011]; in general, walking infants tend to have full visual access to their environment and the people in it, while crawling infants do not [@kretch2014].
+Children are deeply engaged in learning from others around them  [@csibra2009natural; @meltzoff2007like] and attend to the social information in their environment from their earliest days. Even newborns tend to prefer to look at faces with direct vs. averted gaze [@farroni2002eye] and follow overt gaze shifts by 6 months of age [@gredeback2008microstructure, @gredeback2010development]. And when infants free-view videos,they tend to look mostly at faces at the expense of all of complex information--though older infants also start to looktowards people's hands and the actions they are performing [@frank2012measuring; @frank2014visual].
+
+However, as children are learning from others around them, their view of the world is also radically changing [@adolph2007]. Infants' motor abilities improve dramatically near the end of the first year of life, allowing them to locomote independently. These motor changes have drastic consequences for what children see; crawling and walking infants have radically different views of the world. For example, during spontaneous play in a laboratory playroom, toddlers are more likely to look at the floor while crawling than while walking [@franchak2011]; in general, walking infants tend to have full visual access to their environment and the people in it, while crawling infants do not [@kretch2014].
 
 One possibility is that these motor improvements have strong developmental cascades, impacting children’s emerging social, cognitive, and linguistic abilities [@iverson2010]. Indeed, these postural changes also impact how children interact with their mothers; walking (vs. crawling) infants make different kinds of object-related bids for attention from their mothers and tend to hear more action directed statements (e.g., “open it”) [@karasik2014]. Further, in an observational study, @walle2014 found that children who were able to walk had both higher receptive and productive vocabularies. On their account, children’s ability to stand and independently locomote may fundamentally change their ability to access social information (e.g., faces, gaze) relative to children who are still crawling and sitting. In other words, the ability to walk and move around independently and subsequently access more detailed social information may allow infants to learn words quicker and more efficiently, facilitating language growth.
 
 Recent technological developments allow for testing of this hypothesis by documenting the experiences of infants and children from their own perspective. By using head-mounted cameras, researchers have begun to document visual experiences of infants and children — which even for walking children are radically different from the adult perspective (and not easily predicted by our own adult intuitions) [@clerkin2017;@franchak2011;@yoshida2008]. Children’s views tend to be restricted and to be dominated by objects and hands much more than that of adults [@yoshida2008], and both computational and empirical work suggest that this restricted viewpoint may be more effective for learning objects and their labels than the comparable adult perspective [@bambach2017;@yurovsky2012]. Further, recent work also suggests dramatic changes in the child’s perspective over the first two years of life, as views transition from primarily containing a close up view of faces to capturing views of hands paired with the objects they are acting on [@fausey2016].
 
-Here, we directly ask whether postural and locomotive developments change the availability of the social information relevant for word learning. To do so, we recorded the visual experience of a group of infants and children using head-mounted cameras during a brief laboratory free-play session; children’s posture and orientation relative to their caregiver were also recorded from a third-person perspective and hand-annotated. We capitalize on recent improvements in face detection algorithms [@zhang2016; @cao2017realtime] to analyze the frequencies of faces in the child’s visual environment, both overall and relative to naming events by their caregivers. We hypothesized that there would be differences in access to social information based on children's posture: that as infant's learned how to crawl, they would see relatively fewer faces as they would be looking primarily at the ground, and that as infant's learned how to walk and locomote independently, that they would experience a much greater portion of faces in their environment.  
+Here, we directly ask whether postural and locomotive developments change the availability of the social information--the presence of faces and hands. To do so, we recorded the visual experience of a group of infants and children using head-mounted cameras during a brief laboratory free-play session; children’s posture and orientation relative to their caregiver were also recorded from a third-person perspective and hand-annotated. We capitalize on recent improvements in face detection algorithms [@zhang2016; @cao2017realtime] to analyze the frequencies of faces in the child’s visual environment, both overall and relative to naming events by their caregivers. We hypothesized that there would be differences in access to social information based on children's posture: that as infant's learned how to crawl, they would see relatively fewer faces as they would be looking primarily at the ground, and that as infant's learned how to walk and locomote independently, that they would experience a much greater portion of faces in their environment.  
 
 # Methods
 ## Participants
@@ -154,9 +155,9 @@ The second algorithm was based on the work by @zhang2016 using multi-task cascad
 The third algorithm was a CNN-based pose detector that provided the locations of 18 body parts (ears, nose, wrists, etc.) called OpenPose [@cao2017realtime; @simon2017hand; @wei2016cpm] avaliable at https://github.com/CMU-Perceptual-Computing-Lab/openpose. The system uses a CNN for initial anatomical detection and subsequently applies part affinity fields (PAFs) for part association, producing a series of body part candidates. The candidates are then matched to a single individual and finally assembled into a pose. For the purposes of our investigation we only made use of the body parts relevant to the face (ears, eyes, nose). We operationalized face detections as any frames containing a nose, as any half of a face necessarily contains a nose.  We operationalized wrist detections as any frames containing either the left or the right wrist.  
 
 ### Detector evaluation
-In order to evaluate the performance of these detectors, we constructed a "gold set" of frames by hand labeling both a sample of frames with a high density of faces (as reported by the detectors) and a random sample from the remaining frames. This was done so as to not bias our evaluation by the relatively rare appearance of faces in the dataset. A face was present in a frame if at least half of the face was showing. Precision (hits / hits + false alarms), recall (hits / hits + misses), and F-score (harmonic mean of previous measures) were calculated and are reported in Table 2.
+To evaluate detector performance, we constructed a "gold set" of frames by hand labeling both a sample of frames with a high density of faces (half reported by the MTCNN, half by OpenPose) and a random sample from the remaining frames; each sample was comprised of frames sampled from each participant (i.e., video). This was done so as to not bias our evaluation by the relatively rare appearance of faces in the dataset.  Faces were classifed as present in a frame if at least half of the face was showing. Precision (hits / hits + false alarms), recall (hits / hits + misses), and F-score (harmonic mean of previous measures) were calculated for all detectors and are reported in Table 2.
 
-Both OpenPose and MTCNN detectors performed relatively well on the gold set, with MTCNN outperforming OpenPose on the random sample but trailing behind in the high density sample. Due to the high performance of these two detectors we have included the results of both in the analyses to follow. The ViolaJones detector did not perform well on either gold set, so the results from this detector were not included.
+Both OpenPose and MTCNN detectors performed relatively well on the gold set, with MTCNN outperforming OpenPose on the random sample but trailing behind in the high density sample. We found a clear tradeoff between recall and precision between the two models. That is, MTCNN almost always detected a face if it was present, but made more false alarms; conversely, OpenPose made less false alarms but overall detected fewer faces. ViolaJones performed quite poorly, missing many of the faces in the randomly sampled frames. 
 
 ```{r, message=FALSE, warning=FALSE, results='asis'}
 setwd("data")
@@ -320,36 +321,39 @@ p2=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col 
   theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) +
   labs(y = "Prop. faces detected", x = element_blank()) 
 
-
 ggarrange(p1, p2)
 
 ```
 
-<!-- # ```{r echo=FALSE, include=FALSE} -->
-<!-- d$faceNum_MT=as.numeric(d$faceMT) -->
-<!-- d$faceNum_OP=as.numeric(d$faceOP) -->
+```{r echo=FALSE, include=FALSE}
+d$faceNum_MT=as.numeric(d$faceMT)
+d$faceNum_OP=as.numeric(d$faceOP)
 
-<!-- # Fails to converge -->
-<!-- # fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid), -->
-<!-- #       data = d, -->
-<!-- #       family = "binomial") -->
+# Fails to converge
+# fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid),
+#       data = d,
+#       family = "binomial")
 
-<!-- # Fails to converge -->
-<!-- # agexOrientation <- glmer(faceNum ~ scale(age.at.test) * orientation + (1|subid), -->
-<!-- #       data = d, -->
-<!-- #       family = "binomial") -->
+# Fails to converge
+# agexOrientation <- glmer(faceNum ~ scale(age.at.test) * orientation + (1|subid),
+#       data = d,
+#       family = "binomial")
 
-<!-- fullModelminsInt_Faces_MTCNN <- glmer(faceNum_MT ~ scale(age.at.test) + posture + orientation + (1|subid), -->
-<!--        data = d, -->
-<!--        family = "binomial") -->
+fullModelminsInt_Faces_MTCNN <- glmer(faceNum_MT ~ scale(age.at.test) + posture + orientation + (1|subid),
+       data = d,
+       family = "binomial")
+       
+ageOnly_MTCNN <- glmer(faceNum_MT ~ scale(age.at.test) + (1|subid),
+       data = d,
+       family = "binomial")
 
-<!-- fullModelminsInt_Faces_OP <- glmer(faceNum_OP ~ scale(age.at.test) + posture + orientation + (1|subid), -->
-<!--        data = d, -->
-<!--        family = "binomial") -->
+fullModelminsInt_Faces_OP <- glmer(faceNum_OP ~ scale(age.at.test) + posture + orientation + (1|subid),
+       data = d,
+       family = "binomial")
 
-<!-- ``` -->
+```
 
-To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame as the dependent variable, and participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table 3 for the MTCNN detections, though we found the same pattern of results for the OpenPose detections.  While age remained a significant predictor even when accounting for the effects of infants' posture and  orientation, it accounted for the least amount of variance. Overall, these results suggest that, instead, infants' access to faces is heavily infleunced by their own posture and their orientation towards their caregiver. 
+To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame (as detected by MTCNN), with participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table 3. While age remained a significant predictor even when accounting for the effects of infants' posture and  orientation, it accounted for the least amount of variance. Overall, these results suggest that, instead, infants' access to faces is heavily infleunced by their own posture and their orientation towards their caregiver.  We found the same pattern of results for the OpenPose detections, omitted here for brevity.
 
 <!-- ```{r MTCNNModel, results="asis"} -->
 <!-- tab2 <- xtable::xtable(summary(fullModelminsInt_Faces_MTCNN)$coef, digits=3, -->
