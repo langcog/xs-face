@@ -176,6 +176,9 @@ levels(dlong$detectorType)
 #[1] "faceMT"  "faceOP"  "handOP"  "wristOP"
 levels(dlong$detectorType) <- c("MTCNN-Faces", "OpenPose-Faces","ViolaJones-Faces","OpenPose-Wrists") 
 
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, include=FALSE}
 ### READ IN GROUND TRUTH
 ground_truth_faces <- read_csv("../data/ground_truth/ground_truth_faces.csv") %>%
   mutate(sample_type=as.factor(sample_type)) 
@@ -379,77 +382,68 @@ y_wrists=cbind(dGLM_wrists$countDetected_Wrists, dGLM_wrists$countTotal_Frames)
 
 # run models
 glm_faces<-glm(y_faces ~ dGLM_faces$age.at.test * dGLM_faces$posture * dGLM_faces$orientation,family=binomial(logit))
-xtable(summary(glm_faces))
+
+glm_faces_noInt<-glm(y_faces ~ dGLM_faces$age.at.test + dGLM_faces$posture + dGLM_faces$orientation,family=binomial(logit))
 
 glm_wrists<-glm(y_wrists ~ dGLM_wrists$age.at.test * dGLM_wrists$posture * dGLM_wrists$orientation,family=binomial(logit))
 
+glm_wrists_noInt<-glm(y_wrists ~ dGLM_wrists$age.at.test + dGLM_wrists$posture + dGLM_wrists$orientation,family=binomial(logit))
+
 ## OUTPUT GLM RESULTS
+cleanedNames_NoInt = c("Intercept","Age","Prone","Sit","Stand","Close","Far")
 cleanedNames = c("Intercept","Age","Prone","Sit","Stand","Close","Far", "Age:Prone","Age:Sit","Age:Stand","Age:Close",
           "Age:Far","Prone:Close","Sit:Close","Stand:Close","Prone:Far","Sit:Far","Stand:Far","Age:Prone:Close",
           "Age:Sit:Close","Age:Prone:Far","Age:Sit:Far")
+
 faceGLMOut=xtable(summary(glm_faces))
 rownames(faceGLMOut)<-cleanedNames
 
 wristGLMOut=xtable(summary(glm_wrists))
 rownames(wristGLMOut)<-cleanedNames
 
+wristGLMOut_noInt=xtable(summary(glm_wrists_noInt))
+rownames(wristGLMOut_noInt)<-cleanedNames_NoInt
+
+faceGLMOut_noInt=xtable(summary(glm_faces_noInt))
+rownames(faceGLMOut_noInt)<-cleanedNames_NoInt
+
 ```
 
 ```{r results="asis"}
-print(faceGLMOut, type="latex", comment = F, table.placement = "H")
-print(wristGLMOut, type="latex", comment = F, table.placement = "H")
+print(faceGLMOut_noInt, type="latex", comment = F, table.placement = "H")
+```
+
+```{r results="asis"}
+print(wristGLMOut_noInt, type="latex", comment = F, table.placement = "H")
+```
+
+```{r echo=FALSE, include=FALSE}
+## Mixed effect model tries - many convergence issues
+
+ # Interactions fail to converge, as does the one below 
+ # fullModelminsInt_Faces_MTCNN <- glmer(faceMT ~ scale(age.at.test)+(posture)+(orientation) + (1|subid), 
+ #        data = d, 
+ #        family = "binomial") 
+
+## Reading https://rdrr.io/cran/lme4/man/convergence.html 
+## Check for singularity - not an issue 
+# fm1=fullModelminsInt_Faces_MTCNN 
+# diag.vals <- getME(fm1,"theta")[getME(fm1,"lower") == 0] 
+# any(diag.vals < 1e-6) # FALSE
+
+## But has issues with every optimizer... -->
+#source(system.file("utils", "allFit.R", package="lme4")) 
+#fm1.all <- allFit(fm1)
+#ss <- summary(fm1.all) 
+
+#No convergence issues with open pose detectors for faces, but for wrists
+#fullModelminsInt_Faces_OP <- glmer(faceOP ~ scale(age.at.test) + posture + orientation + (1|subid), 
+#      data = d, 
+#        family = "binomial") 
 ```
 
 
-
-<!-- # # output results -->
-<!-- normalGLM <- normalGLM %>% -->
-<!--   xtable %>% -->
-<!--   print(type="latex", comment = F, table.placement = "H") -->
-
-<!-- # ## Then try a run mixed effet model -->
-<!-- # ## Interactions fail to converge, as does the one below -->
-<!-- # fullModelminsInt_Faces_MTCNN <- glmer(faceMT ~ scale(age.at.test)+(posture)+(orientation) + (1|subid), -->
-<!-- #        data = d, -->
-<!-- #        family = "binomial") -->
-
-<!-- ## Reading https://rdrr.io/cran/lme4/man/convergence.html -->
-<!-- ## Check for singularity - not an issue -->
-<!-- # fm1=fullModelminsInt_Faces_MTCNN -->
-<!-- # diag.vals <- getME(fm1,"theta")[getME(fm1,"lower") == 0] -->
-<!-- # any(diag.vals < 1e-6) # FALSE -->
-
-<!-- ## But has issues with every optimizer... -->
-<!-- #source(system.file("utils", "allFit.R", package="lme4")) -->
-<!-- #fm1.all <- allFit(fm1) -->
-<!-- #ss <- summary(fm1.all) -->
-
-<!-- #No convergence issues with open pose detectors -->
-<!-- fullModelminsInt_Faces_OP <- glmer(faceOP ~ scale(age.at.test) + posture + orientation + (1|subid), -->
-<!--        data = d, -->
-<!--        family = "binomial") -->
-
-<!-- fullModelminsInt_Wrist_OP <- glmer(wristOP ~ scale(age.at.test) + posture + orientation + (1|subid), -->
-<!--        data = d, -->
-<!--        family = "binomial") -->
-<!-- ``` -->
-
 To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame (as detected by MTCNN), with participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table 3. While age remained a significant predictor even when accounting for the effects of infants' posture and  orientation, it accounted for the least amount of variance. Overall, these results suggest that, instead, infants' access to faces is heavily infleunced by their own posture and their orientation towards their caregiver.  We found the same pattern of results for the OpenPose detections, omitted here for brevity.
-
-<!-- ```{r MTCNNModel, results="asis"} -->
-<!-- tab2 <- xtable::xtable(summary(fullModelminsInt_Faces_MTCNN)$coef, digits=3, -->
-<!--                       caption = "Results from GLMM model predicting the presence/absence of a face (MTCNN-Faces) across the entire dataset.") -->
-
-<!-- print(tab2, type="latex", comment = F, table.placement = "H") -->
-<!-- ``` -->
-
-<!-- ```{r OPModel, results="asis"} -->
-<!--  tab3 <- xtable::xtable(summary(fullModelminsInt_Faces_OP)$coef, digits=3, -->
-<!--                        caption = "Results from GLMM model prediting the presence/absence of faces (OpenPose-Faces) across the entire dataset.") -->
-
-<!--  print(tab3, type="latex", comment = F, table.placement = "H") -->
-<!-- ``` -->
-
 
 ```{r echo=FALSE, include=FALSE }
 source("helper.R")
@@ -523,6 +517,6 @@ Thanks to Kaia Simmons, Kathy Woo, Aditi Maliwal, and other members of the Langu
 \setlength{\leftskip}{0.125in}
 \noindent
 
-# ```{r session_info, include=FALSE, echo=FALSE}
-# devtools::session_info()
-# ```
+ ```{r session_info, include=FALSE, echo=FALSE}
+ devtools::session_info()
+ ```
