@@ -160,8 +160,8 @@ To evaluate detector performance, we constructed a "gold set" of frames by hand 
 
 Both OpenPose and MTCNN detectors performed relatively well on the gold set, with MTCNN outperforming OpenPose on the random sample but trailing behind in the high density sample. We found a clear tradeoff between recall and precision between the two models. That is, MTCNN almost always detected a face if it was present, but made more false alarms; conversely, OpenPose made less false alarms but overall detected fewer faces. ViolaJones performed quite poorly, missing many of the faces in the randomly sampled frames. 
 
-```{r, message=FALSE, warning=FALSE, results='asis'}
-
+```{r, message=FALSE, warning=FALSE, echo=FALSE, include=FALSE}
+### READ IN DETECTIONS
 d <- read_csv("../data/consolidateddata/consolidated_data_4detectors.csv") %>%
   mutate(posture = factor(posture), orientation = factor(orientation))
 
@@ -176,39 +176,37 @@ levels(dlong$detectorType)
 #[1] "faceMT"  "faceOP"  "handOP"  "wristOP"
 levels(dlong$detectorType) <- c("MTCNN-Faces", "OpenPose-Faces","ViolaJones-Faces","OpenPose-Wrists") 
 
-evaluate <- function(a, b) {
-  if (a == TRUE) {
-    if (a == b) return ("TP") # was face, detected face
-    else return("FN") # was face, missed face
-  }
-  else {
-    if (a == b) return("TN") # was not face, detected face
-    else return("FP") # was not face, said face
-  }
-}
+### READ IN GROUND TRUTH
+ground_truth_faces <- read_csv("../data/ground_truth/ground_truth_faces.csv") %>%
+  mutate(sample_type=as.factor(sample_type)) 
 
-ground_truth_faces <- read_csv("../data/ground_truth/ground_truth_faces.csv")
-ground_truth_wrists <- read_csv("../data/ground_truth/ground_truth_wrists.csv")
+ground_truth_wrists <- read_csv("../data/ground_truth/ground_truth_wrists.csv") %>%
+  mutate(sample_type=as.factor(sample_type)) 
 
-## evaluate face detectors
+# Renaming for table output
+levels(ground_truth_faces$sample_type)=c("High density", "Random")
+levels(ground_truth_wrists$sample_type)=c("High density", "Random")
+
+## EVALUATE FACE DETECTORS
 performanceFaces <- ground_truth_faces  %>%
   mutate(frame=as.numeric(frame), subid=video) %>%
   left_join(dlong)   %>%
+  filter(detectorType!="OpenPose-Wrists") %>%
   mutate(detector_is_face = detection, is_face = as.logical(is_face)) %>%
   rowwise() %>%
   mutate(result = evaluate(is_face, detector_is_face)) %>%
   group_by(detectorType, sample_type) %>%
   summarise(tp=sum(result == "TP"), fp=sum(result == "FP"), fn=sum(result=="FN")) %>%
   group_by(detectorType, sample_type) %>%
-  summarise(p = tp / (tp + fp), r = tp / (tp + fn), f=( 2 * p * r )/ (p + r))
+  summarise(p = tp / (tp + fp), r = tp / (tp + fn), f=( 2 * p * r )/ (p + r)) %>%
   xtable %>%
   print(digits = 2, include.rownames=FALSE,table.placement = "H", type="latex", comment = F)
   
-## evaluate wrist detectors
+## EVALUATE WRIST DETECTOR
 performanceWrists <- ground_truth_wrists  %>%
   mutate(frame=as.numeric(frame), subid=video) %>%
   left_join(dlong)   %>%
-  filter(detectorType=="wristOP") %>%
+  filter(detectorType=="OpenPose-Wrists") %>%
   mutate(detector_is_wrist = detection, is_wrist = as.logical(is_face)) %>%
   rowwise() %>%
   mutate(result = evaluate(is_wrist, detector_is_wrist)) %>%
@@ -219,6 +217,10 @@ performanceWrists <- ground_truth_wrists  %>%
   xtable %>%
   print(digits = 2, include.rownames=FALSE,table.placement = "H", type="latex", comment = F)
 
+## get rid of ViolaJones detections from data structure for future analyses
+dlong <- dlong %>%
+  filter(detectorType!="faceVJ") 
+
 ```
 
 \begin{table}[ht]
@@ -227,12 +229,14 @@ performanceWrists <- ground_truth_wrists  %>%
   \hline
    Algorithm & Sample\ Type & P & R & F \\ 
   \hline
-   MTCNN & High\ density & 0.841 & 1.000 & 0.914 \\ 
-   MTCNN & Random & 0.947 & 0.750 & 0.837 \\ 
-  OpenPose & High\ density & 0.995 & 0.863 & 0.924 \\ 
-   OpenPose & Random & 0.710 & 0.917 & 0.800 \\ 
-   ViolaJones & High\ Density & 0.991 & 0.495 & 0.660 \\ 
-   ViolaJones & Random & 0.389 & 0.292 & 0.333 \\ 
+  MTCNN-Faces & High density & 0.89 & 0.92 & 0.90 \\ 
+  MTCNN-Faces & Random & 0.94 & 0.62 & 0.75 \\ 
+  OpenPose-Faces & High density & 0.78 & 0.93 & 0.84 \\ 
+  OpenPose-Faces & Random & 0.72 & 0.80 & 0.76 \\ 
+  ViolaJones-Faces & High density & 0.96 & 0.44 & 0.60 \\ 
+  ViolaJones-Faces & Random & 0.44 & 0.38 & 0.41 \\ 
+  OpenPose-Wrists & High density & 0.64 & 1.00 & 0.78 \\ 
+  OpenPose-Wrists & Random & 0.76 & 0.26 & 0.39 \\ 
    \hline
 \end{tabular}
 \caption{Detector performance on both high density samples (where proportion of faces detected was high) and random samples (where frames were randomly selected). P, R, and F denote precision, recall, and F-score, respectively.} 
@@ -241,12 +245,6 @@ performanceWrists <- ground_truth_wrists  %>%
 # Results
 First, we report developmental shifts in infants' posture and their orientation relative to their caregiver. Then, we explore how these changes influence children's visual access to faces across this developmental time range. Finally, we explore how these changes impact the accessibility of faces during labeling events.
 
-```{r echo=FALSE, include=FALSE}
-# get rid of violajones
-dlong <- dlong %>%
-  filter(detectorType!="faceVJ") %>%
-  filter(detectorType!="faceVJ")
-```
 
 ## Changes in Posture and Orientation
 
@@ -341,7 +339,6 @@ p2=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col 
   facet_grid(~detectorType, scales="free_y") +
   theme_few() +
   theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) +
-  labs(y = "Prop. faces detected", x = element_blank()) 
 
 ggarrange(p1, p2)
 
@@ -460,17 +457,17 @@ aroundNamings_subAvg_Orient <- d %>%
 p1=ggplot(aroundNamings_subAvg_Posture, aes(x = posture, y = mean, col = posture)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   ylab("Prop. faces detected") +
-  xlab("Posture") +
+  xlab("") +
   theme_few() + 
   theme(legend.position="none") 
-
 
 p2=ggplot(aroundNamings_subAvg_Orient, aes(x = orientation, y = mean, col = orientation)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   ylab("Prop. faces detected") +
-  xlab("Orientation") +
+  xlab("") +
   theme_few() +
-  theme(legend.position="none")
+  theme(legend.position="none") 
+
 
 ggarrange(p1,p2)
 ```
