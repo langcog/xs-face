@@ -210,14 +210,14 @@ performanceFaces <- ground_truth_faces  %>%
   group_by(detectorType, sample_type) %>%
   summarise(tp=sum(result == "TP"), fp=sum(result == "FP"), fn=sum(result=="FN")) %>%
   group_by(detectorType, sample_type) %>%
-  summarise(p = tp / (tp + fp), r = tp / (tp + fn), f=( 2 * p * r )/ (p + r)) %>%
-  xtable %>%
-  print(digits = 2, include.rownames=FALSE,table.placement = "H", type="latex", comment = F)
+  summarise(p = tp / (tp + fp), r = tp / (tp + fn), f=( 2 * p * r )/ (p + r)) 
+  # xtable %>%
+  # print(digits = 2, include.rownames=FALSE,table.placement = "H", type="latex", comment = F)
   
 ## EVALUATE WRIST DETECTOR
 performanceWrists <- ground_truth_wrists  %>%
   mutate(frame=as.numeric(frame), subid=video) %>%
-  left_join(dlong)   %>%
+  left_join(dlong) %>%
   filter(detectorType=="OpenPose-Wrists") %>%
   mutate(detector_is_wrist = detection, is_wrist = as.logical(is_face)) %>%
   rowwise() %>%
@@ -225,15 +225,13 @@ performanceWrists <- ground_truth_wrists  %>%
   group_by(detectorType, sample_type) %>%
   summarise(tp=sum(result == "TP"), fp=sum(result == "FP"), fn=sum(result=="FN")) %>%
   group_by(detectorType, sample_type) %>%
-  summarise(p = tp / (tp + fp), r = tp / (tp + fn), f=( 2 * p * r )/ (p + r)) %>%
-  xtable %>%
-  print(digits = 2, include.rownames=FALSE,table.placement = "H", type="latex", comment = F)
+  summarise(p = tp / (tp + fp), r = tp / (tp + fn), f=( 2 * p * r )/ (p + r)) 
+  # xtable %>%
+  # print(digits = 2, include.rownames=FALSE,table.placement = "H", type="latex", comment = F)
 
 ## get rid of ViolaJones detections from data structure for future analyses
 dlong <- dlong %>%
   filter(detectorType!="faceVJ") 
-
-
 
 ```
 
@@ -282,7 +280,7 @@ posture <- d %>%
 p1=ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) + 
   geom_boxplot() + 
   ylab("Proportion Time") + 
-    xlab("") + 
+  xlab("") + 
   theme_few() +
   scale_x_discrete( labels=c("8 m.", "12 m.", "16 m."))
 
@@ -361,71 +359,80 @@ ggarrange(p1, p2)
 ```
 
 ```{r echo=FALSE, include=FALSE}
-
-## First try a normal logistic regressino, grouping by subject / posture / orientation
-# wrangle data
-dModelGLM <- d %>%
+# First try a normal logistic regressino, grouping by subject / posture / orientation
+#wrangle data
+dGLM_faces <- d %>%
   group_by(subid, posture, orientation) %>%
-  summarize(countDetected=sum(faceMT==TRUE), countTotal = sum(faceMT==FALSE), age.at.test=age.at.test[1])
-y=cbind(dModelGLM$countDetected, dModelGLM$countTotal) # successes / failures for modeling proportions
-dModelGLM$age.at.test=scale(dModelGLM$age.at.test) # scale and center continous predictor
-# run model
-normalGLM<-glm(y ~ dModelGLM$age.at.test + dModelGLM$posture + dModelGLM$orientation,family=binomial(logit))
-# output results
-normalGLM <- normalGLM %>%
-  xtable %>%
-  print(type="latex", comment = F, table.placement = "H") 
+  summarize(countDetected_Faces=sum(faceMT==TRUE), countTotal_Frames = sum(faceMT==FALSE), age.at.test=age.at.test[1]) 
 
-# Then fit a mixed effet model
-fullModel <- glmer(faceMT ~ scale(age.at.test)+(posture)+(orientation) + (1|subid),
-       data = d,
-       family = "binomial")
+dGLM_wrists <- d %>%
+  group_by(subid, posture, orientation) %>%
+  summarize(countDetected_Wrists=sum(wristOP==TRUE), countTotal_Frames = sum(wristOP==FALSE),   age.at.test=age.at.test[1]) 
 
-# Fails to converge
-# fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid),
-#       data = d,
-#       family = "binomial")
+# scale cont predictors
+dGLM_faces$age.at.test=scale(dGLM_faces$age.at.test)
+dGLM_wrists$age.at.test=scale(dGLM_wrists$age.at.test)
 
-# Fails to converge
-# agexOrientation <- glmer(faceNum ~ scale(age.at.test) * orientation + (1|subid),
-#       data = d,
-#       family = "binomial")
+# successes / failures data structure for glm
+y_faces=cbind(dGLM_faces$countDetected_Faces, dGLM_faces$countTotal_Frames)  
+y_wrists=cbind(dGLM_wrists$countDetected_Wrists, dGLM_wrists$countTotal_Frames) 
 
-fullModelminsInt_Faces_MTCNN <- glmer(faceNum_MT ~ scale(age.at.test) + posture + orientation + (1|subid),
-       data = d,
-       family = "binomial")
+# run models
+glm_faces<-glm(y_faces ~ dGLM_faces$age.at.test * dGLM_faces$posture * dGLM_faces$orientation,family=binomial(logit))
+xtable(summary(glm_faces))
 
- <- glm(faceNum_MT ~ scale(age.at.test) + posture + orientation,
-       data = d,
-       family = "binomial")
+glm_wrists<-glm(y_wrists ~ dGLM_wrists$age.at.test * dGLM_wrists$posture * dGLM_wrists$orientation,family=binomial(logit))
 
-## Check for singularity
-fm1=fullModelminsInt_Faces_MTCNN
-diag.vals <- getME(fm1,"theta")[getME(fm1,"lower") == 0]
-any(diag.vals < 1e-6) # FALSE
+## OUTPUT GLM RESULTS
+cleanedNames = c("Intercept","Age","Prone","Sit","Stand","Close","Far", "Age:Prone","Age:Sit","Age:Stand","Age:Close",
+          "Age:Far","Prone:Close","Sit:Close","Stand:Close","Prone:Far","Sit:Far","Stand:Far","Age:Prone:Close",
+          "Age:Sit:Close","Age:Prone:Far","Age:Sit:Far")
+faceGLMOut=xtable(summary(glm_faces))
+rownames(faceGLMOut)<-cleanedNames
 
-source(system.file("utils", "allFit.R", package="lme4"))
-fm1.all <- allFit(fm1)
-ss <- summary(fm1.all)
-
-ageOnly_MTCNN <- glmer(faceNum_MT ~ scale(age.at.test) + (1|subid),
-       data = d,
-       family = "binomial")
-
-fullModelminsInt_Faces_OP <- glmer(faceNum_OP ~ scale(age.at.test) + posture + orientation + (1|subid),
-       data = d,
-       family = "binomial")
-
-
-
-
-
-## try plain logistic regression
-## think about classification techniques -- ?
-
-
+wristGLMOut=xtable(summary(glm_wrists))
+rownames(wristGLMOut)<-cleanedNames
 
 ```
+
+```{r results="asis"}
+print(faceGLMOut, type="latex", comment = F, table.placement = "H")
+print(wristGLMOut, type="latex", comment = F, table.placement = "H")
+```
+
+
+
+<!-- # # output results -->
+<!-- normalGLM <- normalGLM %>% -->
+<!--   xtable %>% -->
+<!--   print(type="latex", comment = F, table.placement = "H") -->
+
+<!-- # ## Then try a run mixed effet model -->
+<!-- # ## Interactions fail to converge, as does the one below -->
+<!-- # fullModelminsInt_Faces_MTCNN <- glmer(faceMT ~ scale(age.at.test)+(posture)+(orientation) + (1|subid), -->
+<!-- #        data = d, -->
+<!-- #        family = "binomial") -->
+
+<!-- ## Reading https://rdrr.io/cran/lme4/man/convergence.html -->
+<!-- ## Check for singularity - not an issue -->
+<!-- # fm1=fullModelminsInt_Faces_MTCNN -->
+<!-- # diag.vals <- getME(fm1,"theta")[getME(fm1,"lower") == 0] -->
+<!-- # any(diag.vals < 1e-6) # FALSE -->
+
+<!-- ## But has issues with every optimizer... -->
+<!-- #source(system.file("utils", "allFit.R", package="lme4")) -->
+<!-- #fm1.all <- allFit(fm1) -->
+<!-- #ss <- summary(fm1.all) -->
+
+<!-- #No convergence issues with open pose detectors -->
+<!-- fullModelminsInt_Faces_OP <- glmer(faceOP ~ scale(age.at.test) + posture + orientation + (1|subid), -->
+<!--        data = d, -->
+<!--        family = "binomial") -->
+
+<!-- fullModelminsInt_Wrist_OP <- glmer(wristOP ~ scale(age.at.test) + posture + orientation + (1|subid), -->
+<!--        data = d, -->
+<!--        family = "binomial") -->
+<!-- ``` -->
 
 To formalize these observations, we fit a generalized logistic mixed-effect model to all with the presence/absence of a face on every frame (as detected by MTCNN), with participant's age, orientation, and posture as predictors. Interactions between predictors were not included as this maximal model failed to converge. A summary of the coefficients of this model can be found in Table 3. While age remained a significant predictor even when accounting for the effects of infants' posture and  orientation, it accounted for the least amount of variance. Overall, these results suggest that, instead, infants' access to faces is heavily infleunced by their own posture and their orientation towards their caregiver.  We found the same pattern of results for the OpenPose detections, omitted here for brevity.
 
@@ -443,23 +450,6 @@ To formalize these observations, we fit a generalized logistic mixed-effect mode
 <!--  print(tab3, type="latex", comment = F, table.placement = "H") -->
 <!-- ``` -->
 
-\begin{table}[H]
-\centering
-\begin{tabular}{rrrrr}
-  \hline
- & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\
-  \hline
-(Intercept) & -4.846 & 0.077 & -62.682 & 0.000 \\
-  Age & 0.170 & 0.061 & 2.766 & 0.006 \\
-  Posture-Prone & -0.513 & 0.036 & -14.045 & 0.000 \\
-  Posture-Sit & 0.648 & 0.034 & 18.853 & 0.000 \\
-  Posture-Stand & 1.005 & 0.035 & 28.402 & 0.000 \\
-  Orient.-Close & 1.549 & 0.021 & 72.757 & 0.000 \\
-  Orient.-Far & 2.258 & 0.022 & 101.138 & 0.000 \\
-   \hline
-\end{tabular}
-\caption{Results from GLMM model predicting the presence/absence of a face across the entire dataset (MTCNN detectors).}
-\end{table}
 
 ```{r echo=FALSE, include=FALSE }
 source("helper.R")
@@ -491,15 +481,17 @@ aroundNamings_subAvg_Orient <- d %>%
 
 p1=ggplot(aroundNamings_subAvg_Posture, aes(x = posture, y = mean, col = posture)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
-  ylab("Prop. faces detected") +
+  ylab("Prop. faces") +
   xlab("") +
+  ylim(0,.3) +
   theme_few() + 
   theme(legend.position="none") 
 
 p2=ggplot(aroundNamings_subAvg_Orient, aes(x = orientation, y = mean, col = orientation)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
-  ylab("Prop. faces detected") +
+  ylab("Prop. faces") +
   xlab("") +
+  ylim(0,.3) +
   theme_few() +
   theme(legend.position="none") 
 
@@ -531,6 +523,6 @@ Thanks to Kaia Simmons, Kathy Woo, Aditi Maliwal, and other members of the Langu
 \setlength{\leftskip}{0.125in}
 \noindent
 
-```{r session_info, include=FALSE, echo=FALSE}
-devtools::session_info()
-```
+# ```{r session_info, include=FALSE, echo=FALSE}
+# devtools::session_info()
+# ```
