@@ -24,3 +24,22 @@ df2 <- ground_truth_openpose %>%
 write_csv(rbind(df1, df2), "ground_truth_faces.csv")
 ```
 
+```{r}
+ground_truth_wrists <- read_csv("intermediate/ground_truth_wrists.csv")
+ground_truth_hands <- read_csv("intermediate/ground_truth_hands.csv")
+candidates_hands <- read_csv("intermediate/candidates_hands.csv")
+
+df3 <- ground_truth_wrists %>%
+  inner_join(candidates_hands %>%
+               select(group, video, frame, sample_type), by = c("group", "video", "frame")) %>%
+  mutate(detector_sample = "openpose")
+
+df4 <- ground_truth_hands %>%
+  inner_join(candidates_hands %>%
+               select(group, video, frame, sample_type), by = c("group", "video", "frame")) %>%
+  mutate(detector_sample = "openpose")
+
+write_csv(df3, "ground_truth_wrists.csv")
+write_csv(df4, "ground_truth_hands.csv")
+```
+
