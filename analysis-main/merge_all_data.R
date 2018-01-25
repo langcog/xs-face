@@ -90,5 +90,5 @@ complete_combos <- expand(d, nesting(posture, orientation), subid) %>%
 d <- bind_rows(d, complete_combos)
 
 ## save it out
-write_csv(d, "../data/consolidateddata/consolidated_data_4dets2.csv")
+write_csv(d, "../data/consolidateddata/consolidated_data_4detectors.csv")
 
