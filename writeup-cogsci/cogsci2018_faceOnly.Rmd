@@ -187,6 +187,18 @@ ground_truth_wrists <- read_csv("../data/ground_truth/ground_truth_wrists.csv") 
 levels(ground_truth_faces$sample_type)=c("High density", "Random")
 levels(ground_truth_wrists$sample_type)=c("High density", "Random")
 
+# Function to evaluate detectors
+evaluate <- function(a, b) {
+  if (a == TRUE) {
+    if (a == b) return ("TP") # was face/wrist, detected face/wrist
+    else return("FN") # was face/wrist, missed face/wrist
+  }
+  else {
+    if (a == b) return("TN") # was not face/wrist, detected face/wrist
+    else return("FP") # was not face/wrist, said face/wrist
+  }
+}
+
 ## EVALUATE FACE DETECTORS
 performanceFaces <- ground_truth_faces  %>%
   mutate(frame=as.numeric(frame), subid=video) %>%
@@ -220,6 +232,8 @@ performanceWrists <- ground_truth_wrists  %>%
 ## get rid of ViolaJones detections from data structure for future analyses
 dlong <- dlong %>%
   filter(detectorType!="faceVJ") 
+
+
 
 ```
 
@@ -280,7 +294,6 @@ p2=ggplot(orientation, aes(x = factor(age.grp), y = prop.time, col = orientation
   scale_x_discrete( labels=c("8 m.", "12 m.", "16 m.")) +
   theme(axis.ticks = element_blank())
 
-
 ggarrange(p1,p2)
 ```
 We noted characteristic changes in infants' posture and orientation across this developmental time range. The proportion of time infants spent sitting decreased with age, and the proportion of time infants spent standing increased with age. Both 8-month-olds and 12-month-olds spent equivalent amounts of time either lying/crawling, which was markedly decreased in the 16-month-olds, who spent most of their time either sitting or standing (see Figure \ref{fig:posture}).  We also observed characteristic changes in children's orientation relative to their caregivers: the 8-month-olds spent more time with their caregiver behind them supporting their sitting positions (see Figure \ref{fig:orientation}). 
@@ -288,6 +301,8 @@ We noted characteristic changes in infants' posture and orientation across this 
 # Changes in Access to Faces 
 ```{r detByAge, fig.env="figure", fig.pos = "h", fig.align = "center", fig.width=3, fig.height=2, fig.cap = "Proportion of faces detected by the MTCNN model (left) and wrists detected by the OpenPose model (right panel) as a function of child's age. Larger dots indicate children who had longer playsessions and thus for whom there was more data"}
 detectionsByAge <- dlong %>%
+  filter(detectorType!="OpenPose-Faces") %>% # for brevity
+  filter(detectorType!="ViolaJones-Faces") %>% # low performance
   filter(!is.na(age.at.test)) %>%
   group_by(subid, age.at.test, detectorType) %>%
   summarise(detections = mean(detection)) %>%
@@ -302,7 +317,7 @@ ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorTyp
     labs(y = "Prop. detected", x = element_blank()) +
     theme_few() + 
     theme(legend.position="none") +
-    facet_grid(~detectorType, scales = "free_y") 
+    facet_grid(~detectorType) 
 ```
 
 We first examined the proportion of face detections across age; a full summary can be seen in Figure \ref{fig:detByAge}. We observed a slight U-shaped function both when analyzing the output of the MTCNN and OpenPose detectors, such that 12-month-olds appeared to experience slighly fewer faces faces than 8 or 16-month-olds.
@@ -312,7 +327,8 @@ However, we found that any age related effects were much smaller compared to the
 ```{r detByPosOrient, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=4, fig.cap = "Proportion face detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant."}
 
 dlongPlot <-dlong %>%
-    filter(detectorType!="OpenPose-Faces") 
+    filter(detectorType!="OpenPose-Faces") %>%
+    filter(detectorType!="ViolaJones-Faces") 
 
 detectionsByPosture <- dlongPlot %>%
   filter(!is.na(posture)) %>%
@@ -338,15 +354,32 @@ p2=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col 
   labs(y = "Prop. detected", x = element_blank()) +
   facet_grid(~detectorType, scales="free_y") +
   theme_few() +
-  theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) +
+  theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) 
 
 ggarrange(p1, p2)
 
 ```
 
 ```{r echo=FALSE, include=FALSE}
-d$faceNum_MT=as.numeric(d$faceMT)
-d$faceNum_OP=as.numeric(d$faceOP)
+
+## First try a normal logistic regressino, grouping by subject / posture / orientation
+# wrangle data
+dModelGLM <- d %>%
+  group_by(subid, posture, orientation) %>%
+  summarize(countDetected=sum(faceMT==TRUE), countTotal = sum(faceMT==FALSE), age.at.test=age.at.test[1])
+y=cbind(dModelGLM$countDetected, dModelGLM$countTotal) # successes / failures for modeling proportions
+dModelGLM$age.at.test=scale(dModelGLM$age.at.test) # scale and center continous predictor
+# run model
+normalGLM<-glm(y ~ dModelGLM$age.at.test + dModelGLM$posture + dModelGLM$orientation,family=binomial(logit))
+# output results
+normalGLM <- normalGLM %>%
+  xtable %>%
+  print(type="latex", comment = F, table.placement = "H") 
+
+# Then fit a mixed effet model
+fullModel <- glmer(faceMT ~ scale(age.at.test)+(posture)+(orientation) + (1|subid),
+       data = d,
+       family = "binomial")
 
 # Fails to converge
 # fullModel <- glmer(is_face ~ scale(age.at.test)*(posture) *(orientation) + (1|subid),
@@ -359,6 +392,10 @@ d$faceNum_OP=as.numeric(d$faceOP)
 #       family = "binomial")
 
 fullModelminsInt_Faces_MTCNN <- glmer(faceNum_MT ~ scale(age.at.test) + posture + orientation + (1|subid),
+       data = d,
+       family = "binomial")
+
+ <- glm(faceNum_MT ~ scale(age.at.test) + posture + orientation,
        data = d,
        family = "binomial")
 
@@ -380,9 +417,7 @@ fullModelminsInt_Faces_OP <- glmer(faceNum_OP ~ scale(age.at.test) + posture + o
        family = "binomial")
 
 
-fullModelminsInt_Faces_OP <- glm(faceNum_OP ~ scale(age.at.test) + posture + orientation,
-       data = d,
-       family = "binomial")
+
 
 
 ## try plain logistic regression
