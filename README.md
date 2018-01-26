@@ -35,7 +35,7 @@ In order to validate the models, we selected a sample of gold set images to anno
 In order to not bias the evaluation because of the relatively rare appearance of faces in the dataset, two gold samples were selected: one high density sample consisting of a large number of face detections, and one random sample from the remaining frames. 
 
 # Analysis
-The final face detection results are stored in [final_output](data/final_output) or on google drive. These data were merged with the corresponing posture, orientation, and demographics csvs to form one large consolidated csv that was too large to store in git and is instead stored in [google drive](https://drive.google.com/file/d/1u2anuP849NGeKrGfEmDN19uR-WzCw26F/view?usp=sharing). 
+The final face detection results are stored in [final_output](data/final_output). These data were merged with the corresponding posture, orientation, and demographics csvs to form one large consolidated csv that is stored as a feather file in [data](data). 
 
 # Rendering the paper
-The Rmarkdown for the paper is stored inside the [writeup](writeup-cogsci) folder. In order to render this paper you must first download the [consolidated data file](https://drive.google.com/file/d/1u2anuP849NGeKrGfEmDN19uR-WzCw26F/view?usp=sharing) and store it inside [data](data) in a newly created folder called consolidateddata. This should be the only external data dependency needed to render the Rmarkdown file.
+The Rmarkdown for the paper is stored inside the [writeup](writeup-cogsci) folder.
