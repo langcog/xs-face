@@ -41,6 +41,7 @@ library(ggthemes)
 library(egg) # plot arranging
 library(lme4)
 library(gridExtra)
+library(feather)
 ```
 # Introduction
 
@@ -162,7 +163,8 @@ Both OpenPose and MTCNN detectors performed relatively well on the gold set, wit
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE, include=FALSE}
 ### READ IN DETECTIONS
-d <- read_csv("../data/consolidateddata/consolidated_data_4detectors.csv") %>%
+getwd()
+d <- read_feather("../data/consolidated_data_4detectors.feather") %>%
   mutate(posture = factor(posture), orientation = factor(orientation))
 
 ## make long form version for plotting both face detections on same graph
