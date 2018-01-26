@@ -3,7 +3,7 @@ import csv
 import ntpath
 import xml.etree.ElementTree as ET
 
-# TODO change folder name to sample or whatever in ~/xsface
+# TODO take in arg for wrist or face and change the corresponding is_face?
 
 BRIA_ANNOTATIONS = "/Users/alessandro/Downloads/sample_face_images_openpose_bll"
 
