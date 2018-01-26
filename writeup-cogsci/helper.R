@@ -156,7 +156,7 @@ summarize.naming <- function (x, window = c(-2,2)) {
     range <- c(max(c(0,t + window[1])),
                min(c(t+window[2],max(x$time,na.rm=T))))
     
-    namings$face[i] <- mean(x$face[x$time > range[1] & x$time < range[2]], na.rm=TRUE)
+    namings$detections[i] <- mean(x$detections[x$time > range[1] & x$time < range[2]], na.rm=TRUE)
     namings$posture[i] <- x$posture[(x$time > namings$time[i])][1]
     namings$orientation[i] <- x$orientation[(x$time > namings$time[i])][1]  
   }
