@@ -29,4 +29,4 @@ if __name__ == "__main__":
 
 		cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-		cv2.imwrite(ntpath.basename(k).split(".")[0] + "_with_box.jpg")
+		cv2.imwrite(ntpath.basename(k).split(".")[0] + "_with_box.jpg", image)
