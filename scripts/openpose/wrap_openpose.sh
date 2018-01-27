@@ -1,14 +1,12 @@
 #!/bin/sh
 
-# TODO add 64GB memory to large videos
-
 module load system
 module load singularity/2.4
 module load cuda/8.0.61
 module load caffe2/0.8.1
 module load cudnn/5.1
 
-mkdir -p $PI_HOME/openpose_output6
+mkdir -p $PI_HOME/openpose_json_output
 
 for vid in $SCRATCH/globus/*/*; do
 	if [[ $vid == *1205* || $vid == *1211* || $vid == *1225* || $vid == *1628*  ]]; then
