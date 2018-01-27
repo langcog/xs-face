@@ -25,8 +25,8 @@ if __name__ == "__main__":
 	for k, v in m2.iteritems():
 		image = cv2.imread(k)
 
-		x, y, w, h = m2[k]
+		x, y, x2, y2 = m2[k]
 
-		cv2.rectangle(image, (x, y), (w, h), (0, 255, 0), 3)
+		cv2.rectangle(image, (x, y), (x2, y2), (0, 255, 0), 3)
 
 		cv2.imwrite(ntpath.basename(k).split(".")[0] + "_with_box.jpg", image)
