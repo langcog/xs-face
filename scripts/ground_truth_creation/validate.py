@@ -1,10 +1,11 @@
 import os
 import csv
 import ntpath
+import xml.etree.ElementTree as ET
 
-# TODO change folder name to sample or whatever in ~/xsface
+# TODO take in arg for wrist or face and change the corresponding is_face?
 
-BRIA_ANNOTATIONS = "/Users/alessandro/xsface/sample_hand_images"
+BRIA_ANNOTATIONS = "/Users/alessandro/Downloads/sample_face_images_openpose_bll"
 
 if __name__ == "__main__":
 
@@ -19,20 +20,22 @@ if __name__ == "__main__":
                 group = str(int(video.split("_")[1][:2]))
                 frame = filename.split(".")[0].split("-")[1]
 
-                rows[video + filename.split(".")[0]] = [group, video, frame, "False", 0]
+                rows[video + filename.split(".")[0]] = [group, video, frame, "False"]
 
         elif ntpath.basename(root) == "annotations": # inside annotations
             video = ntpath.basename(os.path.dirname(root))
             for filename in filenames:
-                arr = rows[video + filename.split(".")[0]]
-                arr[3] = "True"
-                rows[video + filename.split(".")[0]] = arr
+                xmlroot = ET.parse(os.path.join(root, filename)).getroot()
+                if xmlroot.findall("object"):
+                    arr = rows[video + filename.split(".")[0]]
+                    arr[3] = "True"
+                    rows[video + filename.split(".")[0]] = arr
 
     print(len(rows))
 
-    with open("ground_truth_hands.csv", 'wb') as csvfile:
+    with open("ground_truth_face_openpose.csv", 'wb') as csvfile:
         wr = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        wr.writerow(['group', 'video', 'frame', 'is_face', 'angle'])
+        wr.writerow(['group', 'video', 'frame', 'is_face'])
         for key, val in rows.iteritems():
             wr.writerow(val)
 

@@ -1,9 +1,0 @@
-base
-readr
-langcog
-dplyr
-tidyr
-ggplot2
-lubridate
-bindrcpp
-stringr

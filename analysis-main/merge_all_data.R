@@ -20,7 +20,7 @@ detsOpenPose <- detsOpenPose %>%
   mutate(video = name) %>%
   distinct(video,frame,.keep_all=TRUE)  %>%
   mutate(frame = as.numeric(frame) + 1) %>%
-  mutate(faceOP = Nose_conf!=0 & REye_conf!=0 | LEye_conf!=0 )  %>%
+  mutate(faceOP = Nose_conf!=0)  %>%
   mutate(wristOP = LWrist_conf!=0 | RWrist_conf!=0 )   
 
 # open pose detectors
@@ -28,7 +28,7 @@ detsOpenPose_Hands <- read_csv("../data/final_output/openpose_results_with_detai
 detsOpenPose_HandConf <- detsOpenPose_Hands %>%
   mutate(video = name) %>%
   distinct(video,frame,.keep_all=TRUE)  %>%
-  mutate(frame = as.numeric(frame)) %>%
+  mutate(frame = as.numeric(frame) + 1) %>%
   select(video,frame,ends_with("conf")) %>%
   mutate(confLeft=rowSums(.[grep("hand_left", names(.))])/21)  %>%
   mutate(confRight=rowSums(.[grep("hand_right", names(.))])/21)  %>%
@@ -90,5 +90,5 @@ complete_combos <- expand(d, nesting(posture, orientation), subid) %>%
 d <- bind_rows(d, complete_combos)
 
 ## save it out
-write_csv(d, "../data/consolidateddata/consolidated_data_4dets.csv")
+write_csv(d, "../data/consolidateddata/consolidated_data_4detectors.csv")
 
