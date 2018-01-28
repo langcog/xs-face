@@ -313,9 +313,9 @@ caregivers are interacting with children, yet still visually accessible
 by the child and part of their joint interaction. For example, if a
 caregiver was holding a toy and presenting it to the infant, their
 wrists may be visible but their hand may not necessarily be (as it is
-occluded by the toy). Similarly, we used the nose (one of the 18 parts)
-to operationalize face presence, as any half of a face necessarily
-contains a nose.
+occluded by the toy). Similarly, we used the nose (one of the 18 body
+parts detected) to operationalize face presence, as any half of a face
+necessarily contains a nose.
 
 \subsubsection{Algorithms}\label{algorithms}
 
@@ -365,16 +365,16 @@ set'' was constructed in the same manner, with the exception that frames
 with a high density of wrists were taken by wrist detections made by
 OpenPose.
 
-For face detection, MTCNN outperformed OpenPose when looking at the
-composite F-score (0.89 vs.~0.83); thus the face presence analyses to
-follow all result from MTCNN detections. We found that although MTCNN
-and OpenPose perform comparably with the random sample, MTCNN performs
-better on the high density sample evaluation (specifically looking at
-precision), suggesting that OpenPose generated more false positives than
-MTCNN. ViolaJones performed quite poorly relative to the other
-detectors, finding much less faces in the random sample.
+For face detection, MTCNN outperformed OpenPose when taking into account
+only the composite F-score (0.89 MTCNN vs.~0.83 OpenPose); thus the face
+presence analyses to follow all result from MTCNN detections. We found
+that although MTCNN and OpenPose perform comparably with the random
+sample, MTCNN performed better on the high density sample (specifically
+looking at precision), suggesting that OpenPose generated more false
+positives than MTCNN. ViolaJones performed quite poorly relative to the
+other detectors especially on the random sample.
 
-For wrist detection, OpenPose performed moderately well (f = 0.72) with
+For wrist detection, OpenPose performed moderately well (F = 0.72) with
 relatively high precision, but low recall on the randomly sampled set of
 frames (see Table 2). We thus analyze wrist detections, with the caveat
 that we are likely underestimating the proportion of wrists overall in
@@ -433,7 +433,7 @@ their caregivers: the 8-month-olds spent more time with their caregiver
 behind them supporting their sitting positions (see Figure
 \ref{fig:posture}).
 
-\section{Changes in Access to Faces and
+\subsection{Changes in Access to Faces and
 Hands}\label{changes-in-access-to-faces-and-hands}
 
 \begin{CodeChunk}
@@ -540,8 +540,8 @@ locomotive development.
 \end{figure}
 \end{CodeChunk}
 
-\subsection{Access to Faces and Wrists During Labeling
-Events}\label{access-to-faces-and-wrists-during-labeling-events}
+\subsection{Access to Faces and Hands During Labeling
+Events}\label{access-to-faces-and-hands-during-labeling-events}
 
 Finally, we analyzed how face and wrists detections changed during
 object labeling events as a function of infant's posture and

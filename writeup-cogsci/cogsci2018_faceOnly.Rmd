@@ -321,7 +321,7 @@ ggarrange(p1,p2)
 ```
 We noted characteristic changes in infants' posture and orientation across this developmental time range. The proportion of time infants spent sitting decreased with age, and the proportion of time infants spent standing increased with age. Both 8-month-olds and 12-month-olds spent equivalent amounts of time either lying/crawling, which was markedly decreased in the 16-month-olds, who spent most of their time either sitting or standing (see Figure \ref{fig:posture}).  We also observed characteristic changes in children's orientation relative to their caregivers: the 8-month-olds spent more time with their caregiver behind them supporting their sitting positions (see Figure \ref{fig:posture}). 
 
-# Changes in Access to Faces and Hands
+## Changes in Access to Faces and Hands
 ```{r detByAge, fig.env="figure", fig.pos = "h", fig.align = "center", fig.width=3, fig.height=2, fig.cap = "Proportion of faces detected by the MTCNN model (left) and wrists detected by the OpenPose model (right) as a function of child's age. Larger dots indicate children who had longer play sessions and thus for whom there was more data."}
 detectionsByAge <- dlong %>%
   filter(detectorType!="OpenPose-Faces") %>% # for brevity
@@ -589,7 +589,7 @@ p4=ggplot(aroundNamings_Orient_Wrists, aes(x = orientation, y = mean, col = orie
 
 ggarrange(p1,p2, p3, p4)
 ```
-## Access to Faces and Wrists During Labeling Events
+## Access to Faces and Hands During Labeling Events
 Finally, we analyzed how face and wrists detections changed during object labeling events as a function of infant's posture and orientation.  Specfically, we analyzed a four-second window around each labeling event (e.g., "Look at the [zem]!"); these labeling events were hand-annotated and automatically synchronized with the frame-by-frame face detections. We again found that infants' posture and orientations impacted the degree to which they saw their caregiver's face and wrist during a labeling event; infants who were sitting or standing were more likely to have access to this social information.
 
 # General Discussion
