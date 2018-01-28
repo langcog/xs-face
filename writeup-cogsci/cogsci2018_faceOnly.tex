@@ -205,14 +205,14 @@ Simmons, Yurovsky, \& Pusiol (2013).
 
 }
 
-\caption[Field of view for three different headcam configurations, with the device we used in the middle]{Field of view for three different headcam configurations, with the device we used in the middle.}\label{fig:headcam}
+\caption[Field of view for two different headcam configurations]{Field of view for two different headcam configurations. We used the second device in our experiments.}\label{fig:headcam}
 \end{figure}
 \end{CodeChunk}
 
 We used a small, head-mounted camera (``headcam'') that was constructed
 from a MD80 model camera attached to a soft elastic headband. Videos
-captured by the headcam were 720x480 pixels with 25 frames per
-second.Detailed instructions for creating this headcam can be found at
+captured by the headcam were 720x480 pixels with 25 frames per second.
+Detailed instructions for creating this headcam can be found at
 \url{http://babieslearninglanguage.blogspot.com/2013/10/how-to-make-babycam.html}.
 A fisheye lens was attached to the camera to increase the view angle
 from \(32^{\circ}\) horizontal by \(24^{\circ}\) vertical to
@@ -276,14 +276,14 @@ physical posture (e.g.~standing) and the orientation of the caregiver
 relative to the child (e.g.~far away). The child's posture was
 categorized as being held/carried, prone (crawling or lying), sitting,
 or standing. The caregiver's orientation was characterized as being
-close to the child, far from the child, and a global category of
-caregiver behind the child. For the first two annotations (close/far
-from the child), the caregiver could either be to the the front or to
-the side of the child. All annotations were made by a trained coder
-using the OpenSHAPA/Datavyu software (K. Adolph, Gilmore, Freeman,
-Sanderson, \& Millman, 2012), and times when the child was out of view
-of the tripod camera were marked as uncodable and were excluded from
-these annotations.
+close to the child, far from the child, and behind the child (whether
+close or far). For the first two annotations (close/far from the child),
+the caregiver could either be to the the front or to the side of the
+child. All annotations were made by a trained coder using the
+OpenSHAPA/Datavyu software (K. Adolph, Gilmore, Freeman, Sanderson, \&
+Millman, 2012), and times when the child was out of view of the tripod
+camera were marked as uncodable and were excluded from these
+annotations.
 
 \subsection{Face Detection}\label{face-detection}
 
@@ -295,11 +295,11 @@ a benchmark for performance, and while it can achieve impressive
 accuracy in some situations, it is notoriously bad at dealing with
 occluded faces (Scheirer, Anthony, Nakayama, \& Cox, 2014). We next
 capitalized on recent improvements in computer vision, testing the
-performance of two state-of-the-art face detectors that both made use of
-Convolutional Neural Networks (CNNs) to extract face information. The
-first algorithm was specifically optimized for face detection, and the
-second algorithm was optimized to extract information about the position
-of agent's bodyparts.
+performance of two face detectors that both made use of Convolutional
+Neural Networks (CNNs) to extract face information. The first algorithm
+was specifically optimized for face detection, and the second algorithm
+was optimized to extract information about the position of agent's
+bodyparts.
 
 The second of these algorithms (OpenPose) also captures information
 about the ``skeleton'' of people in a given frame, outputting
@@ -489,6 +489,7 @@ Intercept & -5.2469 & 0.0584 & -89.88 & 0.0000 \\
   Far & 2.5479 & 0.0239 & 106.42 & 0.0000 \\ 
    \hline
 \end{tabular}
+\caption{Model coefficients from a generalized linear model predicting the proportion of wrists seen by infants.} 
 \end{table}
 
 \begin{table}[H]
@@ -506,10 +507,11 @@ Intercept & -5.0818 & 0.0776 & -65.46 & 0.0000 \\
   Far & 1.6357 & 0.0200 & 81.61 & 0.0000 \\ 
    \hline
 \end{tabular}
+\caption{Model coefficients from a generalized linear model predicting the proportion of wrists seen by infants.} 
 \end{table}
 
 To formalize these observations, we fit a generalized linear model to
-the proportion faces infants saw in each posture and orientation (as
+the proportion of faces infants saw in each posture and orientation (as
 detected by MTCNN), with participant's age, orientation, and posture as
 independent variables. A summary of the coefficients of a model with
 only main effects (and no interactions) model can be found in Table 3.
@@ -550,7 +552,7 @@ standing were more likely to have access to this social information.
 
 \section{General Discussion}\label{general-discussion}
 
-We use a head-mounted camera to explore how children's postural and
+We used a head-mounted camera to explore how children's postural and
 locomotive development directly impacts their access to social
 information, here operationalized as the presence of the faces and
 wrists of their caregiver. We found that children's posture and
