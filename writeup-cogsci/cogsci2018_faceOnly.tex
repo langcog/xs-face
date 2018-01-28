@@ -72,7 +72,7 @@ computer vision algorithms to detect the proportion of faces and hands
 in infants' environments. We find that infants' posture and orientation
 to their caregiver largely mediate infants' access to socially
 informative features, suggesting that postural and locomotive
-development play a significant role in mediating children's emerging
+developments play a significant role in the emergence of children's
 linguistic and social capacities. Broadly, we suggest that the combined
 use of head-mounted cameras and the application of new computer vision
 techniques is a promising avenue for understanding the statistics of
@@ -153,8 +153,8 @@ orientation relative to their caregiver were also recorded from a
 third-person perspective and hand-annotated. We then capitalize on
 recent improvements in face and pose detection algorithms (Cao, Simon,
 Wei, \& Sheikh, 2017; K. Zhang, Zhang, Li, \& Qiao, 2016) to analyze the
-frequencies of faces and hands (operationalized by the presence of
-wrists) in the child's visual environment, both overall and relative to
+frequencies of faces and hands (using wrist presence as a proxy for the
+latter) in the child's visual environment, both overall and relative to
 naming events by their caregivers. We hypothesized that there would be
 differential access to social information based on children's postural
 developments: crawling infants would see fewer faces because they would
@@ -177,7 +177,7 @@ Demographics and exclusion rates are given in Table \ref{tab:pop}.
 \centering
 \begin{tabular}{rrrrrr}
   \hline
- Group & N & \% incl. & Mean age & Videos length (min) \\ 
+ Group & N & \% incl. & Avg age & Avg video length (min) \\ 
   \hline
    8 mo. &   12 & 0.46 & 8.71 & 14.41 \\ 
    12 mo. &  12 & 0.40 & 12.62 & 13.48 \\ 
@@ -286,7 +286,7 @@ the OpenSHAPA/Datavyu software (K. Adolph, Gilmore, Freeman, Sanderson,
 tripod camera were marked as uncodable and were excluded from these
 annotations.
 
-\subsection{Face and Wrist Detection}\label{face-and-wrist-detection}
+\subsection{Face and Hand Detection}\label{face-and-hand-detection}
 
 We used three face detection systems to explore infants' changing access
 to social information and to avoid the cost of hand-annotating every
@@ -302,17 +302,20 @@ optimized for face detection, and the second algorithm was optimized to
 extract information about the position of 18 different body parts
 belonging to an agent.
 
-This second of the CNN-based algorithms - the pose detector - provided
-us with the location of an agent's wrists, which we used as a good proxy
-for the presence of a hand. We do so first because we did not capture
-the entire visual field experienced by the infants/children. Thus, even
-though the video may only show the presence of a wrist, the caregiver's
-hand may be within the child's field of view. Second, we do so because
-hands are often occluded by objects when caregivers are interacting with
-children, yet still visually accessible by the child and part of their
-joint interaction. For example, if a caregiver was holding a toy and
-presenting it to the infant, their wrists may be visible but their hand
-may not necessarily be (as it is occluded by the toy).
+This second of the CNN-based algorithms--the pose detector--provided us
+(along with other parts) with the location of an agent's wrists, which
+we used as a good proxy for the presence of a hand. We did so first
+because we did not capture the entire visual field experienced by the
+infants/children. Thus, even though the video may only show the presence
+of a wrist, the caregiver's hand may be within the child's field of
+view. Second, we did so because hands are often occluded by objects when
+caregivers are interacting with children, yet still visually accessible
+by the child and part of their joint interaction. For example, if a
+caregiver was holding a toy and presenting it to the infant, their
+wrists may be visible but their hand may not necessarily be (as it is
+occluded by the toy). Similarly, we used the nose (one of the 18 parts)
+to operationalize face presence, as any half of a face necessarily
+contains a nose.
 
 \subsubsection{Algorithms}\label{algorithms}
 
@@ -342,9 +345,8 @@ series of body part candidates. The candidates are then matched to a
 single individual and finally assembled into a pose. For the purposes of
 our investigation we only made use of the body parts relevant to the
 face and hands (nose and wrists). We operationalized face detections as
-any frames containing a nose, as any half of a face necessarily contains
-a nose. We operationalized wrist detections as any frames containing
-either the left or the right wrist.
+any frames containing a nose, and hand detections as any frames
+containing either the left or the right wrist.
 
 \subsubsection{Detector evaluation}\label{detector-evaluation}
 
