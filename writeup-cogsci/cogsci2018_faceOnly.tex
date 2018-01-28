@@ -68,14 +68,14 @@ entirely new way. How do these postural and locomotive changes affect
 children's access to the social information relevant for word-learning?
 Here, we explore this question by using head-mounted cameras to record
 infants' (8-16 months of age) egocentric visual perspective and use
-state-of-the-art computer vision algorithms to detect the proportion of
-faces in infants' environments. We find that infants' posture and
-orientation to their caregiver largely mediate infants' access to faces,
-suggesting that these postural and locomotive developments facilitate
-infants' emerging linguistic and social capacities. Broadly, we suggest
-that the combined use of head-mounted cameras and the application of
-novel deep learning algorithms is a promising avenue for understanding
-the statistics of infants' visual and linguistic experience.
+computer vision algorithms to detect the proportion of faces in infants'
+environments. We find that infants' posture and orientation to their
+caregiver largely mediate infants' access to faces, suggesting that
+these postural and locomotive developments facilitate infants' emerging
+linguistic and social capacities. Broadly, we suggest that the combined
+use of head-mounted cameras and the application of new computer vision
+techniques is a promising avenue for understanding the statistics of
+infants' visual and linguistic experience.
 
 \textbf{Keywords:}
 social cognition; face-perception; infancy; locomotion; head-cameras;
@@ -190,9 +190,11 @@ To obtain this final sample, we tested 95 children, excluding 59
 children for the following reasons: 20 for technical issues related to
 the headcam, 15 for failing to wear the headcam, 10 for fewer than 4
 minutes of headcam footage, 5 for having multiple adults present, 5 for
-missing CDI data, 2 for missing scene camera footage, 1 for fussiness,
-and one excluded for sample symmetry. All inclusion decisions were made
-independent of the results of subsequent analyses.
+missing Communicative Development Inventory (CDI) data, 2 for missing
+scene camera footage, 1 for fussiness, and one excluded for sample
+symmetry. All inclusion decisions were made independent of the results
+of subsequent analyses. Some of these data were also used in Frank,
+Simmons, Yurovsky, \& Pusiol (2013).
 
 \subsection{Head-mounted camera}\label{head-mounted-camera}
 
@@ -203,7 +205,7 @@ independent of the results of subsequent analyses.
 
 }
 
-\caption[Field of view for three different headcam configurations, with the device we used in the middle]{Field of view for three different headcam configurations, with the device we used in the middle. The lowest camera is pictured for comparison, but was not available until after our study was already in progress.}\label{fig:headcam}
+\caption[Field of view for three different headcam configurations, with the device we used in the middle]{Field of view for three different headcam configurations, with the device we used in the middle.}\label{fig:headcam}
 \end{figure}
 \end{CodeChunk}
 
@@ -225,8 +227,9 @@ Hansen, \& Fulton, 1988; Mayer, Fulton, \& Cummings, 1988). As we were
 primarily interested in the presence of faces in the child's field of
 view, we chose to orient the camera upwards to capture the entirety of
 the child's upper visual field where the child is likely to see the
-faces of adults around them. This allowed us to maximize our chances of
-capturing faces that the child would have seen during the play session.
+faces of adults around them. This choice allowed us to maximize our
+chances of capturing faces that the child would have seen during the
+play session.
 
 \subsection{Procedure}\label{procedure}
 
@@ -241,8 +244,8 @@ engaging toys to try to draw the child's focus away from the headcam
 After the child was comfortable wearing the headcam, the child and
 caregiver were shown to a playroom for the free-play session--the focus
 of the current study. Parents were shown a box containing three pairs of
-novel and familiar objects (e.g., a ball and a feather duster, named a
-``zem''), and were instructed to play with the object pairs with their
+novel and familiar objects (e.g., a ball and a microfiber duster, named
+a ``zem''), and were instructed to play with the object pairs with their
 child one at a time, ``as they typically would.'' All parents confirmed
 that their child had not previously seen the novel toys and were
 instructed to use the novel labels to refer to the novel toys.
@@ -284,19 +287,19 @@ these annotations.
 
 \subsection{Face Detection}\label{face-detection}
 
-We used a total of three face detection systems to explore infants'
-changing access to social information and to avoid the cost of
-hand-annotating every frame. We first measured the performance of the
-most commonly-used and widely available face detection algorithms
-(Viola-Jones). We used this as a benchmark for performance, and while it
-can achieve impressive accuracy in some situations, it is notoriously
-bad at dealing with occluded faces (Scheirer, Anthony, Nakayama, \& Cox,
-2014). We next capitalized on recent improvements in computer vision,
-testing the performance of two state-of-the-art face detectors that both
-made use of Convolutional Neural Networks (CNNs) to extract face
-information. The first algorithm was specifically optimized for face
-detection, and the second algorithm was optimized to extract information
-about the position of agent's bodyparts.
+We used three face detection systems to explore infants' changing access
+to social information and to avoid the cost of hand-annotating every
+frame. We first measured the performance of the most commonly-used and
+widely available face detection algorithm, Viola-Jones. We used this as
+a benchmark for performance, and while it can achieve impressive
+accuracy in some situations, it is notoriously bad at dealing with
+occluded faces (Scheirer, Anthony, Nakayama, \& Cox, 2014). We next
+capitalized on recent improvements in computer vision, testing the
+performance of two state-of-the-art face detectors that both made use of
+Convolutional Neural Networks (CNNs) to extract face information. The
+first algorithm was specifically optimized for face detection, and the
+second algorithm was optimized to extract information about the position
+of agent's bodyparts.
 
 The second of these algorithms (OpenPose) also captures information
 about the ``skeleton'' of people in a given frame, outputting
@@ -316,9 +319,9 @@ may not necessarily be (as it is occluded by the toy).
 Algorithms}\label{face-detection-algorithms}
 
 The first face detection system made use of a series of Haar
-feature-based cascade classifiers (Viola-Jones, (Viola \& Jones, 2004))
-applied to each individual frame. This detector provided information
-about the presence of a face as well as its size and position.
+feature-based cascade classifiers (Viola \& Jones, 2004) applied to each
+individual frame. This detector provided information about the presence
+of a face as well as its size and position.
 
 The second algorithm was based on the work by K. Zhang et al. (2016)
 using multi-task cascaded convolutional neural networks (MTCNNs). The
@@ -347,32 +350,28 @@ either the left or the right wrist.
 
 \subsubsection{Detector evaluation}\label{detector-evaluation}
 
-To evaluate face detector performance, we constructed a ``gold set'' of
-frames by hand labeling both a sample of frames with a high density of
-faces (half reported by the MTCNN, half by OpenPose) and a random sample
-from the remaining frames; each sample was comprised of frames sampled
-from each participant (i.e., video). This was done so as to not bias our
-evaluation by the relatively rare appearance of faces in the dataset.
-Faces were classifed as present in a frame if at least half of the face
-was showing. Precision (hits / hits + false alarms), recall (hits / hits
-+ misses), and F-score (harmonic mean of previous measures) were
-calculated for all detectors and are reported in Table 2. For wrist
-detections, the ``gold set'' was constructed in the same way, except
-that frames with a high density of wrists were taken by wrist detections
-made by OpenPose.
+To evaluate face detector performance, we needed to construct a ``gold
+set'' of labeled frames that did not carry any biases that might be due
+to the relatively rare appearance of faces in the dataset. We thus
+hand-labeled two samples: a sample containing a high density of faces
+(half reported by MTCNN, half by OpenPose) and a random sample from the
+remaining frames. Each sample was comprised of an equal number of frames
+taken from each participant (i.e., video). Faces were classifed as
+present in a frame if at least half of the face was showing. Precision
+(hits / hits + false alarms), recall (hits / hits + misses), and F-score
+(harmonic mean of precision and recall) were calculated for all
+detectors and are reported in Table 2. For wrist detections, the ``gold
+set'' was constructed in the same way, except that frames with a high
+density of wrists were taken by wrist detections made by OpenPose.
 
-For face detectionm, both OpenPose and MTCNN detectors performed
-relatively well on the gold set, with MTCNN outperforming OpenPose on
-the random sample but trailing behind in the high density sample. We
-found a clear tradeoff between recall and precision between the two
-models. That is, MTCNN almost always detected a face if it was present,
-but made more false alarms; conversely, OpenPose made less false alarms
-but overall detected fewer faces. ViolaJones performed quite poorly,
-missing many of the faces in the randomly sampled frames. Overall, MTCNN
-had a slightly higher f-score (f = 0.89) than OpenPose (f = 0.83); for
-brevity, we thus report analyses only using these detector outputs
-(though we found the same pattern of results; anlayses code avaliable at
-\url{https://github.com/amsan7/xs-face}).
+For face detection, MTCNN outperformed OpenPose when looking at the
+composite F-score (0.89 vs.~0.83); thus the face presence analyses to
+follow all result from MTCNN detections. We found that although MTCNN
+and OpenPose perform comparably with the random sample, MTCNN had the
+edge with the high density sample (specifically looking at precision),
+suggesting that OpenPose generated more false positives than MTCNN.
+ViolaJones performed quite poorly, missing many of the faces in the
+randomly sampled frames.
 
 For wrist detection, OpenPose performed moderately well (f = 0.72) with
 relatively high precision, but low recall on the randomly sampled set of
@@ -386,10 +385,10 @@ the datatset.
   \hline
    Algorithm & Sample\ Type & P & R & F \\ 
   \hline
-  MTCNN-Faces & High density & 0.89 & 0.92 & 0.90 \\ 
+  MTCNN-Faces & High density & 0.89 & 0.92 & \textbf{0.90} \\ 
   MTCNN-Faces & Random & 0.94 & 0.62 & 0.75 \\ 
   OpenPose-Faces & High density & 0.78 & 0.93 & 0.84 \\ 
-  OpenPose-Faces & Random & 0.72 & 0.80 & 0.76 \\ 
+  OpenPose-Faces & Random & 0.72 & 0.80 & \textbf{0.76} \\ 
   ViolaJones-Faces & High density & 0.96 & 0.44 & 0.60 \\ 
   ViolaJones-Faces & Random & 0.44 & 0.38 & 0.41 \\ 
   OpenPose-Wrists & High density & 0.64 & 1.00 & 0.78 \\ 
@@ -592,10 +591,10 @@ Thanks to Kaia Simmons, Kathy Woo, Aditi Maliwal, and other members of
 the Language and Cognition Lab for help in recruitment, data collection,
 and annotation. This research was supported by a John Merck Scholars
 grant to MCF. An earlier version of this work was presented to the
-Cognitive Science Society in Frank, Simmons, Yurovsky, \& Pusiol (2013).
-Please address correspondence to Michael C. Frank, Department of
-Psychology, Stanford University, 450 Serra Mall (Jordan Hall), Stanford,
-CA, 94305, tel: (650) 724-4003, email: \texttt{mcfrank@stanford.edu}.
+Cognitive Science Society in Frank et al. (2013). Please address
+correspondence to Michael C. Frank, Department of Psychology, Stanford
+University, 450 Serra Mall (Jordan Hall), Stanford, CA, 94305, tel:
+(650) 724-4003, email: \texttt{mcfrank@stanford.edu}.
 
 \section{References}\label{references}
 
