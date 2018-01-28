@@ -569,7 +569,8 @@ p2=ggplot(aroundNamings_Orient_Faces, aes(x = orientation, y = mean, col = orien
   xlab("") +
   ylim(0,.3) +
   theme_few() +
-  theme(legend.position="none") 
+  theme(legend.position="none")  +
+  element_text(angle = 45, hjust = 1)
 
 p3=ggplot(aroundNamings_Posture_Wrists, aes(x = posture, y = mean, col = posture)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
@@ -577,7 +578,8 @@ p3=ggplot(aroundNamings_Posture_Wrists, aes(x = posture, y = mean, col = posture
   xlab("") +
   ylim(0,.3) +
   theme_few() +
-  theme(legend.position="none") 
+  theme(legend.position="none")  +
+  element_text(angle = 45, hjust = 1)
 
 p4=ggplot(aroundNamings_Orient_Wrists, aes(x = orientation, y = mean, col = orientation)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
