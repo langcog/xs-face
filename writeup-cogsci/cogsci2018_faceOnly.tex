@@ -68,10 +68,11 @@ entirely new way. How do these postural and locomotive changes affect
 children's access to the social information relevant for word-learning?
 Here, we explore this question by using head-mounted cameras to record
 infants' (8-16 months of age) egocentric visual perspective and use
-computer vision algorithms to detect the proportion of faces in infants'
-environments. We find that infants' posture and orientation to their
-caregiver largely mediate infants' access to faces, suggesting that
-these postural and locomotive developments facilitate infants' emerging
+computer vision algorithms to detect the proportion of faces and hands
+in infants' environments. We find that infants' posture and orientation
+to their caregiver largely mediate infants' access to socially
+informative features, suggesting that postural and locomotive
+development play a significant role in mediating children's emerging
 linguistic and social capacities. Broadly, we suggest that the combined
 use of head-mounted cameras and the application of new computer vision
 techniques is a promising avenue for understanding the statistics of
@@ -122,8 +123,8 @@ and independently locomote may fundamentally change their ability to
 access social information (e.g., faces, gaze) relative to children who
 are still crawling and sitting. In other words, the ability to walk and
 move around independently and subsequently access more detailed social
-information may accelerate infants' ability to learn the people in their
-environments.
+information may accelerate infants' ability to learn from the people in
+their environments.
 
 Recent technological developments allow for testing of this hypothesis
 by documenting the experiences of infants and children from their own
@@ -150,16 +151,16 @@ in three age ranges (8,12, and 16 months) using head-mounted cameras
 during a brief laboratory free-play session; children's posture and
 orientation relative to their caregiver were also recorded from a
 third-person perspective and hand-annotated. We then capitalize on
-recent improvements in face detection algorithms (Cao, Simon, Wei, \&
-Sheikh, 2017; K. Zhang, Zhang, Li, \& Qiao, 2016) to analyze the
-frequencies of faces and wrists/hands in the child's visual environment,
-both overall and relative to naming events by their caregivers. We
-hypothesized that there would be differential access to social
-information based on children's postural developments: that as infant's
-learned how to crawl, they would see relatively fewer faces as they
-would be looking primarily at the ground, and that as infant's learned
-how to walk and locomote independently, that they will experience a much
-greater portion of social information in their environment.
+recent improvements in face and pose detection algorithms (Cao, Simon,
+Wei, \& Sheikh, 2017; K. Zhang, Zhang, Li, \& Qiao, 2016) to analyze the
+frequencies of faces and hands (operationalized by the presence of
+wrists) in the child's visual environment, both overall and relative to
+naming events by their caregivers. We hypothesized that there would be
+differential access to social information based on children's postural
+developments: crawling infants would see fewer faces because they would
+primarily be looking at the ground, and walking toddlers would have
+access to a richer visual landscape that would contain a larger portion
+of the social information in the environment.
 
 \section{Methods}\label{methods}
 
@@ -205,7 +206,7 @@ Simmons, Yurovsky, \& Pusiol (2013).
 
 }
 
-\caption[Field of view for two different headcam configurations]{Field of view for two different headcam configurations. We used the second device in our experiments.}\label{fig:headcam}
+\caption[Field of view for two different headcam configurations (we used the one below in our current study)]{Field of view for two different headcam configurations (we used the one below in our current study).}\label{fig:headcam}
 \end{figure}
 \end{CodeChunk}
 
@@ -276,47 +277,44 @@ physical posture (e.g.~standing) and the orientation of the caregiver
 relative to the child (e.g.~far away). The child's posture was
 categorized as being held/carried, prone (crawling or lying), sitting,
 or standing. The caregiver's orientation was characterized as being
-close to the child, far from the child, and behind the child (whether
-close or far). For the first two annotations (close/far from the child),
-the caregiver could either be to the the front or to the side of the
-child. All annotations were made by a trained coder using the
-OpenSHAPA/Datavyu software (K. Adolph, Gilmore, Freeman, Sanderson, \&
-Millman, 2012), and times when the child was out of view of the tripod
-camera were marked as uncodable and were excluded from these
+close to the child, far from the child, and behind the child
+(independent of distance). For the first two annotations (close/far from
+the child), the caregiver could either be to the the front or to the
+side of the child. All annotations were made by a trained coder using
+the OpenSHAPA/Datavyu software (K. Adolph, Gilmore, Freeman, Sanderson,
+\& Millman, 2012), and times when the child was out of view of the
+tripod camera were marked as uncodable and were excluded from these
 annotations.
 
-\subsection{Face Detection}\label{face-detection}
+\subsection{Face and Wrist Detection}\label{face-and-wrist-detection}
 
 We used three face detection systems to explore infants' changing access
 to social information and to avoid the cost of hand-annotating every
-frame. We first measured the performance of the most commonly-used and
-widely available face detection algorithm, Viola-Jones. We used this as
-a benchmark for performance, and while it can achieve impressive
-accuracy in some situations, it is notoriously bad at dealing with
-occluded faces (Scheirer, Anthony, Nakayama, \& Cox, 2014). We next
-capitalized on recent improvements in computer vision, testing the
-performance of two face detectors that both made use of Convolutional
-Neural Networks (CNNs) to extract face information. The first algorithm
-was specifically optimized for face detection, and the second algorithm
-was optimized to extract information about the position of agent's
-bodyparts.
+frame. The first of these is the most commonly-used and widely available
+face detection algorithm: Viola-Jones. We used this as a benchmark for
+performance, and while it can achieve impressive accuracy in some
+situations, it is notoriously bad at dealing with occluded faces
+(Scheirer, Anthony, Nakayama, \& Cox, 2014). We next capitalized on
+recent improvements in computer vision, testing the performance of two
+face detectors that both made use of Convolutional Neural Networks
+(CNNs) to extract face information. The first algorithm was specifically
+optimized for face detection, and the second algorithm was optimized to
+extract information about the position of 18 different body parts
+belonging to an agent.
 
-The second of these algorithms (OpenPose) also captures information
-about the ``skeleton'' of people in a given frame, outputting
-information about the entire set of body parts that were detected. We
-analyze wrist detections as a good proxy for the presence of a hand. We
-do so first because we did not capture the entire visual field
-experienced by the infants/children. Thus, even though the video may
-only show the presence of a wrist, the caregiver's hand may be within
-the child's field of view. Second, we do so because hands are often
-occluded by objects when caregivers are interacting with children, yet
-still visually accessible by the child and part of their joint
-interaction. For example, if a caregiver was holding a toy and
+This second of the CNN-based algorithms - the pose detector - provided
+us with the location of an agent's wrists, which we used as a good proxy
+for the presence of a hand. We do so first because we did not capture
+the entire visual field experienced by the infants/children. Thus, even
+though the video may only show the presence of a wrist, the caregiver's
+hand may be within the child's field of view. Second, we do so because
+hands are often occluded by objects when caregivers are interacting with
+children, yet still visually accessible by the child and part of their
+joint interaction. For example, if a caregiver was holding a toy and
 presenting it to the infant, their wrists may be visible but their hand
 may not necessarily be (as it is occluded by the toy).
 
-\subsubsection{Face Detection
-Algorithms}\label{face-detection-algorithms}
+\subsubsection{Algorithms}\label{algorithms}
 
 The first face detection system made use of a series of Haar
 feature-based cascade classifiers (Viola \& Jones, 2004) applied to each
@@ -343,16 +341,16 @@ applies part affinity fields (PAFs) for part association, producing a
 series of body part candidates. The candidates are then matched to a
 single individual and finally assembled into a pose. For the purposes of
 our investigation we only made use of the body parts relevant to the
-face (ears, eyes, nose). We operationalized face detections as any
-frames containing a nose, as any half of a face necessarily contains a
-nose. We operationalized wrist detections as any frames containing
+face and hands (nose and wrists). We operationalized face detections as
+any frames containing a nose, as any half of a face necessarily contains
+a nose. We operationalized wrist detections as any frames containing
 either the left or the right wrist.
 
 \subsubsection{Detector evaluation}\label{detector-evaluation}
 
-To evaluate face detector performance, we needed to construct a ``gold
-set'' of labeled frames that did not carry any biases that might be due
-to the relatively rare appearance of faces in the dataset. We thus
+To evaluate face detector performance, we needed to construct an
+unbiased ``gold set'' of labeled frames that made sure to account for
+the relatively rare appearance of faces in the dataset. We thus
 hand-labeled two samples: a sample containing a high density of faces
 (half reported by MTCNN, half by OpenPose) and a random sample from the
 remaining frames. Each sample was comprised of an equal number of frames
@@ -361,17 +359,18 @@ present in a frame if at least half of the face was showing. Precision
 (hits / hits + false alarms), recall (hits / hits + misses), and F-score
 (harmonic mean of precision and recall) were calculated for all
 detectors and are reported in Table 2. For wrist detections, the ``gold
-set'' was constructed in the same way, except that frames with a high
-density of wrists were taken by wrist detections made by OpenPose.
+set'' was constructed in the same manner, with the exception that frames
+with a high density of wrists were taken by wrist detections made by
+OpenPose.
 
 For face detection, MTCNN outperformed OpenPose when looking at the
 composite F-score (0.89 vs.~0.83); thus the face presence analyses to
 follow all result from MTCNN detections. We found that although MTCNN
-and OpenPose perform comparably with the random sample, MTCNN had the
-edge with the high density sample (specifically looking at precision),
-suggesting that OpenPose generated more false positives than MTCNN.
-ViolaJones performed quite poorly, missing many of the faces in the
-randomly sampled frames.
+and OpenPose perform comparably with the random sample, MTCNN performs
+better on the high density sample evaluation (specifically looking at
+precision), suggesting that OpenPose generated more false positives than
+MTCNN. ViolaJones performed quite poorly relative to the other
+detectors, finding much less faces in the random sample.
 
 For wrist detection, OpenPose performed moderately well (f = 0.72) with
 relatively high precision, but low recall on the randomly sampled set of
@@ -395,16 +394,16 @@ the datatset.
   OpenPose-Wrists & Random & 0.76 & 0.26 & 0.39 \\ 
    \hline
 \end{tabular}
-\caption{Detector performance on both high density samples (where proportion of faces detected was high) and random samples (where frames were randomly selected). P, R, and F denote precision, recall, and F-score, respectively.} 
+\caption{Detector performance on both high density samples (where proportion of faces detected was high) and random samples (where frames were randomly selected). P, R, and F denote precision, recall, and F-score, respectively. Scores in bold are the highest F-scores for each sample type.} 
 \end{table}
 
 \section{Results}\label{results}
 
 First, we report developmental shifts in infants' posture and their
 orientation relative to their caregiver. Then, we explore how these
-changes influence children's visual access to faces across this
-developmental time range. Finally, we explore how these changes impact
-the accessibility of faces during labeling events.
+changes influence children's visual access to faces and hands across
+this developmental time range. Finally, we explore how these changes
+impact the accessibility of faces and hands during labeling events.
 
 \subsection{Changes in Posture and
 Orientation}\label{changes-in-posture-and-orientation}
@@ -432,7 +431,8 @@ their caregivers: the 8-month-olds spent more time with their caregiver
 behind them supporting their sitting positions (see Figure
 \ref{fig:posture}).
 
-\section{Changes in Access to Faces}\label{changes-in-access-to-faces}
+\section{Changes in Access to Faces and
+Hands}\label{changes-in-access-to-faces-and-hands}
 
 \begin{CodeChunk}
 \begin{figure}[h]
@@ -441,15 +441,16 @@ behind them supporting their sitting positions (see Figure
 
 }
 
-\caption[Proportion of faces detected by the MTCNN model (left) and wrists detected by the OpenPose model (right panel) as a function of child's age]{Proportion of faces detected by the MTCNN model (left) and wrists detected by the OpenPose model (right panel) as a function of child's age. Larger dots indicate children who had longer playsessions and thus for whom there was more data}\label{fig:detByAge}
+\caption[Proportion of faces detected by the MTCNN model (left) and wrists detected by the OpenPose model (right) as a function of child's age]{Proportion of faces detected by the MTCNN model (left) and wrists detected by the OpenPose model (right) as a function of child's age. Larger dots indicate children who had longer play sessions and thus for whom there was more data.}\label{fig:detByAge}
 \end{figure}
 \end{CodeChunk}
 
-We first examined the proportion of face detections across age; a full
-summary can be seen in Figure \ref{fig:detByAge}. We observed a slight
-U-shaped function both when analyzing the output of the MTCNN and
-OpenPose detectors, such that 12-month-olds appeared to experience
-slighly fewer faces faces than 8 or 16-month-olds.
+We first examined the proportion of face and wrist detections across
+age; a full summary can be seen in Figure \ref{fig:detByAge}. When
+looking at face presence, we observed a slight U-shaped function both
+when analyzing the output of the MTCNN and OpenPose detectors, such that
+12-month-olds appeared to experience slighly fewer faces faces than 8 or
+16-month-olds.
 
 However, we found that any age related effects were much smaller
 compared to the impact of postural and locomotive changes on children's
@@ -489,7 +490,7 @@ Intercept & -5.2469 & 0.0584 & -89.88 & 0.0000 \\
   Far & 2.5479 & 0.0239 & 106.42 & 0.0000 \\ 
    \hline
 \end{tabular}
-\caption{Model coefficients from a generalized linear model predicting the proportion of wrists seen by infants.} 
+\caption{Model coefficients from a generalized linear model predicting the proportion of faces seen by infants.} 
 \end{table}
 
 \begin{table}[H]
@@ -522,8 +523,8 @@ for the OpenPose face detections, omitted here for brevity. We also
 found the same pattern with respect to infant's visual access to hands
 (see Table 4); including interaction terms also reduced any main effect
 of age on the proportion of hands detected (b = -15.7, SE = 113.98, z =
--0.14 , p =0.89). Thus, these results suggest that infants access to
-social information is heavily infleunced by their postural and
+-0.14 , p =0.89). Thus, these results suggest that infants' access to
+social information is heavily influenced by their postural and
 locomotive development.
 
 \begin{CodeChunk}
@@ -545,7 +546,7 @@ object labeling events as a function of infant's posture and
 orientation. Specfically, we analyzed a four-second window around each
 labeling event (e.g., ``Look at the {[}zem{]}!''); these labeling events
 were hand-annotated and automatically synchronized with the
-frame-by-frame face detections. We again found that infant's posture and
+frame-by-frame face detections. We again found that infants' posture and
 orientations impacted the degree to which they saw their caregiver's
 face and wrist during a labeling event; infants who were sitting or
 standing were more likely to have access to this social information.
