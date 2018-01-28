@@ -132,8 +132,8 @@ The experimenter then left the playroom for approximately 15 minutes, during whi
 ## Data Processing and Annotation
 
 \begin{figure*}
-\includegraphics[width=6in]{images/framesample.pdf}
-\caption{\label{fig:frames} Example face detections made by MTCNN for the headcam videos from a child in each group  (green squares).}
+\includegraphics[width=6in]{images/detector_samples_banner.pdf}
+\caption{\label{fig:frames} Example face and pose detections made by OpenPose (top row) and MTCNN (bottom row) from a child in each age group. The last column features a false positive from OpenPose and a false negative from MTCNN.}
 \end{figure*}
 
 Headcam videos were trimmed such that they excluded the instruction phase when the experimenter was in the room and were automatically synchronized with the tripod-mounted videos using FinalCut Pro Software. These sessions yielded videos of 
