@@ -286,11 +286,11 @@ to faces. The first of these is the most commonly-used and widely
 available face detection algorithm: Viola-Jones. We used this as a
 benchmark for performance, as while it can achieve impressive accuracy
 in some situations, it is notoriously bad at dealing with occluded faces
-(Scheirer, Anthony, Nakayama, \& Cox, 2014). We next capitalized tested
-the performance of two face detectors that both made use of recently
+(Scheirer, Anthony, Nakayama, \& Cox, 2014). We next tested the
+performance of two face detectors that both made use of recently
 developed Convolutional Neural Networks (CNNs) to extract face
 information. The first algorithm was specifically optimized for face
-detection, and the second algorithm was this to extract information
+detection, and the second algorithm was optimized to extract information
 about the position of 18 different body parts. For the second algorithm
 (called OpenPose) (Cao et al., 2017), we used the agent's nose (one of
 the 18 body parts detected) to operationalize the presence of faces, as
@@ -314,7 +314,7 @@ The first face detection system made use of a series of Haar
 feature-based cascade classifiers (Viola \& Jones, 2004) applied to each
 individual frame. This detector provided information about the presence
 of a face as well as its size and position. The second algorithm (based
-on work by K. Zhang et al. (2016)) using multi-task cascaded
+on work by K. Zhang et al. (2016)) uses multi-task cascaded
 convolutional neural networks (MTCNNs). The system was built using a
 novel cascaded CNN-based framework for joint detection and alignment,
 built to perform well in real-world environments where varying
@@ -327,7 +327,7 @@ its size and position.
 The CNN-based pose detector (OpenPose (Cao et al., 2017; Simon, Joo,
 Matthews, \& Sheikh, 2017; Wei, Ramakrishna, Kanade, \& Sheikh, 2016))
 provided the locations of 18 body parts (ears, nose, wrists, etc.)
-avaliable at
+available at
 \url{https://github.com/CMU-Perceptual-Computing-Lab/openpose}. The
 system uses a CNN for initial anatomical detection and subsequently
 applies part affinity fields (PAFs) for part association, producing a
@@ -335,7 +335,7 @@ series of body part candidates. The candidates are then matched to a
 single individual and finally assembled into a pose; here, we only made
 use of the body parts relevant to the face and hands (nose and wrists).
 We operationalized face detections as any frames containing a nose, and
-hand detections as any frames containing either the left orright wrist.
+hand detections as any frames containing either the left or right wrist.
 
 \subsubsection{Detector evaluation}\label{detector-evaluation}
 
@@ -441,7 +441,7 @@ Hands}\label{changes-in-access-to-faces-and-hands}
 
 }
 
-\caption[Proportion face detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant]{Proportion face detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant.}\label{fig:detByPosOrient}
+\caption[Proportion face and wrist detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant]{Proportion face and wrist detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant.}\label{fig:detByPosOrient}
 \end{figure*}
 \end{CodeChunk}
 
@@ -506,16 +506,15 @@ To formalize these observations, we fit a generalized linear model to
 the proportion of faces infants saw in each posture and orientation (as
 detected by MTCNN), with participant's age, orientation, and posture as
 independent variables. A summary of the coefficients of a model with
-only main effects (and no interactions) model can be found in Table 3.
-When we did include interaction terms between age, posture, and
-orientation, age no longer remained a significant predictor (b = -15.84,
-SE = 113.98, z = -0.14 , p = 0.89). We also found the same pattern with
-respect to infant's visual access to hands (see Table 4); including
-interaction terms also eliminated any main effect of age on the
-proportion of hands detected (b = -15.7, SE = 113.98, z = -0.14, p =
-0.89). Thus, these results suggest that infants' access to social
-information is heavily influenced by their postural and locomotive
-developments.
+only main effects (and no interactions) can be found in Table 3. When we
+did include interaction terms between age, posture, and orientation, age
+no longer remained a significant predictor (b = -15.84, SE = 113.98, z =
+-0.14 , p = 0.89). We also found the same pattern with respect to
+infant's visual access to hands (see Table 4); including interaction
+terms also eliminated any main effect of age on the proportion of hands
+detected (b = -15.7, SE = 113.98, z = -0.14, p = 0.89). Thus, these
+results suggest that infants' access to social information is heavily
+influenced by their postural and locomotive developments.
 
 \begin{CodeChunk}
 \begin{figure}[H]
@@ -524,7 +523,7 @@ developments.
 
 }
 
-\caption[Proportion face detections around a naming instance ('Look, a Zem']{Proportion face detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture.}\label{fig:detByNaming}
+\caption[Proportion face and wrist detections around a naming instance ('Look, a Zem']{Proportion face and wrist detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture.}\label{fig:detByNaming}
 \end{figure}
 \end{CodeChunk}
 
