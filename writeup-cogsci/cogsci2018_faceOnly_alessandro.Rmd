@@ -576,7 +576,10 @@ p2=ggplot(aroundNamings_Orient_Faces, aes(x = orientation, y = mean, col = orien
   theme_few() +
   theme(legend.position="none")  +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+<<<<<<< HEAD
 
+=======
+>>>>>>> 77e9fb3df9c3d7d3ee2e8fa6655ed12aef630920
 p3=ggplot(aroundNamings_Posture_Wrists, aes(x = posture, y = mean, col = posture)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   ylab("Prop. wrists") +
@@ -585,7 +588,10 @@ p3=ggplot(aroundNamings_Posture_Wrists, aes(x = posture, y = mean, col = posture
   theme_few() +
   theme(legend.position="none")  +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+<<<<<<< HEAD
 
+=======
+>>>>>>> 77e9fb3df9c3d7d3ee2e8fa6655ed12aef630920
 p4=ggplot(aroundNamings_Orient_Wrists, aes(x = orientation, y = mean, col = orientation)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   ylab("Prop. wrists") +
@@ -594,7 +600,10 @@ p4=ggplot(aroundNamings_Orient_Wrists, aes(x = orientation, y = mean, col = orie
   theme_few() +
   theme(legend.position="none") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+<<<<<<< HEAD
 
+=======
+>>>>>>> 77e9fb3df9c3d7d3ee2e8fa6655ed12aef630920
 ggarrange(p1,p2, p3, p4)
 ```
 
