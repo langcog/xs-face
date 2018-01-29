@@ -47,13 +47,15 @@ library(feather)
 
 Children are deeply engaged in learning from others [@csibra2009natural; @meltzoff2007like] and attend to the social information in their environment from their earliest days. Even newborns tend to prefer to look at faces with direct vs. averted gaze [@farroni2002eye] and follow overt gaze shifts by 6 months of age [@gredeback2008microstructure; @gredeback2010development]. And when infants free-view videos, they tend to look mostly at faces at the expense of other visual information--though older infants start to look towards people's hands and the actions they are performing [@frank2012measuring; @frank2014visual].
 
-However, as children are learning from others around them, their view of the world is also radically changing [@adolph2007]. Infants' motor abilities improve dramatically near the end of the first year of life, allowing them to locomote independently. These motor changes have drastic consequences for what children see; crawling and walking infants have radically different views of the world. For example, during spontaneous play in a laboratory playroom, toddlers are more likely to look at the floor while crawling than while walking [@franchak2011]; in general, walking infants tend to have full visual access to their environment and the people in it, while crawling infants do not [@kretch2014].
+However, as children are learning from others around them, their view of the world is also changing radically [@adolph2007]. Infants' motor abilities improve dramatically near the end of the first year of life, allowing them to locomote independently. These motor changes have drastic consequences for what children see; crawling and walking infants have radically different views of the world. For example, during spontaneous play in a laboratory playroom, toddlers are more likely to look at the floor while crawling than while walking [@franchak2011]; in general, walking infants tend to have full visual access to their environment and the people in it, while crawling infants do not [@kretch2014].
 
 One possibility is that these motor improvements have strong developmental cascades, impacting children’s emerging social, cognitive, and linguistic abilities [@iverson2010]. Indeed, these postural changes also impact how children interact with their mothers; walking (vs. crawling) infants make different kinds of object-related bids for attention from their mothers and tend to hear more action directed statements (e.g., “open it”) [@karasik2014]. Further, in an observational study, @walle2014 found that children who were able to walk had both higher receptive and productive vocabularies. On their account, children’s ability to stand and independently locomote may fundamentally change their ability to access social information (e.g., faces, gaze) relative to children who are still crawling and sitting. In other words, the ability to walk and move around independently and subsequently access more detailed social information may accelerate infants’ ability to learn from the people in their environments. 
 
 Recent technological developments allow for testing of this hypothesis by documenting the experiences of infants and children from their own perspective. By using head-mounted cameras, researchers have begun to document visual experiences of infants and children — which even for walking children are radically different from the adult perspective (and not easily predicted by our own adult intuitions) [@clerkin2017;@franchak2011;@yoshida2008]. Children’s views tend to be restricted and to be dominated by objects and hands much more than that of adults [@yoshida2008], and both computational and empirical work suggest that this restricted viewpoint may be more effective for learning objects and their labels than the comparable adult perspective [@bambach2017;@yurovsky2012]. Further, recent work also suggests dramatic changes in the child’s perspective over the first two years of life, as views transition from primarily containing a close up view of faces to capturing views of hands paired with the objects they are acting on [@fausey2016].
 
-Here, we directly ask whether postural and locomotive developments change the availability of social information--the presence of faces and hands. To do so, we recorded the visual experience of a group of infants in three age ranges (8,12, and 16 months) using head-mounted cameras during a brief laboratory free-play session; children’s posture and orientation relative to their caregiver were also recorded from a third-person perspective and hand-annotated. We then capitalize on recent improvements in face and pose detection algorithms [@zhang2016; @cao2017realtime] to analyze the frequencies of faces and hands (using wrist presence as a proxy for the latter) in the child’s visual environment, both overall and relative to naming events by their caregivers. We hypothesized that there would be differential access to social information based on children's postural developments: crawling infants would see fewer faces because they would primarily be looking at the ground, and walking toddlers would have access to a richer visual landscape that would contain a larger portion of the social information in the environment.
+Here, we directly ask whether postural and locomotive developments change the availability of social information--the presence of faces and hands. To do so, we recorded the visual experience of a group of infants in three age ranges (8,12, and 16 months) using head-mounted cameras during a brief laboratory free-play session; children’s posture and orientation relative to their caregiver were also recorded from a third-person perspective and hand-annotated. We then capitalize on recent improvements in face and pose detection algorithms [@zhang2016; @cao2017realtime] to analyze the frequencies of faces and hands (using wrists as a proxy for the latter) in the child’s visual environment, both overall and relative to naming events by their caregivers. We hypothesized that there would be differential access to social information based on children's postural developments: crawling infants would see fewer faces because they would primarily be looking at the ground, while walking toddlers would have access to a richer visual landscape thus enabling a larger portion of the social information in their environment to be accessible.
+
+that would contain a larger portion of the social information in the environment.
 
 
 # Methods
@@ -559,36 +561,34 @@ p1=ggplot(aroundNamings_Posture_Faces, aes(x = posture, y = mean, col = posture)
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   ylab("Prop. faces") +
   xlab("") +
-  ylim(0,.3) +
+  ylim(0,.25) +
   theme_few() + 
-  theme(legend.position="none") 
-
+  theme(legend.position="none") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p2=ggplot(aroundNamings_Orient_Faces, aes(x = orientation, y = mean, col = orientation)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   ylab("Prop. faces") +
   xlab("") +
-  ylim(0,.3) +
+  ylim(0,.25) +
   theme_few() +
   theme(legend.position="none")  +
-  element_text(angle = 45, hjust = 1)
-
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p3=ggplot(aroundNamings_Posture_Wrists, aes(x = posture, y = mean, col = posture)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   ylab("Prop. wrists") +
   xlab("") +
-  ylim(0,.3) +
+  ylim(0,.25) +
   theme_few() +
   theme(legend.position="none")  +
-  element_text(angle = 45, hjust = 1)
-
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p4=ggplot(aroundNamings_Orient_Wrists, aes(x = orientation, y = mean, col = orientation)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   ylab("Prop. wrists") +
   xlab("") +
-  ylim(0,.3) +
+  ylim(0,.25) +
   theme_few() +
-  theme(legend.position="none") 
-
+  theme(legend.position="none") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ggarrange(p1,p2, p3, p4)
 ```
 ## Access to Faces and Hands During Labeling Events
