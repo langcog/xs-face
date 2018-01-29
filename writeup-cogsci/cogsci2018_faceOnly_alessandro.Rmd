@@ -545,7 +545,8 @@ aroundNamings_Orient_Wrists <- d %>%
 
 
 
-```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face and wrist detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture."}
+
+```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face and wrist detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture. Error bars represent non-parametric bootstrapped 95% confidence intervals."}
 
 p1=ggplot(aroundNamings_Posture_Faces, aes(x = posture, y = mean, col = posture)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
