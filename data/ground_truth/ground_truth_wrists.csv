@@ -96,11 +96,11 @@ group,video,frame,is_face,sample_type,detector_sample
 8,XS_0811,02231,False,random,openpose
 16,XS_1638,04400,True,high_density,openpose
 8,XS_0807,19121,True,high_density,openpose
-12,XS_1201,04945,False,high_density,openpose
+12,XS_1201,04945,True,high_density,openpose
 16,XS_1639,21152,False,random,openpose
 12,XS_1222,03619,False,high_density,openpose
 16,XS_1604,16997,True,high_density,openpose
-12,XS_1201,05063,False,high_density,openpose
+12,XS_1201,05063,True,high_density,openpose
 16,XS_1628,22209,False,random,openpose
 8,XS_0826,11420,False,high_density,openpose
 8,XS_0801,09005,False,random,openpose
@@ -165,7 +165,7 @@ group,video,frame,is_face,sample_type,detector_sample
 8,XS_0803,17803,False,random,openpose
 12,XS_1229,03831,True,high_density,openpose
 8,XS_0807,08926,True,random,openpose
-16,XS_1631,14238,False,random,openpose
+16,XS_1631,14238,True,random,openpose
 8,XS_0822,20100,False,random,openpose
 12,XS_1205,35381,False,random,openpose
 8,XS_0821,02008,False,high_density,openpose
@@ -201,7 +201,7 @@ group,video,frame,is_face,sample_type,detector_sample
 16,XS_1628,06681,True,high_density,openpose
 8,XS_0825,08878,True,high_density,openpose
 16,XS_1622,18019,True,high_density,openpose
-12,XS_1218,02310,False,random,openpose
+12,XS_1218,02310,True,random,openpose
 16,XS_1635,10898,True,high_density,openpose
 12,XS_1229,01753,True,random,openpose
 8,XS_0826,11391,False,random,openpose
@@ -301,7 +301,7 @@ group,video,frame,is_face,sample_type,detector_sample
 8,XS_0811,07071,True,high_density,openpose
 16,XS_1631,03393,False,random,openpose
 12,XS_1205,65387,False,random,openpose
-12,XS_1201,04934,False,high_density,openpose
+12,XS_1201,04934,True,high_density,openpose
 8,XS_0803,09804,False,random,openpose
 12,XS_1229,03824,True,high_density,openpose
 8,XS_0822,04848,False,random,openpose
@@ -432,8 +432,8 @@ group,video,frame,is_face,sample_type,detector_sample
 16,XS_1629,20391,True,high_density,openpose
 12,XS_1224,04274,False,high_density,openpose
 16,XS_1604,25820,True,high_density,openpose
-12,XS_1224,08999,False,high_density,openpose
-16,XS_1629,18666,False,high_density,openpose
+12,XS_1224,08999,True,high_density,openpose
+16,XS_1629,18666,True,high_density,openpose
 16,XS_1639,11151,False,high_density,openpose
 12,XS_1222,00330,False,high_density,openpose
 12,XS_1201,04929,False,high_density,openpose

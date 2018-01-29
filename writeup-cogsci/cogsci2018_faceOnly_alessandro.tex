@@ -97,11 +97,7 @@ infants start to look towards people's hands and the actions they are
 performing (Frank, Amso, \& Johnson, 2014; Frank, Vul, \& Saxe, 2012).
 
 However, as children are learning from others around them, their view of
-<<<<<<< HEAD
 the world is also changing radically (K. Adolph \& Berger, 2007).
-=======
-the world is also radically changing (K. Adolph \& Berger, 2007).
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
 Infants' motor abilities improve dramatically near the end of the first
 year of life, allowing them to locomote independently. These motor
 changes have drastic consequences for what children see; crawling and
@@ -157,7 +153,6 @@ orientation relative to their caregiver were also recorded from a
 third-person perspective and hand-annotated. We then capitalize on
 recent improvements in face and pose detection algorithms (Cao, Simon,
 Wei, \& Sheikh, 2017; K. Zhang, Zhang, Li, \& Qiao, 2016) to analyze the
-<<<<<<< HEAD
 frequencies of faces and hands (using wrists as a proxy for the latter)
 in the child's visual environment, both overall and relative to naming
 events by their caregivers. We hypothesized that there would be
@@ -169,16 +164,6 @@ the social information in their environment to be accessible.
 
 that would contain a larger portion of the social information in the
 environment.
-=======
-frequencies of faces and hands (using wrist presence as a proxy for the
-latter) in the child's visual environment, both overall and relative to
-naming events by their caregivers. We hypothesized that there would be
-differential access to social information based on children's postural
-developments: crawling infants would see fewer faces because they would
-primarily be looking at the ground, and walking toddlers would have
-access to a richer visual landscape that would contain a larger portion
-of the social information in the environment.
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
 
 \section{Methods}\label{methods}
 
@@ -277,10 +262,7 @@ the session and the headcam captured video from the child's perspective.
 Annotation}\label{data-processing-and-annotation}
 
 \begin{figure*}
-<<<<<<< HEAD
 \centering
-=======
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
 \includegraphics[width=6in]{images/detector_samples_banner.pdf}
 \caption{\label{fig:frames} Example face and pose detections made by OpenPose (top row) and MTCNN (bottom row) from a child in each age group. The last column features a false positive from OpenPose and a false negative from MTCNN.}
 \end{figure*}
@@ -314,11 +296,7 @@ We used three face detection systems to explore infants' changing access
 to social information and to avoid the cost of hand-annotating every
 frame. The first of these is the most commonly-used and widely available
 face detection algorithm: Viola-Jones. We used this as a benchmark for
-<<<<<<< HEAD
 performance; while it can achieve impressive accuracy in some
-=======
-performance, and while it can achieve impressive accuracy in some
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
 situations, it is notoriously bad at dealing with occluded faces
 (Scheirer, Anthony, Nakayama, \& Cox, 2014). We next capitalized on
 recent improvements in computer vision, testing the performance of two
@@ -329,7 +307,6 @@ extract information about the position of 18 different body parts
 belonging to an agent.
 
 This second of the CNN-based algorithms--the pose detector--provided us
-<<<<<<< HEAD
 with the location of an agent's wrists, which we used as a proxy for the
 presence of a hand. We did so first because we did not capture the
 entire visual field experienced by the infants/children. Thus, even
@@ -343,21 +320,6 @@ may not necessarily be (as it is occluded by the toy). Similarly, we
 used an agent's nose (one of the 18 body parts detected) to
 operationalize face presence, as any half of a face necessarily contains
 a nose.
-=======
-(along with other parts) with the location of an agent's wrists, which
-we used as a good proxy for the presence of a hand. We did so first
-because we did not capture the entire visual field experienced by the
-infants/children. Thus, even though the video may only show the presence
-of a wrist, the caregiver's hand may be within the child's field of
-view. Second, we did so because hands are often occluded by objects when
-caregivers are interacting with children, yet still visually accessible
-by the child and part of their joint interaction. For example, if a
-caregiver was holding a toy and presenting it to the infant, their
-wrists may be visible but their hand may not necessarily be (as it is
-occluded by the toy). Similarly, we used the nose (one of the 18 body
-parts detected) to operationalize face presence, as any half of a face
-necessarily contains a nose.
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
 
 \subsubsection{Algorithms}\label{algorithms}
 
@@ -404,11 +366,7 @@ present in a frame if at least half of the face was showing. Precision
 (harmonic mean of precision and recall) were calculated for all
 detectors and are reported in Table 2. For wrist detections, the ``gold
 set'' was constructed in the same manner, with the exception that frames
-<<<<<<< HEAD
 with a high density of wrists were taken by pose detections made by
-=======
-with a high density of wrists were taken by wrist detections made by
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
 OpenPose.
 
 For face detection, MTCNN outperformed OpenPose when taking into account
@@ -418,13 +376,9 @@ that although MTCNN and OpenPose perform comparably with the random
 sample, MTCNN performed better on the high density sample (specifically
 looking at precision), suggesting that OpenPose generated more false
 positives than MTCNN. ViolaJones performed quite poorly relative to the
-<<<<<<< HEAD
 other detectors especially with respect to the random sample.
-=======
-other detectors especially on the random sample.
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
 
-For wrist detection, OpenPose performed moderately well (F = 0.72) with
+For wrist detection, OpenPose performed moderately well (F = 0.74) with
 relatively high precision, but low recall on the randomly sampled set of
 frames (see Table 2). We thus analyze wrist detections, with the caveat
 that we are likely underestimating the proportion of wrists overall in
@@ -474,11 +428,7 @@ Orientation}\label{changes-in-posture-and-orientation}
 We noted characteristic changes in infants' posture and orientation
 across this developmental time range. The proportion of time infants
 spent sitting decreased with age, and the proportion of time infants
-<<<<<<< HEAD
 spent standing increased with age. Both 8 month-olds and 12 month-olds
-=======
-spent standing increased with age. Both 8-month-olds and 12-month-olds
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
 spent equivalent amounts of time either lying/crawling, which was
 markedly decreased in the 16-month-olds, who spent most of their time
 either sitting or standing (see Figure \ref{fig:posture}). We also
@@ -574,23 +524,13 @@ independent variables. A summary of the coefficients of a model with
 only main effects (and no interactions) model can be found in Table 3.
 When we did include interaction terms between age, posture, and
 orientation, age no longer remained a significant predictor (b = -15.84,
-<<<<<<< HEAD
-SE = 113.98, z = -0.14 , p =0.89). We found the same pattern of results
-for the OpenPose face detections, omitted here for brevity. We also
-found the same pattern with respect to infant's visual access to hands
-(see Table 4); including interaction terms also reduced any main effect
-of age on the proportion of hands detected (b = -15.7, SE = 113.98, z =
--0.14 , p =0.89). Thus, these results suggest that infants' access to
-social information is heavily influenced by their postural and
-=======
 SE = 113.98, z = -0.14 , p = 0.89). We found the same pattern of results
 for the OpenPose face detections, omitted here for brevity. We also
 found the same pattern with respect to infant's visual access to hands
 (see Table 4); including interaction terms also eliminated any main
 effect of age on the proportion of hands detected (b = -15.7, SE =
-113.98, z = -0.14 , p = 0.89). Thus, these results suggest that infants'
+113.98, z = -0.14, p = 0.89). Thus, these results suggest that infants'
 access to social information is heavily influenced by their postural and
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
 locomotive development.
 
 \begin{CodeChunk}
@@ -607,17 +547,6 @@ locomotive development.
 \subsection{Access to Faces and Hands During Labeling
 Events}\label{access-to-faces-and-hands-during-labeling-events}
 
-<<<<<<< HEAD
-Finally, we analyzed how face and wrists detections changed during
-object labeling events as a function of infant's posture and
-orientation. Specfically, we analyzed a four-second window around each
-labeling event (e.g., ``Look at the {[}zem{]}!''); these labeling events
-were hand-annotated and automatically synchronized with the
-frame-by-frame face detections. We again found that infants' posture and
-orientations impacted the degree to which they saw their caregiver's
-face and wrist during a labeling event; infants who were sitting or
-standing were more likely to have access to this social information.
-=======
 Finally, we analyzed how face and wrist detections changed during object
 labeling events as a function of infant's posture and orientation.
 Specfically, we analyzed a four-second window around each labeling event
@@ -629,10 +558,9 @@ during a labeling event; infants who were sitting or standing were more
 likely to have access to this social information. However, this did not
 manifest in a direct change the presence of wrists/hands before
 vs.~after naming events (average difference in proportion of wrists
-detected, 8 m.o. = -0.006,12 m.o. = -0.013 ,16 m.o. = -0.007 ) or in
+detected, 8 m.o. = -0.006, 12 m.o. = -0.013, 16 m.o. = -0.007) or in
 proportion of faces detected (average difference in proportion of faces
-detected, 8 m.o. = -0.002,12 m.o. = 0 ,16 m.o. = -0.004 ).
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
+detected, 8 m.o. = -0.002, 12 m.o. = 0, 16 m.o. = -0.004).
 
 \section{General Discussion}\label{general-discussion}
 
@@ -642,16 +570,6 @@ information, here operationalized as the presence of the faces and
 wrists of their caregiver. We found that children's posture and
 orientation towards their caregiver changed systematically across age,
 and that both of these factors dramatically impacted the proportion of
-<<<<<<< HEAD
-faces and wrists that were avaliable in the child's visual field. Thus,
-infants' postural and locomotive developments are mediating factors that
-explain some of the age-related changes in the proportion of faces and
-hands avaliable in infants' visual field. Broadly, this work suggests
-that motoric developments mediate how infants experience their visual
-world and the social information in it: infants that are sitting and
-standing have a different view of their world, the people in it, and the
-actions that are being performed.
-=======
 faces and wrists that were available in the child's visual field. Thus,
 infants' postural and locomotive developments are mediating factors that
 explain some of the age-related changes in the proportion of faces and
@@ -660,7 +578,6 @@ suggests that motoric developments mediate how infants experience their
 visual world and the social information in it: infants that are sitting
 and standing have a different view of their world, the people in it, and
 the actions that are being performed.
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
 
 This work also deploys novel advancements in computer vision to the
 study of developmental psychology. The field of object detection and
@@ -672,17 +589,6 @@ datasets and can extract richer and more detailed information. Videos
 from the infant perspective provided substantial challenges (e.g.,
 partially occluded faces) for the classic models of face detection
 (e.g., ViolaJones) (Viola \& Jones, 2004). Further, as the headcam
-<<<<<<< HEAD
-technologies employed here were inexpensive (\textasciitilde{}\$60 a
-camera) and the computer vision algorithms freely avaliable, this method
-is a promising avenue for quanitfying the visual and social information
-avaliable to infant learners.
-
-Thus, we suggest that the combined use of these new tools can be
-leveraged to understand the changing infant perspecive on the visual
-world and the implications of these changes for both linguistic,
-cognitive, and social development.
-=======
 technologies employed here were inexpensive and the computer vision
 algorithms freely available, this method is a promising avenue for
 quantifying the visual and social information available to infant
@@ -692,7 +598,6 @@ Broadly, we suggest that the combined use of these new tools can be
 leveraged to understand the changing infant perspective on the visual
 world and the implications of these changes for linguistic, cognitive,
 and social development.
->>>>>>> 39aaada6f6e387fe7eded58d3575f558fd7df8cf
 
 \section{Acknowledgements}\label{acknowledgements}
 
