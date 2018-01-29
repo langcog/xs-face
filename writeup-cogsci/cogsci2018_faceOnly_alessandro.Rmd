@@ -519,6 +519,7 @@ aroundNamings_Orient_Faces <- d %>%
   group_by(orientation) %>%
   multi_boot_standard(col = "propFacesDetected") 
 
+###
 aroundNamings_Posture_Wrists <- d %>%
   group_by(subid) %>%
   mutate(detections = wristOP) %>%
@@ -541,6 +542,7 @@ aroundNamings_Orient_Wrists <- d %>%
   group_by(orientation) %>%
   multi_boot_standard(col = "propWristsDetected") 
 ```
+
 
 
 ```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture."}
@@ -584,82 +586,45 @@ p4=ggplot(aroundNamings_Orient_Wrists, aes(x = orientation, y = mean, col = orie
 ggarrange(p1,p2, p3, p4)
 ```
 
-```{r echo=FALSE, include=FALSE}
-## Break down by before/after naming
-### First for wrists
-beforeNamings_Wrists <- d %>%
-  group_by(subid) %>%
-  mutate(detections = wristOP) %>%
-  do(summarize.naming(.,window = c(-2,0))) %>%
-  group_by(subid, age.grp)  %>%
-  summarise(avgDetections = mean(detections, na.rm=TRUE))  %>%
-  mutate(namingTime = "beforeNaming") 
 
-namings_Wrists <- d %>%
-  group_by(subid) %>%
-  mutate(detections = wristOP) %>%
-  do(summarize.naming(.,window = c(0,2))) %>%
-  group_by(subid, age.grp)  %>%
-  summarise(avgDetections = mean(detections, na.rm=TRUE)) %>%
-  mutate(namingTime = "afterNaming") %>%
-  bind_rows(beforeNamings_Wrists)
-
-### Now for faces
-beforeNamings_Faces <- d %>%
+```{r include=FALSE, echo=FALSE}
+# Compute proportion of faces/hands during naming events relative to baseline
+## Faces 
+faces_baseline<- d %>%
+  group_by(subid, age.grp) %>%
+  summarize(baselineDetections = mean(faceMT))
+#
+faces_naming <- d %>%
   group_by(subid) %>%
   mutate(detections = faceMT) %>%
-  do(summarize.naming(.,window = c(-2,0))) %>%
+  do(summarize.naming(.)) %>%
   group_by(subid, age.grp)  %>%
-  summarise(avgDetections = mean(detections, na.rm=TRUE))  %>%
-  mutate(namingTime = "beforeNaming") 
-
-namings_Faces <- d %>%
+  summarize(namingDetections = mean(detections,na.rm=TRUE)) %>% 
+  left_join(faces_baseline) %>%
+  mutate(baselineDiff = namingDetections - baselineDetections)  %>%
+  group_by(age.grp) %>%
+  summarize(avgBaselineDiff = mean(baselineDiff))
+## Wrists
+wrists_baseline<- d %>%
+  group_by(subid, age.grp) %>%
+  summarize(baselineDetections = mean(faceMT))
+#
+wrists_naming <- d %>%
   group_by(subid) %>%
-  mutate(detections = faceMT) %>%
-  do(summarize.naming(.,window = c(0,2))) %>%
+  mutate(detections = wristOP) %>%
+  do(summarize.naming(.)) %>%
   group_by(subid, age.grp)  %>%
-  summarise(avgDetections = mean(detections, na.rm=TRUE)) %>%
-  mutate(namingTime = "afterNaming") %>%
-  bind_rows(beforeNamings_Faces)
-
-# Plot if you want to look
-# p1=ggplot(namings_Faces, aes(x = factor(age.grp), y = avgDetections, col = age.grp)) +
-#   geom_boxplot() +
-#   ylab("Prop. faces") +
-#   xlab("") +
-#   theme_few() +
-#   theme(legend.position="none") +
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-#   facet_grid(~namingTime)
-# 
-# p2=ggplot(namings_Wrists, aes(x = factor(age.grp), y = avgDetections, col = age.grp)) +
-#   geom_boxplot() +
-#   ylab("Prop. wrists") +
-#   xlab("") +
-#   theme_few() +
-#   theme(legend.position="none") +
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-#   facet_grid(~namingTime)
-
-# ggarrange(p1,p2) # not shown in .rmd
-
-## output for text below \
-naming_Wrists_Summary <-  namings_Wrists %>%
-  spread(namingTime, avgDetections) %>%
-  mutate(diffWrists = afterNaming - beforeNaming) %>%
+  summarize(namingDetections = mean(detections, na.rm=TRUE)) %>%
+  left_join(wrists_baseline) %>%
+  mutate(baselineDiff = namingDetections - baselineDetections)  %>%
   group_by(age.grp) %>%
-  summarize(mean = mean(diffWrists), sd=sd(diffWrists))
-
-naming_Faces_Summary <-  namings_Faces %>%
-  spread(namingTime, avgDetections) %>%
-  mutate(diffFaces = afterNaming - beforeNaming) %>%
-  group_by(age.grp) %>%
-  summarize(mean = mean(diffFaces), sd=sd(diffFaces)) # no room for SD maybe but still informative
+  summarize(avgBaselineDiff = mean(baselineDiff))
 
 ```
-
+  
 ## Access to Faces and Hands During Labeling Events
-Finally, we analyzed how face and wrist/hand detections changed during object labeling events as a function of infant's posture and orientation. Specfically, we analyzed a four-second window around each labeling event (e.g., "Look at the [zem]!"); these labeling events were hand-annotated and automatically synchronized with the frame-by-frame face detections. We found that infants' posture and orientations impacted the degree to which they saw their caregiver's face and wrist during a labeling event; infants who were sitting or standing were more likely to have access to this social information. However, this did not manifest in a direct change the presence of wrists/hands before vs. after naming events (average difference in proportion of wrists detected, 8 m.o. = `r round(naming_Wrists_Summary$mean[1],3)`, 12 m.o. = `r round(naming_Wrists_Summary$mean[2],3)`, 16 m.o. = `r round(naming_Wrists_Summary$mean[3],3)`) or in proportion of faces detected  (average difference in proportion of faces detected, 8 m.o. = `r round(naming_Faces_Summary$mean[1],3)`, 12 m.o. = `r round(naming_Faces_Summary$mean[2],3)`, 16 m.o. = `r round(naming_Faces_Summary$mean[3],3)`). 
+Finally, we explored how face and wrist/hand detections changed during object labeling events as a function of infant's posture and orientation. Specfically, we analyzed a four-second window around each labeling event (e.g., "Look at the [zem]!"); these labeling events were hand-annotated and automatically synchronized with the frame-by-frame face detections. As before, we found that infants' posture and orientations impacted the degree to which they saw their caregiver's face and wrist during a labeling event; infants who were sitting or standing were more likely to have access to this social information. A full summary of the results can be seen in Figure \ref{fig:detByNaming}. However, we did not find that infants saw more faces or more wrists/hands during naming events relative to baseline (average difference in proportion of wrists detected, 8 m.o. = `r round(wrists_naming$avgBaselineDiff[1],3)`, 12 m.o. = `r round(wrists_naming$avgBaselineDiff[2],3)`, 16 m.o. = `r round(wrists_naming$avgBaselineDiff[3],3)`;  average difference in proportion of faces detected, 8 m.o. = `r round(faces_naming$avgBaselineDiff[1],3)`, 12 m.o. = `r round(faces_naming$avgBaselineDiff[2],3)`, 16 m.o. = `r round(faces_naming$avgBaselineDiff[3],3)`).
+
 
 # General Discussion
 We used a head-mounted camera to explore how children's postural and locomotive development directly impacts their access to social information, here operationalized as the presence of the faces and wrists of their caregiver. We found that children's posture and orientation towards their caregiver changed systematically across age, and that both of these factors dramatically impacted the proportion of faces and wrists/hands that were available in the child's visual field. Thus, infants' postural and locomotive developments are mediating factors that explain some of the age-related changes in the proportion of faces and wrists/hands that are visually available to infants. Broadly, this work suggests that motoric developments mediate how infants experience their visual world and the social information in it: infants that are sitting and standing have a different view of their world, the people in it, and the actions that are being performed.
