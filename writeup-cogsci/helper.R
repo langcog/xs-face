@@ -97,7 +97,6 @@ regularize.naming <- function (n) {
   n$name[n$name == "truck"] <- "car"
   n$name[n$name == "kittycat"] <- "cat"
   n$name[n$name == "bobcat"] <- "cat"
-
   n$name <- factor(n$name, levels=words)
   
   n$familiarity <- "familiar"
@@ -108,9 +107,17 @@ regularize.naming <- function (n) {
     n$name == "manu"] <- "novel"
   n$familiarity <- factor(n$familiarity)
   
-  # make the times seconds since onset
-  n$time <- as.numeric(difftime(strptime(n$time,"%M:%OS"),
-                                strptime("00:00:00.0","%H:%M:%OS"),units="secs"))
+  # make the times seconds since onset - # if excel output is HMS vs MS - ugh! this was causing a big bug in analyses prior to jan 2018
+  timeBefore=n$time
+  if (nchar(timeBefore[1])>8) {
+    n$time=parse_date_time(timeBefore,"%H:%M:OS%")
+  }
+  else {
+    n$time=parse_date_time(timeBefore,"%M:OS%")
+  }
+  assert_that(sum(hour(n$time))==0)  # check there are no hours!all sessions <20 minutes.
+  n$time <- minute(n$time)*60+second(n$time) # convert to seconds
+  test=c(n$time[1], timeBefore[1])
   
   n <- subset(n,!is.na(name))
   n$naming.instance <- naming.instance(n$name)
@@ -150,12 +157,10 @@ summarize.naming <- function (x, window = c(-2,2)) {
   namings$posture <- factor(NA, levels=levels(x$posture))
   namings$orientation <- factor(NA, levels=levels(x$orientation))
 
-  
   for (i in 1:nrow(namings)) {
     t <- namings$time[i]
     range <- c(max(c(0,t + window[1])),
                min(c(t+window[2],max(x$time,na.rm=T))))
-    
     namings$detections[i] <- mean(x$detections[x$time > range[1] & x$time < range[2]], na.rm=TRUE)
     namings$posture[i] <- x$posture[(x$time > namings$time[i])][1]
     namings$orientation[i] <- x$orientation[(x$time > namings$time[i])][1]  
