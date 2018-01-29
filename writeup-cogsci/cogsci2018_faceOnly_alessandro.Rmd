@@ -564,7 +564,10 @@ p1=ggplot(aroundNamings_Posture_Faces, aes(x = posture, y = mean, col = posture)
   theme_few() + 
   theme(legend.position="none") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+<<<<<<< HEAD
 
+=======
+>>>>>>> 77e9fb3df9c3d7d3ee2e8fa6655ed12aef630920
 p2=ggplot(aroundNamings_Orient_Faces, aes(x = orientation, y = mean, col = orientation)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   ylab("Prop. faces") +
