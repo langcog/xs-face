@@ -332,7 +332,7 @@ ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorTyp
     theme(legend.position="none") +
     facet_grid(~detectorType) 
 ```
-```{r detByPosOrient, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=4, fig.cap = "Proportion face detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant."}
+```{r detByPosOrient, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=4, fig.cap = "Proportion face and wrist/hand detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant."}
 
 dlongPlot <-dlong %>%
     filter(detectorType!="OpenPose-Faces") %>%
@@ -545,7 +545,7 @@ aroundNamings_Orient_Wrists <- d %>%
 
 
 
-```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture."}
+```{r detByNaming, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=3, fig.height=3, fig.cap = "Proportion face and wrist/hand detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture."}
 
 p1=ggplot(aroundNamings_Posture_Faces, aes(x = posture, y = mean, col = posture)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
