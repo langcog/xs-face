@@ -109,7 +109,7 @@ regularize.naming <- function (n) {
   
   # make the times seconds since onset - # if excel output is HMS vs MS - ugh! this was causing a big bug in analyses prior to jan 2018
   timeBefore=n$time
-  if (nchar(timeBefore[1])>8) {
+  if (nchar(timeBefore[1])>8) { ## hacky but works, sorry! will try to prettify soon.
     n$time=parse_date_time(timeBefore,"%H:%M:OS%")
   }
   else {
@@ -117,8 +117,7 @@ regularize.naming <- function (n) {
   }
   assert_that(sum(hour(n$time))==0)  # check there are no hours!all sessions <20 minutes.
   n$time <- minute(n$time)*60+second(n$time) # convert to seconds
-  test=c(n$time[1], timeBefore[1])
-  
+
   n <- subset(n,!is.na(name))
   n$naming.instance <- naming.instance(n$name)
   return(n)
