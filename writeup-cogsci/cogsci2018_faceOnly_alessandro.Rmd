@@ -591,7 +591,7 @@ Understanding these changes has been a persistent challenge for developmental ps
 
 # Acknowledgements
 
-Thanks to Kaia Simmons, Kathy Woo, and Aditi Maliwal for help in recruitment, data collection, and annotation. This work was funded by a Jacobs Foundation Fellowship and a John Merck Scholars award to MCF. An earlier version of this work was presented to the Cognitive Science Society in @frank2013. 
+Thanks to Kaia Simmons, Kathy Woo, and Aditi Maliwal for help in recruitment, data collection, and annotation. This work was funded by a Jacobs Foundation Fellowship and a John Merck Scholars award to MCF and a NSF SPRF-FR Grant #1714726 to BLL. An earlier version of this work was presented to the Cognitive Science Society in @frank2013. 
 
 \vspace{1em} \fbox{\parbox[b][][c]{7.3cm}{\centering All data and code for these analyses are available at\ \url{https://github.com/amsan7/xs-face}}} \vspace{1em}
 
