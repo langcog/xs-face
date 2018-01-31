@@ -14,8 +14,10 @@ abstract: "The ability to process social information is a critical component of 
 
 keywords: "social cognition; face-perception; infancy; locomotion; head-cameras; deep learning"
 output: cogsci2016::cogsci_paper
----
 
+---
+\newcommand{\wrapmf}[1]{#1}
+\vspace{-1em}
 ```{r global_options, include=FALSE}
 rm(list=ls())
 knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = F, fig.pos = "tb", fig.path='figs/',
@@ -40,16 +42,17 @@ library(lme4)
 library(gridExtra)
 library(feather)
 library(assertthat)
+
+
 ```
 # Introduction
-
-From early infancy, children are deeply engaged in learning from others [@csibra2009natural; @meltzoff2007like]. Even newborns tend to prefer to look at faces with direct vs. averted gaze [@farroni2002eye] and young infants follow overt gaze shifts [@gredeback2010development]. Further, when infants attend to video stimuli, they tend to look mostly at faces at the expense of other visual information -- though older infants start to look towards people's hands and the actions they are performing [@frank2012measuring; @frank2014visual].
+From early infancy, children are deeply engaged in learning from others [@csibra2009natural; @meltzoff2007like]. Even newborns tend to prefer to look at faces with direct vs. averted gaze [@farroni2002eye] and young infants follow overt gaze shifts [@gredeback2010]. Further, when infants attend to video stimuli, they tend to look mostly at faces at the expense of other visual information -- though older infants start to look towards people's hands and the actions they are performing [@frank2012measuring; @frank2014visual].
 
 Then, however, their view of the world radically changes [@adolph2006motor]. Infants' motor abilities improve dramatically near the end of the first year of life, allowing them to locomote independently. These motor changes have significant consequences for what children see; crawling and walking infants simply have different views of the world. For example, during spontaneous play in a laboratory playroom, toddlers are more likely to look at the floor while crawling than while walking [@franchak2011]. In general, walking infants tend to have full visual access to their environment and the people in it, while crawling infants do not [@kretch2014].
 
 These motor improvements lead to developmental cascades that impact children’s emerging social, cognitive, and linguistic abilities in various ways [@iverson2010]. For example, postural changes impact how children interact with their mothers: walking (vs. crawling) infants make different kinds of object-related bids for attention from their mothers and tend to hear more action directed statements (e.g., “open it”) [@karasik2014]. Further, in an observational study, @walle2014 found that children who were able to walk had both higher receptive and productive vocabularies. On their account, children’s ability to stand and independently locomote may change their ability to access social information (e.g., faces, gaze)  and in turn to accelerate their own learning.
 
-Recent technological developments allow for testing of this hypothesis by documenting the experiences of infants and children from their own perspective. By using head-mounted cameras, researchers have begun to record the visual experiences of infants and children -- which even for walking children are extremely different from the adult perspective (and not easily predicted by our own adult intuitions) [@clerkin2017;@franchak2011;@yoshida2008]. Children’s views tend to be more restricted and dominated by objects and hands  [@yoshida2008], and computational and empirical work suggest that this restricted viewpoint may be more effective for learning objects and their labels than the comparable adult perspective [@bambach2017;@yurovsky2012]. This perspective changes over the first two years of life, as views transition from primarily containing close up views of faces to capturing views of hands paired with the objects they are acting on [@fausey2016]. These changes may be driven by – or independent from – the concurrent motoric changes described above.
+Recent technological developments allow for testing of this hypothesis by documenting the experiences of infants and children from their own perspective. By using head-mounted cameras, researchers have begun to record the visual experiences of infants and children -- which even for walking children are extremely different from the adult perspective (and not easily predicted by our own adult intuitions) [@clerkin2017;@franchak2011;@yoshida2008]. Children’s views tend to be more restricted and dominated by objects and hands  [@yoshida2008], and computational and empirical work suggest that this restricted viewpoint may be more effective for learning objects and their labels than the comparable adult perspective [@bambach2017;@yurovsky2013statistical]. This perspective changes over the first two years of life, as views transition from primarily containing close up views of faces to capturing views of hands paired with the objects they are acting on [@fausey2016]. These changes may be driven by – or independent from – the concurrent motoric changes described above.
 
 Here, we directly examine whether postural and locomotive developments change the availability of social information -- the presence of faces and hands. To do so, we recorded the visual experience of a group of infants in three age ranges (8,12, and 16 months) using head-mounted cameras during a brief laboratory free-play session; children’s posture and orientation relative to their caregiver were also recorded from a third-person perspective and hand-annotated. We then capitalize on recent improvements in face and pose detection algorithms [@zhang2016; @cao2017realtime] to analyze the frequencies of faces and hands (using wrists as a proxy for the latter) in the child’s visual environment, both overall and relative to naming events by their caregivers. We hypothesized that there would be differential access to social information based on children's postural developments: crawling infants would see fewer faces because they would primarily be looking at the ground, while walking toddlers would have access to a richer visual landscape, thus providing children with greater access to the social information in their environment.
 
@@ -195,8 +198,10 @@ evaluate <- function(a, b) {
     else return("FP") # was not face/wrist, said face/wrist
   }
 }
+```
 
-## EVALUATE FACE DETECTORS
+```{r  include=FALSE, echo=FALSE}
+## Evalute face and wrist detectors
 performanceFaces <- ground_truth_faces  %>%
   mutate(frame=as.numeric(frame), subid=video) %>%
   left_join(dlong)   %>%
@@ -267,6 +272,7 @@ OpenPose-Wrists & Random & 0.88 & 0.29 & 0.43 \\
 \hline
 \end{tabular}
 \caption{Detector performance on both high density samples (where proportion of targets detected was high) and random samples (where frames were randomly selected). P, R, and F denote precision, recall, and F-score, respectively. Scores in bold are the highest F-scores for each sample type.} 
+\vspace{-1em}
 \end{table}
 
 # Results
@@ -370,7 +376,6 @@ ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detectorTyp
   theme(legend.position="none") +
   facet_grid(~detectorType) 
 ```
-
 
 
 ```{r detByPosOrient, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=7, fig.height=3, fig.cap = "Proportion of face and wrist detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant."}
@@ -521,6 +526,7 @@ Intercept & -5.78 & 0.33 & -17.55 & 0.000 \\
    \hline
 \end{tabular}
 \caption{Model coefficients from generalized linear models predicting the proportion of faces (upper panel) and wrists (lower panel) seen by children.} 
+\vspace{-1em}
 \end{table}
 
 A summary of the coefficients of the models can be found in Table 2.  While infant's posture and orientation significantly impacted the proportion of faces and hands that infants saw, age was not a significant predictor in either model. Thus, these results suggest that infants' visual access to social information is modulated by their posture and orientation, which is in turn a function of their general locomotor development.
@@ -617,7 +623,9 @@ Understanding these changes has been a persistent challenge for developmental ps
 
 # Acknowledgements
 
-Thanks to Kaia Simmons, Kathy Woo, and Aditi Maliwal for help in recruitment, data collection, and annotation. An earlier version of this work was presented to the Cognitive Science Society in @frank2013. 
+Thanks to Kaia Simmons, Kathy Woo, and Aditi Maliwal for help in recruitment, data collection, and annotation. This work was funded by a Jacobs Foundation Fellowship and a John Merck Scholars award to MCF. An earlier version of this work was presented to the Cognitive Science Society in @frank2013. 
+
+\vspace{1em} \fbox{\parbox[b][][c]{7.3cm}{\centering All data and code for these analyses are available at\ \url{https://github.com/amsan7/xs-face}}} \vspace{1em}
 
 # References 
 
