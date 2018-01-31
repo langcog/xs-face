@@ -64,7 +64,7 @@ The ability to process social information is a critical component of
 children's early language and cognitive development. However, as
 children reach their first birthday, they begin to locomote themselves,
 dramatically affecting their visual access to this information. How do
-these postural and locomotive changes affect children's access to the
+these postural and locomotor changes affect children's access to the
 social information relevant for word-learning? Here, we explore this
 question by using head-mounted cameras to record 36 infants' (8-16
 months of age) egocentric visual perspective and use computer vision
@@ -83,17 +83,22 @@ social cognition; face-perception; infancy; locomotion; head-cameras;
 deep learning
 \end{abstract}
 
+\newcommand{\wrapmf}[1]{#1}
+
+
+
+
 \section{Introduction}\label{introduction}
 
 From early infancy, children are deeply engaged in learning from others
 (Csibra \& Gergely, 2009; Meltzoff, 2007). Even newborns tend to prefer
 to look at faces with direct vs.~averted gaze (Farroni, Csibra, Simion,
-\& Johnson, 2002) and young infants follow overt gaze shifts (Gredebäck,
-Fikke, \& Melinder, 2010). Further, when infants attend to video
-stimuli, they tend to look mostly at faces at the expense of other
-visual information -- though older infants start to look towards
-people's hands and the actions they are performing (Frank, Amso, \&
-Johnson, 2014; Frank, Vul, \& Saxe, 2012).
+\& Johnson, 2002) and young infants follow overt gaze shifts
+(Gredeb\wrapmf{\"{a}}ck, Fikke, \& Melinder, 2010). Further, when
+infants attend to video stimuli, they tend to look mostly at faces at
+the expense of other visual information -- though older infants start to
+look towards people's hands and the actions they are performing (Frank,
+Amso, \& Johnson, 2014; Frank, Vul, \& Saxe, 2012).
 
 Then, however, their view of the world radically changes (Adolph \&
 Berger, 2006). Infants' motor abilities improve dramatically near the
@@ -108,16 +113,15 @@ it, while crawling infants do not (Kretch, Franchak, \& Adolph, 2014).
 
 These motor improvements lead to developmental cascades that impact
 children's emerging social, cognitive, and linguistic abilities in
-various ways (Iverson, 2010). For example, postural changes impact how
-children interact with their mothers: walking (vs.~crawling) infants
-make different kinds of object-related bids for attention from their
-mothers and tend to hear more action directed statements (e.g., ``open
-it'') (Karasik, Tamis-LeMonda, \& Adolph, 2014). Further, in an
-observational study, Walle \& Campos (2014) found that children who were
-able to walk had both higher receptive and productive vocabularies. On
-their account, children's ability to stand and independently locomote
-may change their ability to access social information (e.g., faces,
-gaze) and in turn to accelerate their own learning.
+various ways. For example, postural changes impact how children interact
+with their mothers: walking (vs.~crawling) infants make different kinds
+of object-related bids for attention from their mothers and tend to hear
+more action directed statements (e.g., ``open it'') (Karasik,
+Tamis-LeMonda, \& Adolph, 2014). Further, in an observational study,
+Walle \& Campos (2014) found that children who were able to walk had
+both higher receptive and productive vocabularies. Thus, children's
+ability independently locomote may change their ability to access social
+information (e.g., faces, gaze) and in turn accelerate their learning.
 
 Recent technological developments allow for testing of this hypothesis
 by documenting the experiences of infants and children from their own
@@ -130,14 +134,14 @@ Children's views tend to be more restricted and dominated by objects and
 hands (Yoshida \& Smith, 2008), and computational and empirical work
 suggest that this restricted viewpoint may be more effective for
 learning objects and their labels than the comparable adult perspective
-(Bambach, Crandall, Smith, \& Yu, 2017; D. Yurovsky, Smith, \& Yu, in
-press). This perspective changes over the first two years of life, as
-views transition from primarily containing close up views of faces to
+(Bambach, Crandall, Smith, \& Yu, 2017; Yurovsky, Smith, \& Yu, 2013).
+This perspective changes over the first two years of life, as views
+transition from primarily containing close up views of faces to
 capturing views of hands paired with the objects they are acting on
 (Fausey, Jayaraman, \& Smith, 2016). These changes may be driven by --
 or independent from -- the concurrent motoric changes described above.
 
-Here, we directly examine whether postural and locomotive developments
+Here, we directly examine whether postural and locomotor developments
 change the availability of social information -- the presence of faces
 and hands. To do so, we recorded the visual experience of a group of
 infants in three age ranges (8,12, and 16 months) using head-mounted
@@ -248,8 +252,8 @@ Annotation}\label{data-processing-and-annotation}
 Headcam videos were trimmed such that they excluded the instruction
 phase when the experimenter was in the room and were automatically
 synchronized with the tripod-mounted videos using FinalCut Pro Software.
-These sessions yielded videos of 516 minutes (almost a million frames),
-with an average video length of 8.6 minutes (min = 4.53, max = 19.35).
+These sessions yielded 516 minutes (almost a million frames) of video,
+with an average video length of 14.33 minutes (min = 4.53, max = 19.35).
 
 \subsubsection{Posture and Orientation
 Annotation}\label{posture-and-orientation-annotation}
@@ -310,7 +314,7 @@ present. We used a Tensorflow implementation of this algorithm avaliable
 at \url{https://github.com/davidsandberg/facenet}.
 
 The CNN-based pose detector (OpenPose; Cao et al., 2017; Simon, Joo,
-Matthews, \& Sheikh, 2017; Wei, Ramakrishna, Kanade, \& Sheikh, 2016))
+Matthews, \& Sheikh, 2017; Wei, Ramakrishna, Kanade, \& Sheikh, 2016)
 provided the locations of 18 body parts (ears, nose, wrists, etc.) and
 is available at
 \url{https://github.com/CMU-Perceptual-Computing-Lab/openpose}. The
@@ -367,6 +371,7 @@ OpenPose-Wrists & Random & 0.88 & 0.29 & 0.43 \\
 \hline
 \end{tabular}
 \caption{Detector performance on both high density samples (where proportion of targets detected was high) and random samples (where frames were randomly selected). P, R, and F denote precision, recall, and F-score, respectively. Scores in bold are the highest F-scores for each sample type.} 
+\vspace{-1em}
 \end{table}
 
 \section{Results}\label{results}
@@ -404,7 +409,7 @@ face detections, such that 12-month-olds appeared to have visual access
 to slightly fewer faces faces than 8 or 16-month-olds; conversely, hand
 detections perhaps appeared to generally increase with age.
 
-Age related effects were much smaller than postural and locomotive
+Age related effects were much smaller than postural and locomotor
 changes on children's visual access to faces and hands. Children's
 posture was a major factor both in how many faces and hands they saw
 during the play session. Infants who were sitting saw more faces than
@@ -434,7 +439,7 @@ faces/hands than children who were close to their caregiver (Figure
 
 }
 
-\caption[Proportion of face and wrist detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant]{Proportion of face and wrist detections as a function of children's posture (top panel) and orientation (bottom panel), binned by the age of the participant.}\label{fig:detByPosOrient}
+\caption[Proportion of face and wrist detections in each age group as a function of children's posture (top panel) and orientation (bottom panel)]{Proportion of face and wrist detections in each age group as a function of children's posture (top panel) and orientation (bottom panel).}\label{fig:detByPosOrient}
 \end{figure*}
 \end{CodeChunk}
 
@@ -471,6 +476,7 @@ Intercept & -5.78 & 0.33 & -17.55 & 0.000 \\
    \hline
 \end{tabular}
 \caption{Model coefficients from generalized linear models predicting the proportion of faces (upper panel) and wrists (lower panel) seen by children.} 
+\vspace{-1em}
 \end{table}
 
 A summary of the coefficients of the models can be found in Table 2.
@@ -518,7 +524,7 @@ world, the people in it, and the actions that are being performed.
 
 }
 
-\caption[Proportion of face and hand detections around a naming instance ('Look, a Zem']{Proportion of face and hand detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture. Error bars represent non-parametric bootstrapped 95 percent confidence intervals.}\label{fig:detByNaming}
+\caption[Proportion of face and hand detections around a naming instance ('Look, a Zem']{Proportion of face and hand detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture. Error bars represent non-parametric bootstrapped 95 \% confidence intervals.}\label{fig:detByNaming}
 \end{figure}
 \end{CodeChunk}
 
@@ -535,17 +541,23 @@ Understanding these changes has been a persistent challenge for
 developmental psychology, but the field of computer vision has advanced
 dramatically in recent years, creating a new generation of algorithmic
 tools. These tools deal better with noisier, more complicated datasets
-and extract richer and more detailed information than previous systems.
-We hope that these new tools can be leveraged to understand the changing
-infant perspective on the visual world and the implications of these
-changes for linguistic, cognitive, and social development.
+and extract richer information than previous systems. We hope that these
+new tools can be leveraged to understand the changing infant perspective
+on the visual world and the implications of these changes for
+linguistic, cognitive, and social development.
 
 \section{Acknowledgements}\label{acknowledgements}
 
 Thanks to Kaia Simmons, Kathy Woo, and Aditi Maliwal for help in
-recruitment, data collection, and annotation. An earlier version of this
-work was presented to the Cognitive Science Society in Frank et al.
-(2013).
+recruitment, data collection, and annotation. This work was funded by a
+Jacobs Foundation Fellowship to MCF, a John Merck Scholars award to MCF,
+and a NSF \#1714726 to BLL. An earlier version of this work was
+presented to the Cognitive Science Society in Frank et al. (2013).
+
+\vspace{1em}
+
+\fbox{\parbox[b][][c]{7.3cm}{\centering All data and code for these analyses are available at\ \url{https://github.com/amsan7/xs-face}}}
+\vspace{1em}
 
 \section{References}\label{references}
 
@@ -618,15 +630,10 @@ social attention using free-viewing. \emph{Infancy}, \emph{17}(4),
 355--375.
 
 \hypertarget{ref-gredeback2010development}{}
-Gredebäck, G., Fikke, L., \& Melinder, A. (2010). The development of
-joint visual attention: A longitudinal study of gaze following during
-interactions with mothers and strangers. \emph{Developmental Science},
-\emph{13}(6), 839--848.
-
-\hypertarget{ref-iverson2010}{}
-Iverson, J. M. (2010). Developing language in a developing body: The
-relationship between motor development and language development.
-\emph{Journal of Child Language}, \emph{37}(2), 229--261.
+Gredeb\wrapmf{\"{a}}ck, G., Fikke, L., \& Melinder, A. (2010). The
+development of joint visual attention: A longitudinal study of gaze
+following during interactions with mothers and strangers.
+\emph{Developmental Science}, \emph{13}(6), 839--848.
 
 \hypertarget{ref-karasik2014}{}
 Karasik, L. B., Tamis-LeMonda, C. S., \& Adolph, K. E. (2014). Crawling
@@ -676,9 +683,10 @@ Yoshida, H., \& Smith, L. (2008). What's in view for toddlers? Using a
 head camera to study visual experience. \emph{Infancy}, \emph{13},
 229--248.
 
-\hypertarget{ref-yurovsky2012}{}
-Yurovsky, D., Smith, L., \& Yu, C. (in press). Statistical word learning
-at scale: The baby's view is better. \emph{Developmental Science}.
+\hypertarget{ref-yurovsky2013statistical}{}
+Yurovsky, D., Smith, L. B., \& Yu, C. (2013). Statistical word learning
+at scale: The baby's view is better. \emph{Developmental Science},
+\emph{16}(6), 959--966.
 
 \hypertarget{ref-zhang2016}{}
 Zhang, K., Zhang, Z., Li, Z., \& Qiao, Y. (2016). Joint face detection
