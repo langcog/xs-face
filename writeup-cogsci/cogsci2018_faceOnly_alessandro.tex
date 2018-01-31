@@ -95,8 +95,8 @@ visual information -- though older infants start to look towards
 people's hands and the actions they are performing (Frank, Amso, \&
 Johnson, 2014; Frank, Vul, \& Saxe, 2012).
 
-Then, however, their view of the world radically changes (K. Adolph \&
-Berger, 2007). Infants' motor abilities improve dramatically near the
+Then, however, their view of the world radically changes (Adolph \&
+Berger, 2006). Infants' motor abilities improve dramatically near the
 end of the first year of life, allowing them to locomote independently.
 These motor changes have significant consequences for what children see;
 crawling and walking infants simply have different views of the world.
@@ -106,10 +106,10 @@ are more likely to look at the floor while crawling than while walking
 tend to have full visual access to their environment and the people in
 it, while crawling infants do not (Kretch, Franchak, \& Adolph, 2014).
 
-One possibility is that these motor improvements lead to developmental
-cascades that impact children's emerging social, cognitive, and
-linguistic abilities (Iverson, 2010). These postural changes also impact
-how children interact with their mothers: walking (vs.~crawling) infants
+These motor improvements lead to developmental cascades that impact
+children's emerging social, cognitive, and linguistic abilities in
+various ways (Iverson, 2010). For example, postural changes impact how
+children interact with their mothers: walking (vs.~crawling) infants
 make different kinds of object-related bids for attention from their
 mothers and tend to hear more action directed statements (e.g., ``open
 it'') (Karasik, Tamis-LeMonda, \& Adolph, 2014). Further, in an
@@ -262,8 +262,8 @@ caregiver's orientation was characterized as being close, far, or behind
 the child (independent of distance). For the first two annotations
 (close/far from the child), the caregiver could either be to the front
 or side of the child. All annotations were made by a trained coder using
-the OpenSHAPA/Datavyu software (K. Adolph, Gilmore, Freeman, Sanderson,
-\& Millman, 2012). Times when the child was out of view of the tripod
+the OpenSHAPA/Datavyu software (Adolph, Gilmore, Freeman, Sanderson, \&
+Millman, 2012). Times when the child was out of view of the tripod
 camera were marked as uncodable and were excluded from these
 annotations.
 
@@ -286,7 +286,7 @@ a face necessarily contains a nose.
 
 The OpenPose detector also provided us with the location of an agent's
 wrists, which we used as a proxy for hands for two reasons. First, as we
-did not capture children's entire visual field. the presence of a wrist
+did not capture children's entire visual field, the presence of a wrist
 is likely often indicative of the presence of a hand within the field of
 view. Second, hands are often occluded by objects when caregivers are
 interacting with children, yet still visually accessible by the child
@@ -309,7 +309,7 @@ real-world environments where varying illuminations and occlusions are
 present. We used a Tensorflow implementation of this algorithm avaliable
 at \url{https://github.com/davidsandberg/facenet}.
 
-The CNN-based pose detector (OpenPose, Cao et al., 2017; Simon, Joo,
+The CNN-based pose detector (OpenPose; Cao et al., 2017; Simon, Joo,
 Matthews, \& Sheikh, 2017; Wei, Ramakrishna, Kanade, \& Sheikh, 2016))
 provided the locations of 18 body parts (ears, nose, wrists, etc.) and
 is available at
@@ -324,17 +324,18 @@ use of the body parts relevant to the face and hands (nose and wrists).
 
 To evaluate face detector performance, we hand-labeled a ``gold set'' of
 labeled frames. To account for the relatively rare appearance of faces
-in the dataset, we hand abeled two types of samples: a sample containing
-a high density of faces (half reported by MTCNN, half by OpenPose) and a
-random sample from the remaining frames. Each sample was comprised of an
-equal number of frames taken from each child's video. For wrist
-detections, the ``gold set'' was constructed in the same manner, except
-frames with a high density of wrists came only from detections made by
-OpenPose. Faces were classified as present if at least half of the face
-was showing; wrists were classified as present if any part of the wrist
-was showing. Precision (hits / hits + false alarms), recall (hits / hits
-+ misses), and F-score (harmonic mean of precision and recall) were
-calculated for all detectors and are reported in Table 2.
+in the dataset, we hand-labeled two types of samples: a sample
+containing a high density of faces (half reported by MTCNN, half by
+OpenPose) and a random sample from the remaining frames. Each sample was
+comprised of an equal number of frames taken from each child's video.
+For wrist detections, the ``gold set'' was constructed in the same
+manner, except frames with a high density of wrists came only from
+detections made by OpenPose. Faces were classified as present if at
+least half of the face was showing; wrists were classified as present if
+any part of the wrist was showing. Precision (hits / hits + false
+alarms), recall (hits / hits + misses), and F-score (harmonic mean of
+precision and recall) were calculated for all detectors and are reported
+in Table 2.
 
 For face detection, MTCNN outperformed OpenPose when taking into account
 only the composite F-score (0.89 MTCNN vs.~0.83 OpenPose). Although
@@ -385,8 +386,8 @@ OpenPose-Wrists & Random & 0.88 & 0.29 & 0.43 \\
 Orientation}\label{changes-in-posture-and-orientation}
 
 The proportion of time infants spent sitting decreased with age, and the
-proportion of time infants spent standing increased with age. Both 8
-month-olds and 12 month-olds spent equivalent amounts of time
+proportion of time infants spent standing increased with age. Both
+8-month-olds and 12-month-olds spent equivalent amounts of time
 lying/crawling, which was markedly decreased in the 16-month-olds, who
 spent most of their time sitting or standing (see Figure
 \ref{fig:posture}). We also observed changes in children's orientation
@@ -399,7 +400,7 @@ Hands}\label{changes-in-access-to-faces-and-hands}
 
 We examined the proportion of face and hand detections across age (see
 Figure \ref{fig:detByAge}). We observed a slight U-shaped function in
-face detections, such that 12-month-olds appeared to have visual acces
+face detections, such that 12-month-olds appeared to have visual access
 to slightly fewer faces faces than 8 or 16-month-olds; conversely, hand
 detections perhaps appeared to generally increase with age.
 
@@ -472,18 +473,19 @@ Intercept & -5.78 & 0.33 & -17.55 & 0.000 \\
 \caption{Model coefficients from generalized linear models predicting the proportion of faces (upper panel) and wrists (lower panel) seen by children.} 
 \end{table}
 
-A summary of the coefficients of a models can be found in Table 2. While
-infant's posture and orientation significantly impacted the proportion
-of faces and hands that infants saw, age was not a significant predictor
-in either model. Thus, these results suggest that infants' visual access
-to social information is modulated by their posture and orientation,
-which is in turn a function of their general locomotor development.
+A summary of the coefficients of the models can be found in Table 2.
+While infant's posture and orientation significantly impacted the
+proportion of faces and hands that infants saw, age was not a
+significant predictor in either model. Thus, these results suggest that
+infants' visual access to social information is modulated by their
+posture and orientation, which is in turn a function of their general
+locomotor development.
 
 \subsection{Access to Faces and Hands During Labeling
 Events}\label{access-to-faces-and-hands-during-labeling-events}
 
 Finally, we explored how face and hand detections changed during object
-labeling events as a function of infant's posture and orientation. We
+labeling events as a function of infants' posture and orientation. We
 analyzed a four-second window around each labeling event (e.g., ``Look
 at the {[}zem{]}!''); these labeling events were hand-annotated and
 synchronized with the frame-by-frame face/hand detections. We found that
@@ -491,7 +493,7 @@ infants' posture and orientations modulated their visual access to faces
 and hands during labeling events; infants who were sitting or standing
 were more likely to have visual access to this social information (see
 Figure \ref{fig:detByNaming}). However, we did not find that infants saw
-particularily more faces or hands during naming events relative to
+particularly more faces or hands during naming events relative to
 baseline (avg. difference in proportion of hands, 8 m.o. = 0, 12 m.o. =
 -0.003, 16 m.o. = -0.014; avg. difference in proportion of faces, 8 m.o.
 = 0.003, 12 m.o. = 0.01, 16 m.o. = 0.021).
@@ -516,7 +518,7 @@ world, the people in it, and the actions that are being performed.
 
 }
 
-\caption[Proportion face and hand detections around a naming instance ('Look, a Zem']{Proportion face and hand detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture. Error bars represent non-parametric bootstrapped 95 percent confidence intervals.}\label{fig:detByNaming}
+\caption[Proportion of face and hand detections around a naming instance ('Look, a Zem']{Proportion of face and hand detections around a naming instance ('Look, a Zem'; +/- 2 seconds around each utterance) as a function of infants' posture. Error bars represent non-parametric bootstrapped 95 percent confidence intervals.}\label{fig:detByNaming}
 \end{figure}
 \end{CodeChunk}
 
@@ -550,13 +552,13 @@ work was presented to the Cognitive Science Society in Frank et al.
 \setlength{\parindent}{-0.1in} \setlength{\leftskip}{0.125in} \noindent
 
 \hypertarget{refs}{}
-\hypertarget{ref-adolph2007}{}
-Adolph, K., \& Berger, S. (2007). Motor development. In \emph{Handbook
-of child psychology}. Wiley Online Library.
+\hypertarget{ref-adolph2006motor}{}
+Adolph, K. E., \& Berger, S. E. (2006). Motor development.
+\emph{Handbook of Child Psychology}.
 
-\hypertarget{ref-adolph2012}{}
-Adolph, K., Gilmore, R., Freeman, C., Sanderson, P., \& Millman, D.
-(2012). Toward open behavioral science. \emph{Psychological Inquiry},
+\hypertarget{ref-adolph2012toward}{}
+Adolph, K. E., Gilmore, R. O., Freeman, C., Sanderson, P., \& Millman,
+D. (2012). Toward open behavioral science. \emph{Psychological Inquiry},
 \emph{23}(3), 244--247.
 
 \hypertarget{ref-bambach2017}{}
