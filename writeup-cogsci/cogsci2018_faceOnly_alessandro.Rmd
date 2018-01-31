@@ -17,7 +17,7 @@ output: cogsci2016::cogsci_paper
 
 ---
 \newcommand{\wrapmf}[1]{#1}
-\vspace{-1em}
+
 ```{r global_options, include=FALSE}
 rm(list=ls())
 knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = F, fig.pos = "tb", fig.path='figs/',
@@ -46,7 +46,7 @@ library(assertthat)
 
 ```
 # Introduction
-From early infancy, children are deeply engaged in learning from others [@csibra2009natural; @meltzoff2007like]. Even newborns tend to prefer to look at faces with direct vs. averted gaze [@farroni2002eye] and young infants follow overt gaze shifts [@gredeback2010]. Further, when infants attend to video stimuli, they tend to look mostly at faces at the expense of other visual information -- though older infants start to look towards people's hands and the actions they are performing [@frank2012measuring; @frank2014visual].
+From early infancy, children are deeply engaged in learning from others [@csibra2009natural; @meltzoff2007like]. Even newborns tend to prefer to look at faces with direct vs. averted gaze [@farroni2002eye] and young infants follow overt gaze shifts [@gredeback2010development]. Further, when infants attend to video stimuli, they tend to look mostly at faces at the expense of other visual information -- though older infants start to look towards people's hands and the actions they are performing [@frank2012measuring; @frank2014visual].
 
 Then, however, their view of the world radically changes [@adolph2006motor]. Infants' motor abilities improve dramatically near the end of the first year of life, allowing them to locomote independently. These motor changes have significant consequences for what children see; crawling and walking infants simply have different views of the world. For example, during spontaneous play in a laboratory playroom, toddlers are more likely to look at the floor while crawling than while walking [@franchak2011]. In general, walking infants tend to have full visual access to their environment and the people in it, while crawling infants do not [@kretch2014].
 
@@ -78,6 +78,7 @@ all_subs %>%
 
 all_subs %>%
   left_join(inc_subs) %>%
+  filter(inc==TRUE) %>%
   group_by(age_group) %>%
   summarise(n = sum(inc), 
             percent_included = mean(inc),
@@ -114,6 +115,7 @@ To obtain this final sample, we tested `r length(all_subs$reason)` children, exc
 
 ### Head-mounted camera
 ```{r headcam, fig.env = "figure", fig.pos = "H", fig.align='center', fig.width=2, fig.height=2.5, set.cap.width=T, num.cols.cap=1, fig.label="headcam", fig.cap = "Vertical field of view for two different headcam configurations (we used the lower in our current study)."}
+
 img <- png::readPNG("images/viewangle_cut.png")
 grid::grid.raster(img)
 ```
@@ -128,9 +130,9 @@ Even with the fish-eye lens, the vertical field of view of the camera is still c
 All parents signed consent documents while children were fitted with the headcam. If the child was uninterested in wearing the headcam or tried to take it off, the experimenter presented engaging toys to try to draw the child's focus away from the headcam. When the child was comfortable wearing the headcam, the child and caregiver were shown to a playroom for the free-play session. Parents were shown a box containing three pairs of novel and familiar objects (e.g., a ball and a microfiber duster, named a "zem"), and were instructed to play with the object pairs with their child one at a time, "as they typically would." All parents confirmed that their child had not previously seen the novel toys and were instructed to use the novel labels to refer to the toys. The experimenter then left the playroom for approximately 15 minutes, during which a tripod-mounted camera in the corner of the room recorded the session and the headcam captured video from the child's perspective.
 
 ### Data Processing and Annotation
-Headcam videos were trimmed such that they excluded the instruction phase when the experimenter was in the room and were automatically synchronized with the tripod-mounted videos using FinalCut Pro Software. These sessions yielded videos of 
-`r round(sum(inc_subs$len.min), digits = 0)` minutes (almost a million frames), with an average video length of
-`r round(sum(inc_subs$len.min)/60, digits = 2)` minutes
+Headcam videos were trimmed such that they excluded the instruction phase when the experimenter was in the room and were automatically synchronized with the tripod-mounted videos using FinalCut Pro Software. These sessions yielded 
+`r round(sum(inc_subs$len.min), digits = 0)` minutes (almost a million frames) of video, with an average video length of
+`r round(mean(inc_subs$len.min), digits = 2)` minutes
 (min = `r round(min(inc_subs$len.min), digits = 2)`, max = `r round(max(inc_subs$len.min), digits = 2)`).
 
 ### Posture and Orientation Annotation
