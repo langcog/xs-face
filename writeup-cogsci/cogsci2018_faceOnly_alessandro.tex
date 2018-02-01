@@ -53,6 +53,8 @@
 information}
 
 
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}  
+
 \author{{\large \bf Alessandro Sanchez\thanks{These authors contributed equally to this work.}} \\ \texttt{sanchez7@stanford.edu} \\ Department of Psychology \\ Stanford University \And {\large \bf Bria Long\footnotemark[1]}  \\ \texttt{bria@stanford.edu} \\ Department of Psychology \\ Stanford University \And {\large \bf Allison M. Kraus} \\ \texttt{allison.m.kraus@gmail.com} \\ Department of Psychology \\ Stanford University \And {\large \bf Michael C. Frank} \\ \texttt{mcfrank@stanford.edu} \\ Department of Psychology \\ Stanford University}
 
 \begin{document}
@@ -84,9 +86,9 @@ deep learning
 \end{abstract}
 
 \newcommand{\wrapmf}[1]{#1}
+\renewcommand*{\thefootnote}{\arabic{footnote}}
 
-
-
+\setcounter{footnote}{0}
 
 \section{Introduction}\label{introduction}
 
@@ -120,8 +122,9 @@ more action directed statements (e.g., ``open it'') (Karasik,
 Tamis-LeMonda, \& Adolph, 2014). Further, in an observational study,
 Walle \& Campos (2014) found that children who were able to walk had
 both higher receptive and productive vocabularies. Thus, children's
-ability independently locomote may change their ability to access social
-information (e.g., faces, gaze) and in turn accelerate their learning.
+ability to independently locomote may change their ability to access
+social information (e.g., faces, gaze) and in turn accelerate their
+learning.
 
 Recent technological developments allow for testing of this hypothesis
 by documenting the experiences of infants and children from their own
@@ -132,19 +135,20 @@ not easily predicted by our own adult intuitions) (Clerkin, Hart, Rehg,
 Yu, \& Smith, 2017; Franchak et al., 2011; Yoshida \& Smith, 2008).
 Children's views tend to be more restricted and dominated by objects and
 hands (Yoshida \& Smith, 2008), and computational and empirical work
-suggest that this restricted viewpoint may be more effective for
+suggests that this restricted viewpoint may be more effective for
 learning objects and their labels than the comparable adult perspective
 (Bambach, Crandall, Smith, \& Yu, 2017; Yurovsky, Smith, \& Yu, 2013).
-This perspective changes over the first two years of life, as views
-transition from primarily containing close up views of faces to
+This perspective changes over the first two years of life, as visual
+input transitions from primarily containing close up views of faces to
 capturing views of hands paired with the objects they are acting on
-(Fausey, Jayaraman, \& Smith, 2016). These changes may be driven by --
-or independent from -- the concurrent motoric changes described above.
+(Fausey, Jayaraman, \& Smith, 2016). It is uncertain how much these
+changes are driven by the concurrent motoric changes described above
+versus by other developmental factors.
 
 Here, we directly examine whether postural and locomotor developments
 change the availability of social information -- the presence of faces
 and hands. To do so, we recorded the visual experience of a group of
-infants in three age ranges (8,12, and 16 months) using head-mounted
+infants in three age ranges (8, 12, and 16 months) using head-mounted
 cameras during a brief laboratory free-play session; children's posture
 and orientation relative to their caregiver were also recorded from a
 third-person perspective and hand-annotated. We then capitalize on
@@ -215,7 +219,7 @@ second.\footnote{Detailed instructions for creating this headcam can be
 A fisheye lens was attached to the camera to increase the view angle
 from \(32^{\circ}\) horizontal by \(24^{\circ}\) vertical to
 \(64^{\circ}\) horizontal by \(46^{\circ}\) vertical (see Figure
-\ref{fig:headcam}, bottom).
+\ref{fig:headcam}, above).
 
 Even with the fish-eye lens, the vertical field of view of the camera is
 still considerably reduced compared to the child's field of view, which
@@ -339,7 +343,7 @@ least half of the face was showing; wrists were classified as present if
 any part of the wrist was showing. Precision (hits / hits + false
 alarms), recall (hits / hits + misses), and F-score (harmonic mean of
 precision and recall) were calculated for all detectors and are reported
-in Table 2.
+in Table 1.
 
 For face detection, MTCNN outperformed OpenPose when taking into account
 only the composite F-score (0.89 MTCNN vs.~0.83 OpenPose). Although
@@ -350,7 +354,7 @@ MTCNN. ViolaJones performed quite poorly relative to the other
 detectors, especially with respect to the random sample. We thus use
 MTCNN detections in the following analyses. For wrist detection,
 OpenPose performed moderately well (F = 0.74) with relatively high
-precision but low recall on the randomly sampled frames (see Table 2).
+precision but low recall on the randomly sampled frames (see Table 1).
 We thus analyze wrist detections, with the caveat that we are likely
 underestimating the proportion of hands in the dataset.
 
@@ -406,7 +410,7 @@ Hands}\label{changes-in-access-to-faces-and-hands}
 We examined the proportion of face and hand detections across age (see
 Figure \ref{fig:detByAge}). We observed a slight U-shaped function in
 face detections, such that 12-month-olds appeared to have visual access
-to slightly fewer faces faces than 8 or 16-month-olds; conversely, hand
+to slightly fewer faces than 8 or 16-month-olds; conversely, hand
 detections perhaps appeared to generally increase with age.
 
 Age related effects were much smaller than postural and locomotor
@@ -447,7 +451,7 @@ To formalize these observations, we fit two generalized linear
 mixed-effect models for the proportion of faces and the proportion of
 hands infants saw in each posture and orientation, with participant's
 age, orientation, and posture as fixed effects and with random slopes
-for infant's orientation. Random slopes for posture or interactions
+for infants' orientation. Random slopes for posture or interactions
 between our fixed effects caused the models to fail to converge.
 
 \begin{table}[ht]
@@ -480,7 +484,7 @@ Intercept & -5.78 & 0.33 & -17.55 & 0.000 \\
 \end{table}
 
 A summary of the coefficients of the models can be found in Table 2.
-While infant's posture and orientation significantly impacted the
+While infants' posture and orientation significantly impacted the
 proportion of faces and hands that infants saw, age was not a
 significant predictor in either model. Thus, these results suggest that
 infants' visual access to social information is modulated by their
@@ -551,8 +555,8 @@ linguistic, cognitive, and social development.
 Thanks to Kaia Simmons, Kathy Woo, and Aditi Maliwal for help in
 recruitment, data collection, and annotation. This work was funded by a
 Jacobs Foundation Fellowship to MCF, a John Merck Scholars award to MCF,
-and a NSF \#1714726 to BLL. An earlier version of this work was
-presented to the Cognitive Science Society in Frank et al. (2013).
+and NSF \#1714726 to BLL. An earlier version of this work was presented
+to the Cognitive Science Society in Frank et al. (2013).
 
 \vspace{1em}
 
