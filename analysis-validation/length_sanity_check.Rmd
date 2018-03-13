@@ -1,6 +1,6 @@
 ---
 title: "xsface - file length sanity checking"
-author: "Mike Frank"
+author: "Mike Frank, continued by Bria Long & Alessandro Sanchez"
 date: "July 11, 2016"
 output:
   html_document:
@@ -11,7 +11,9 @@ The goal of this document is to document processing steps for the xsface data an
 
 1. source files for movies
 2. demographic sheet (containing session lengths)
-3. detector outputs
+3. detector outputs (MTCNN/ OpenPose)
+4. timing outputs from ffprobe
+
 
 ```{r}
 rm(list=ls())
@@ -19,14 +21,18 @@ library(readr)
 library(magrittr)
 library(dplyr)
 library(lubridate)
+library(stringr)
+
 ```
 
-read in lengths on movies
+read in lengths on movies, demographics, detections, and frame time outputs
 
 ```{r}
 demo <- read_csv("../data/demographics/demographics.csv")
 movies <- read_csv("../data/video_stats/new_movie_lengths.csv") 
-dets <- read_csv("../data/final_output/mtcnn3.csv")
+MTCNN <- read_csv("../data/final_output/mtcnn3.csv")
+openPose <- read_csv("../data/final_output/openpose_results_truncated_2.csv")
+frameTimes <- read_csv("../data/video_stats/frametimechecks_showframes.csv")
 ```
 
 Clean up measurements. 
@@ -42,23 +48,42 @@ movies %<>%
          length_movie = length) 
 
 # standardize
-dets$frame=as.numeric(dets$frame)
-dets$subid=dets$video
+MTCNN$frame=as.numeric(MTCNN$frame)
+MTCNN$subid=MTCNN$video
+openPose$frame=as.numeric(openPose$frame)
+openPose$subid=openPose$name
 
-det.lens <- dets %>%
+## get out max frame
+MTCNN.lens <- MTCNN %>%
   group_by(subid) %>%
-  summarise(frames_dets = max(frame))
+  summarise(frames_dets_mtcnn = max(frame))
+
+openPose.lens <- openPose %>%
+  group_by(subid) %>%
+  summarise(frames_dets_op = max(frame))
+
+## get frames from frame time output (ffprobe)
+frameTimes <- frameTimes %>%
+  mutate(last_frame_times = last.frame) %>%
+  mutate(subid = str_replace_all(subid,"-","_")) %>%
+  mutate(subid = str_sub(as.character(subid),start=1,end=7))
+  
 ```
 
 Merge. 
 
 ```{r}
 all_data <- left_join(demo, movies) %>%
-  left_join(det.lens) %>%
-  select(subid, recorded_len, last_frame_movie, length_movie, frames_dets) %>%
-  mutate(det_frame_err = abs(last_frame_movie - frames_dets) > 100,
-         demo_time_err = abs(recorded_len - length_movie) > 1) %>%
+  left_join(MTCNN.lens) %>%
+  left_join(openPose.lens) %>%
+  left_join(frameTimes) %>%
+  select(subid, recorded_len, length_movie, last_frame_movie, last_frame_times, frames_dets_mtcnn, frames_dets_op) %>%
+  mutate(det_frame_err = abs(last_frame_movie - frames_dets_mtcnn) > 100,
+         demo_time_err = abs(recorded_len - length_movie) > 1,
+         frame_time_diff = last_frame_times - frames_dets_mtcnn) %>%
   data.frame
+
+sum(all_data$frame_time_diff)
 ```
 
 Print. 
@@ -67,7 +92,11 @@ Print.
 knitr::kable(all_data, digits = 2)
 ```
 
-Explanations of discrepancies:
+XS_1229 has been trimmed (headcam came off) and therefore there are different movie lenghts.
+
+=====
+
+Mike's notes (Explanations of old discrepancies :)
 
 + 0825 - unknown, ~500 frames off (15s), spot checks seem to match decently well. 
 + 1205, 1211, and 1225 were post-trimed, hypothesis is that the _QT files are wrappers to source files that trim length to appropriate? 

@@ -4,22 +4,23 @@ output: html_notebook
 ---
 
 ```{r}
+
 library(tidyverse)
 library(knitr)
+
 ```
 
 Load data
 ```{r}
-ffprobe_frame_counts <- read_csv("data/video_stats/ffprobe_frame_count.csv")
-extracted_frame_counts <- read_csv("data/video_stats/extracted_frame_count.csv")
-mtcnn_data <- read_csv("data/final_output/mtcnn_face_detections.csv")
+ffprobe_frame_counts <- read_csv("../../data/video_stats/ffprobe_frame_count.csv")
+extracted_frame_counts <- read_csv("../../data/video_stats/extracted_frame_count.csv")
+mtcnn_data <- read_csv("../../data/final_output/mtcnn3.csv")
 # openpose_data 
 ```
 
 Check ffprobe results against actual extracted frames
 ```{r}
-ffprobe_frame_counts %>%
-  all.equal(extracted_frame_counts)
+s
 ```
 
 Check mtcnn results frame counts against extracted frames
