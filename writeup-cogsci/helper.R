@@ -1,23 +1,28 @@
 library(stringr)
 
 ######## MERGE IN EXACT TIMES FOR FRAMES #########
+
 add.times <- function(x) {
   print(x$subid[1])
-  fname <- paste0("../data/frame_times/",
-                 str_sub(as.character(x$subid[1]),start=4,end=8),
-                 ".csv")
+  ## from initial submission
+  # fname <- paste0("../data/frame_times/",
+  #                str_sub(as.character(x$subid[1]),start=4,end=8),
+  #                ".csv")
+  
+  ## redone march 6th
+  fname <- paste0("../data/frame_times_redone/",
+                  str_sub(as.character(x$subid[1])),
+                  "_objs.mov.frames.txt.csv")
+  
   if (file.exists(fname)) {
     times <- read_csv(fname)
-    
-#     x <- merge(x,times, by.x = "frame", by.y = "frame", all.x = TRUE, all.y = FALSE)
     x <- left_join(x, times)
-    x$dt <- c(diff(x$time),.032) ## assumes data is sorted by frames! also not sure why .032?
+    x$dt <- c(diff(x$time),.032) 
   } else {
     print(paste0("**** ", x$subid[1], " is missing frames ****"))
     x$time <- NA
     x$dt <- NA
   }
-  
   return(x)
 }
 
@@ -109,13 +114,14 @@ regularize.naming <- function (n) {
   
   # make the times seconds since onset - # if excel output is HMS vs MS - ugh! this was causing a big bug in analyses prior to jan 2018
   timeBefore=n$time
-  if (nchar(timeBefore[1])>8) { ## hacky but works, sorry! will try to prettify soon.
+  if (nchar(timeBefore[1])>8) { ## hacky but works.
     n$time=parse_date_time(timeBefore,"%H:%M:OS%")
   }
   else {
     n$time=parse_date_time(timeBefore,"%M:OS%")
   }
   assert_that(sum(hour(n$time))==0)  # check there are no hours!all sessions <20 minutes.
+  browser()
   n$time <- minute(n$time)*60+second(n$time) # convert to seconds
 
   n <- subset(n,!is.na(name))
@@ -147,7 +153,7 @@ summarize.naming <- function (x, window = c(-2,2)) {
                       sep=""),
                 stringsAsFactors=FALSE)
   
-  # print(x$subid[1])
+  print(x$subid[1])
   
   # rectify the coding
   namings <- regularize.naming(namings)
