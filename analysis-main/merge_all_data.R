@@ -1,3 +1,5 @@
+
+
 ## main data merge script - prerequisite for all other analyses
 rm(list=ls())
 library(dplyr)
@@ -7,14 +9,14 @@ library(tidyr)
 library(assertthat)
 source("helper.R")
 
-## load detectors for mtcnn2
+## load detectors for mtcnn
 dets <- read_csv("../data/final_output/mtcnn3.csv") %>%
   mutate(subid = video) %>%
   mutate(frame = as.numeric(frame)) %>%
   mutate(faceMT = as.logical(is_face)) %>%
   distinct(video,frame,.keep_all=TRUE)   
 
-# open pose detectorsa
+# open pose detections - faces and wrists
 detsOpenPose <- read_csv("../data/final_output/openpose_results_truncated_2.csv") 
 detsOpenPose <- detsOpenPose %>%
   mutate(video = name) %>%
@@ -23,28 +25,31 @@ detsOpenPose <- detsOpenPose %>%
   mutate(faceOP = Nose_conf!=0)  %>%
   mutate(wristOP = LWrist_conf!=0 | RWrist_conf!=0 )   
 
-# open pose detectors
-detsOpenPose_Hands <- read_csv("../data/final_output/openpose_results_with_detail_hands.csv") 
-detsOpenPose_HandConf <- detsOpenPose_Hands %>%
-  mutate(video = name) %>%
-  distinct(video,frame,.keep_all=TRUE)  %>%
-  mutate(frame = as.numeric(frame) + 1) %>%
-  select(video,frame,ends_with("conf")) %>%
-  mutate(confLeft=rowSums(.[grep("hand_left", names(.))])/21)  %>%
-  mutate(confRight=rowSums(.[grep("hand_right", names(.))])/21)  %>%
-  mutate(handOP = confRight>0 | confLeft>0 )
+# # open pose detectors - hands -- not using because poor accuracy
+# detsOpenPose_Hands <- read_csv("../data/final_output/openpose_results_with_detail_hands.csv") 
+# detsOpenPose_HandConf <- detsOpenPose_Hands %>%
+#   mutate(video = name) %>%
+#   distinct(video,frame,.keep_all=TRUE)  %>%
+#   mutate(frame = as.numeric(frame) + 1) %>%
+#   select(video,frame,ends_with("conf")) %>%
+#   mutate(confLeft=rowSums(.[grep("hand_left", names(.))])/21)  %>%
+#   mutate(confRight=rowSums(.[grep("hand_right", names(.))])/21)  %>%
+#   mutate(handOP = confRight>0 | confLeft>0 )
 
-# viola jones detectors
+# viola jones face detectors
 detsViola <- read_csv("../data/final_output/viola.csv") 
 detsViola <- detsViola %>%
   distinct(video,frame,.keep_all=TRUE)  %>%
   mutate(faceVJ = as.logical(is_face))  %>%
   mutate(frame = as.numeric(frame)) 
 
+## check sizes
+assert_that(dim(dets)[1]==dim(detsViola)[1])
+# assert_that(dim(dets)[1]==dim(detsOpenPose)[1]) ## slightly different.
+
 # merge all three detectors
 alldets=left_join(dets,detsViola[,c("video","frame","faceVJ")]) 
 alldets=left_join(alldets,detsOpenPose[,c("video","frame","faceOP","wristOP")]) 
-alldets=left_join(alldets,detsOpenPose_HandConf[,c("video","frame","handOP")]) 
 
 # load demographics and pose / orientation / timing
 demo.data <- read_csv("../data/demographics/demographics.csv") %>% 
@@ -53,7 +58,7 @@ demo.data <- read_csv("../data/demographics/demographics.csv") %>%
 # rearrange so we make sure it is in the order of the frames
 alldets<-arrange(alldets,video,frame) 
 
-## OpenPose doesn't get all frames. Let's check out the frames it deleted somehow.
+## OpenPose doesn't get all frames. Let's check out the frames it doesn't have
 missingInd=is.na(alldets$faceOP)
 assert_that(sum(is.na(alldets$faceOP))==45)
 
@@ -62,7 +67,6 @@ missingOP<-alldets %>%
 
 # None of the missing frames are faces. Replace OP "NAN" detections with "FALSE"
 alldets$faceOP[missingInd]=FALSE
-alldets$handOP[missingInd]=FALSE
 alldets$wristOP[missingInd]=FALSE
 
 # calls helper functions in helper.r to get times and posture coding integrated
@@ -75,6 +79,16 @@ d <- alldets %>%
   group_by(subid) %>%
   do(add.posture(.))
 
+test <- d %>%
+  filter(!is.na(dt)) %>%
+  mutate(isDuplicate = (dt==0)) %>%
+  group_by(subid) %>%
+  summarize(duplicateCount = sum(isDuplicate))
+
+## check that we synced everything right
+assert_that(sum(test$duplicateCount)==0)
+assert_that(sum(is.na(d$time))==0)
+
 # Complete the data frame so that zeros get counted: expands so that each subid
 # includes a zero length row for each posture and orientation.
 # this was annoying.
@@ -83,12 +97,13 @@ ages <- d %>%
   group_by(subid) %>%
   summarise(age.grp = mean(age.grp)) 
 
-complete_combos <- expand(d, nesting(posture, orientation), subid) %>% 
+complete_combos <- tidyr::expand(d, nesting(posture, orientation), subid) %>% 
   mutate(dt = 0, faceMT = FALSE, faceVJ = FALSE, faceOP = FALSE, handOP = FALSE, wristOP = FALSE) %>%
   left_join(ages)
 
-d <- bind_rows(d, complete_combos)
+d <- bind_rows(d, complete_combos) ## bind these 251  data points
+
 
 ## save it out
-write_csv(d, "../data/consolidateddata/consolidated_data_4detectors.csv")
+write_csv(d, "../data/consolidateddata/consolidated_data_4detectors_march7.csv")
 

@@ -1,23 +1,30 @@
 library(stringr)
+library(assertthat)
 
 ######## MERGE IN EXACT TIMES FOR FRAMES #########
 add.times <- function(x) {
   print(x$subid[1])
-  fname <- paste0("../data/frame_times/",
+
+  fname <- paste0("../data/frame_times_redone/",
                  str_sub(as.character(x$subid[1]),start=4,end=8),
                  ".csv")
+  
+  
   if (file.exists(fname)) {
     times <- read_csv(fname)
+    times$time <- times$best_time ## best estimate of timestamp
+    assert_that(sum(is.na(times$time))==0)
     
-#     x <- merge(x,times, by.x = "frame", by.y = "frame", all.x = TRUE, all.y = FALSE)
-    x <- left_join(x, times)
-    x$dt <- c(diff(x$time),.032) ## assumes data is sorted by frames! also not sure why .032?
+    print(paste0("**** ", x$subid[1], 'det frame count', max(x$frame), 'time frame count', max(times$frame), "****"))
+    ## 
+    x<-left_join(x, times)
+    x$dt <- c(diff(x$time),.032)
+    
   } else {
     print(paste0("**** ", x$subid[1], " is missing frames ****"))
     x$time <- NA
     x$dt <- NA
   }
-  
   return(x)
 }
 
@@ -97,7 +104,6 @@ regularize.naming <- function (n) {
   n$name[n$name == "truck"] <- "car"
   n$name[n$name == "kittycat"] <- "cat"
   n$name[n$name == "bobcat"] <- "cat"
-
   n$name <- factor(n$name, levels=words)
   
   n$familiarity <- "familiar"
@@ -108,12 +114,23 @@ regularize.naming <- function (n) {
     n$name == "manu"] <- "novel"
   n$familiarity <- factor(n$familiarity)
   
-  # make the times seconds since onset
-  n$time <- as.numeric(difftime(strptime(n$time,"%M:%OS"),
-                                strptime("00:00:00.0","%H:%M:%OS"),units="secs"))
-  
+  # make the times seconds since onset - # if excel output is HMS vs MS - ugh! this was causing a big bug in analyses prior to jan 2018
+  # -- not evident in excel files can see in sublime -- different subs timestamps have different formats
+  op <- options(digits.secs = 3) ## needs this to grab milliseconds precision if it not called beforehand
+  timeBefore=n$time
+  if (nchar(timeBefore[1])>8) { ## hacky but works 
+    n$time=parse_date_time(timeBefore,"%H:%M:OS%:")
+  }
+  else {
+    n$time=parse_date_time(timeBefore,"%M:OS%")
+  }
+
+  assert_that(sum(hour(n$time))==0)  # check there are no hours! all sessions <20 minutes.
+  n$time <- minute(n$time)*60+second(n$time) # convert to seconds (includings milliseconds)
+
   n <- subset(n,!is.na(name))
   n$naming.instance <- naming.instance(n$name)
+  
   return(n)
 }
 
@@ -141,7 +158,7 @@ summarize.naming <- function (x, window = c(-2,2)) {
                       sep=""),
                 stringsAsFactors=FALSE)
   
-  # print(x$subid[1])
+  print(x$subid[1])
   
   # rectify the coding
   namings <- regularize.naming(namings)
@@ -150,13 +167,11 @@ summarize.naming <- function (x, window = c(-2,2)) {
   namings$posture <- factor(NA, levels=levels(x$posture))
   namings$orientation <- factor(NA, levels=levels(x$orientation))
 
-  
   for (i in 1:nrow(namings)) {
     t <- namings$time[i]
     range <- c(max(c(0,t + window[1])),
                min(c(t+window[2],max(x$time,na.rm=T))))
-    
-    namings$face[i] <- mean(x$face[x$time > range[1] & x$time < range[2]], na.rm=TRUE)
+    namings$detections[i] <- mean(x$detections[x$time > range[1] & x$time < range[2]], na.rm=TRUE)
     namings$posture[i] <- x$posture[(x$time > namings$time[i])][1]
     namings$orientation[i] <- x$orientation[(x$time > namings$time[i])][1]  
   }
