@@ -21,10 +21,10 @@ XS_1219,12,11.5,ally,none,15:21,female,921,
 XS_1222,12,12.7,ally,none,15:24,female,924,
 XS_1224,12,12.5,ally,none,14:43,female,883,
 XS_1225,12,13.1,ally,none,15:25,female,925,
-XS_1229,12,13.7,ally,none,15:08,male,908,
+XS_1229,12,13.7,ally,none,5:56,male,356,"was cropped, fixed"
 XS_1230,12,13.1,ally,none,4:32,female,272,
 XS_1604,16,17.8,kaia,none,19:11,male,1151,
-XS_1612,16,15.5,kaia,none,16:47,male,966,fixed
+XS_1612,16,15.5,kaia,none,16:47,male,1007,"fixed, typo"
 XS_1614,16,17,ally,none,15:37,female,937,
 XS_1619,16,17.6,ally,none,14:40,male,880,
 XS_1622,16,15.3,ally,none,14:43,female,883,
