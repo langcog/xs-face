@@ -493,6 +493,7 @@ faces_naming <- d %>%
   mutate(baselineDiff = namingDetections - baselineDetections)  %>%
   group_by(age.grp) %>%
   summarize(avgBaselineDiff = mean(baselineDiff))
+
 ## Wrists
 wrists_baseline<- d %>%
   group_by(subid, age.grp) %>%
