@@ -49,7 +49,7 @@ library(assertthat)
 
 ```
 # Introduction
-From early infancy, children are deeply engaged in learning from others. Even newborns tend to prefer to look at faces with direct vs. averted gaze [@farroni2002eye] and young infants follow overt gaze shifts [@gredeback2010development]. Further, when infants attend to video stimuli, they tend to look mostly at faces at the expense of other visual information -- though older infants start to look towards people's hands and the actions they are performing [@frank2012measuring; @frank2014visual].
+From early infancy, children are deeply engaged in learning from others. Even newborns tend to prefer to look at faces with direct vs. averted gaze [@farroni2002eye] and young infants follow overt gaze shifts [@gredeback2010development]. Further, when infants attend to video stimuli, they tend to look mostly at faces at the expense of other visual information -- though older infants start to look towards people's hands and the actions they are performing [@frank2012measuring].
 
 Then, however, their view of the world radically changes [@adolph2006motor]. Infants' motor abilities improve dramatically near the end of the first year of life, allowing them to locomote independently. These motor changes have significant consequences for what children see. For example, during spontaneous play in a laboratory playroom, toddlers are more likely to look at the floor while crawling than while walking [@franchak2011]; in general, walking infants tend to have full visual access to their environment and the people in it, while crawling infants do not [@kretch2014].
 
@@ -586,7 +586,7 @@ p4=ggplot(aroundNamings_Orient_Wrists, aes(x = orientation, y = mean, col = orie
 ggarrange(p1,p2, p3, p4)
 ```
 
-We created a situation in the lab in which the context of interaction was tightly controlled, but as children grow and change, the activities in which they engage with their caregivers also vary, leading to differences in the distribution of contexts they experience. Thus, more work is needed to understand how our results relate to children's home experiences [@fausey2016]. The ability to walk is part of a cascade of changes in children's  experience, and our study captures only a cross-sectional slice of this broader, multifaceted trajectory. 
+We created a situation in which the context of interaction was tightly controlled, but as children grow and change, the activities in which they engage with their caregivers also vary, leading to differences in the distribution of contexts they experience. Thus, more work is needed to understand how our results relate to children's home experiences [@fausey2016]. The ability to walk is part of a cascade of changes in children's  experience, and our study captures only a cross-sectional slice of this broader, multifaceted trajectory. 
 
 Understanding these changes has been a persistent challenge for developmental psychology, but the field of computer vision has advanced dramatically in recent years, creating a new generation of algorithmic tools. These tools deal better with noisier, more complicated datasets and extract richer information than previous systems. We hope that these new tools can be leveraged to understand the changing infant perspective on the visual world and the implications of these changes for linguistic, cognitive, and social development.
 
