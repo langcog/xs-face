@@ -121,7 +121,6 @@ regularize.naming <- function (n) {
     n$time=parse_date_time(timeBefore,"%M:OS%")
   }
   assert_that(sum(hour(n$time))==0)  # check there are no hours!all sessions <20 minutes.
-  browser()
   n$time <- minute(n$time)*60+second(n$time) # convert to seconds
 
   n <- subset(n,!is.na(name))
