@@ -31,7 +31,7 @@ library(lubridate)
 Note that the dataset here is now the complete data (N=36); all pass length sanity checks.
 
 ```{r}
-d <- read_csv("../data/consolidated_data_4detectors.feather") %>%
+d <- read_csv("../data/consolidated_data_4detectors_march7.csv") %>%
   mutate(posture = factor(posture), 
          orientation = factor(orientation))
 demo <- read_csv("../data/demographics/demographics.csv")
