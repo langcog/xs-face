@@ -9,12 +9,9 @@ add.times <- function(x) {
                  str_sub(as.character(x$subid[1]),start=4,end=8),
                  ".csv")
   
-  # ## redone march 6th / typo fixed oct 12 2018
-  # fname <- paste0("../data/frame_times_redone/",
-  #                 str_sub(as.character(x$subid[1])),".csv")
-  
   if (file.exists(fname)) {
     times <- read_csv(fname)
+    times$time <- times$best_time ## comes from show_frames python script
     x <- left_join(x, times)
     x$dt <- c(diff(x$time),.032) 
   } else {
@@ -35,9 +32,8 @@ add.posture <- function(x) {
   if (file.exists(fname)) {
     print(fname)
     postures <- read_csv(fname)
-    
+    postures <- postures[order(postures$start),] ## add line to sort by time in case weird coding order
     postures <- regularize.postures(subset(postures,code=="posture"))
-    
     x$posture <- factor(NA,levels=levels(postures$posture))
     x$orientation <- factor(NA,levels=levels(postures$orientation))
     
@@ -86,6 +82,10 @@ regularize.postures <- function (p) {
   
   # re-zero the times
   begin <- p$start[1]
+  print(paste0("**** zero-time", begin, "*** min time:", min(p$start)))
+  
+  assert_that(begin==min(p$start))
+
   p$start <- (p$start - begin)/1000
   p$end <- (p$stop - begin)/1000
   
