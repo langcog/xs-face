@@ -5,14 +5,13 @@ library(stringr)
 add.times <- function(x) {
   print(x$subid[1])
   ## from initial submission
-  # fname <- paste0("../data/frame_times/",
-  #                str_sub(as.character(x$subid[1]),start=4,end=8),
-  #                ".csv")
-  
-  ## redone march 6th
   fname <- paste0("../data/frame_times_redone/",
-                  str_sub(as.character(x$subid[1])),
-                  "_objs.mov.frames.txt.csv")
+                 str_sub(as.character(x$subid[1]),start=4,end=8),
+                 ".csv")
+  
+  # ## redone march 6th / typo fixed oct 12 2018
+  # fname <- paste0("../data/frame_times_redone/",
+  #                 str_sub(as.character(x$subid[1])),".csv")
   
   if (file.exists(fname)) {
     times <- read_csv(fname)
