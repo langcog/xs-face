@@ -315,9 +315,9 @@ p2=ggplot(orientation, aes(x = factor(age.grp), y = prop.time, col = orientation
   scale_x_discrete( labels=c("8 m.", "12 m.", "16 m.")) +
   theme(axis.ticks = element_blank())
 
-ggarrange(p1,p2)
-fig1=ggarrange(p1,p2)
-ggsave("Fig3-TimebyPos.png", width = 5, height = 5,unit =  "in", plot = fig1, path="./figs/", device = "png",dpi = 300)
+ggarrange(p1,p2, nrow=1)
+fig1=ggarrange(p1,p2, ncol=1)
+ggsave("Fig3-TimebyPos.png", width = 4, height = 4,unit =  "in", plot = fig1, path="./figs/", device = "png",dpi = 300)
 ```
 ## Changes in Posture and Orientation
 The proportion of time infants spent sitting decreased with age, and the proportion of time infants spent standing increased with age. Both 8-month-olds and 12-month-olds spent equivalent amounts of time lying/crawling, which was markedly decreased in the 16-month-olds, who spent most of their time sitting or standing (see Figure \ref{fig:posture}).  We also observed changes in children's orientation relative to their caregivers: the 8-month-olds spent more time with their caregiver behind them supporting their sitting positions (see Figure \ref{fig:posture}). 
@@ -379,12 +379,14 @@ fig4=ggplot(detectionsByAge, aes(x = age.at.test, y = detections, color = detect
   geom_smooth(size=1) +
   scale_x_continuous(breaks=c(8,12,16)) +
   scale_size_continuous(range=c(.01,2),name = "Video Length (mins)") +
+  scale_colour_grey(start=.2, end=.6) +
   labs(y = "Prop. detected", x = element_blank()) +
   theme_few() + 
   theme(legend.position="none") +
-  facet_grid(~detectorType) 
+  facet_wrap(~detectorType, ncol=1) 
 
-ggsave("Fig4-DetbyAge.png", width = 5, height = 4,unit =  "in", plot = fig4, path="./figs/", device = "png",dpi = 300)
+
+ggsave("Fig4-DetbyAge.png", width = 3, height = 4,unit =  "in", plot = fig4, path="./figs/", device = "png",dpi = 300)
 ```
 
 
