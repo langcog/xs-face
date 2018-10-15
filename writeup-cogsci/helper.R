@@ -83,7 +83,7 @@ regularize.postures <- function (p) {
   # re-zero the times
   begin <- p$start[1]
   print(paste0("**** zero-time", begin, "*** min time:", min(p$start)))
-  
+  ## make sure that this value is the smallest that we're reading
   assert_that(begin==min(p$start))
 
   p$start <- (p$start - begin)/1000
@@ -135,10 +135,8 @@ naming.instance <- function(ns) {
       this.name <- ns==l
       ni[this.name] <- cumsum(this.name)[this.name]
   }
-  
   return(ni)
 }
-
 
 ######## GET SUMMARY MEASURES OVER NAMINGS #########
 summarize.naming <- function (x, window = c(-2,2)) {  
@@ -175,7 +173,6 @@ summarize.naming <- function (x, window = c(-2,2)) {
 }
 
 ######## PLOTTING FUNCTION #########
-
 plot.individual <- function(x) {
   n <- summarize.naming(x)
   x$face.tf <- factor(x$face==1)

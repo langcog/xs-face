@@ -105,5 +105,5 @@ d <- bind_rows(d, complete_combos) ## bind these 251  data points
 
 
 ## save it out
-write_csv(d, "../data/consolidateddata/consolidated_data_4detectors_march7.csv")
+write_csv(d, "../data/consolidateddata/consolidated_data_4detectors_test.csv")
 
