@@ -45,8 +45,6 @@ library(lme4)
 library(gridExtra)
 library(feather)
 library(assertthat)
-
-
 ```
 # Introduction
 From early infancy, children are deeply engaged in learning from others. Even newborns tend to prefer to look at faces with direct vs. averted gaze [@farroni2002eye] and young infants follow overt gaze shifts [@gredeback2010development]. Further, when infants attend to video stimuli, they tend to look mostly at faces at the expense of other visual information -- though older infants start to look towards people's hands and the actions they are performing [@frank2012measuring].
