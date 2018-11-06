@@ -30,8 +30,8 @@ read in lengths on movies, demographics, detections, and frame time outputs
 ```{r}
 demo <- read_csv("../data/demographics/demographics.csv")
 movies <- read_csv("../data/video_stats/new_movie_lengths.csv") 
-MTCNN <- read_csv("../data/final_output/mtcnn3.csv")
-openPose <- read_csv("../data/final_output/openpose_results_truncated_2.csv")
+MTCNN <- read_csv("../data/final_detector_output/mtcnn3.csv")
+openPose <- read_csv("../data/final_detector_output/openpose_results_truncated_2.csv")
 frameTimes <- read_csv("../data/video_stats/frametimechecks_showframes.csv")
 ```
 
@@ -92,17 +92,17 @@ Print.
 knitr::kable(all_data, digits = 2)
 ```
 
-XS_1229 has been trimmed (headcam came off) and therefore there are different movie lenghts.
-
 =====
 
-Mike's notes (Explanations of old discrepancies :)
+<!-- XS_1229 has been trimmed (headcam came off) and therefore there are different movie lenghts. -->
 
-+ 0825 - unknown, ~500 frames off (15s), spot checks seem to match decently well. 
-+ 1205, 1211, and 1225 were post-trimed, hypothesis is that the _QT files are wrappers to source files that trim length to appropriate? 
-+ 1628 and 1639 both off by a lot of frames, unknown.
+<!-- Old notes pre-cleaning of dataset (irrelevant) -->
 
-to check in the videos
-+ 1229 is reported to be much longer in the demographics file, perhaps this is post-trimming? 
-+ 1612 is reported to be shorter than it is, check this. 
-+ 1622 is reported to be longer than it is, check this. 
+<!-- + 0825 - unknown, ~500 frames off (15s), spot checks seem to match decently well.  -->
+<!-- + 1205, 1211, and 1225 were post-trimed, hypothesis is that the _QT files are wrappers to source files that trim length to appropriate?  -->
+<!-- + 1628 and 1639 both off by a lot of frames, unknown. -->
+
+<!-- to check in the videos -->
+<!-- + 1229 is reported to be much longer in the demographics file, perhaps this is post-trimming?  -->
+<!-- + 1612 is reported to be shorter than it is, check this.  -->
+<!-- + 1622 is reported to be longer than it is, check this.  -->

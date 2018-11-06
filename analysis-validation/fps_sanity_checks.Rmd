@@ -9,8 +9,8 @@ library(knitr)
 ```
 
 ```{r, message=FALSE, warning=FALSE}
-new <- read_csv("../data/video_stats/new_movie_lengths.csv")
-old <- read_csv("../data/video_stats/old_movie_lengths.csv")
+new <- read_csv("../data/video_stats/new_movie_lengths.csv") 
+old <- read_csv("../data/video_stats/old_movie_lengths.csv") ## from previous iteration
 ```
 
 ```{r}
