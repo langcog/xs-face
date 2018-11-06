@@ -1,0 +1,58 @@
+---
+title: "get_gold_set_images"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(magrittr)
+```
+
+```{r}
+data <- read_csv("~/Github/xs-face/data/final_output/openpose_results_truncated_2.csv") %>%
+  distinct(name, frame, .keep_all = TRUE)
+```
+
+Filter images from previous ground truth (openpose only)
+```{r}
+old_ground_truth <- read_csv("~/Github/xs-face/data/ground_truth/gold_set_candidates2.csv")
+data %<>%
+  rename(video = name) %>%
+  mutate(frame = sprintf("%05d", as.numeric(frame) + 1)) %>%
+  anti_join(old_ground_truth) %>%
+  mutate(is_face = ifelse(Nose_conf != 0, "True", "False")) %>%
+  select(group, video, frame, Nose_x, Nose_y, Nose_conf, is_face)
+```
+
+Sample high density faces, remove selected from original data
+```{r}
+high_density_faces_sample <- data %>%
+  group_by(video) %>%
+  filter(is_face == "True") %>%
+  sample_n(7) %>%
+  mutate(sample_type = "high_density")
+
+data %<>%
+  anti_join(high_density_faces_sample)
+```
+
+Choose random frames from remaining
+```{r}
+random_sample <- data %>%
+  group_by(video) %>%
+  sample_n(7) %>%
+  mutate(sample_type = "random")
+```
+
+Combine and save result
+```{r}
+gold_set_candidates <- high_density_faces_sample %>%
+  rbind(random_sample) %>%
+  mutate(path = paste0(video, "/image-", frame, ".jpg")) %>%
+  arrange(video, frame)
+
+write_csv(gold_set_candidates, "~/Github/xs-face/data/ground_truth/gold_set_candidates_from_openpose.csv")
+```
+
+
+
