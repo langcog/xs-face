@@ -1,14 +1,13 @@
 tmp/
-data/final_output/openpose_results.csv
 *_cache/
 .DS_Store
-data/consolidated_data.csv
 data/.DS_Store
-data/final_output/*
-data/consolidateddata/*
-data/final_output/openpose_results*
-.Rhistory
-.Rproj.user/
+
+data/consolidated_data/*
+data/final_detector_output/*
+data/final_detector_output/openpose_results.csv
+data/final_detector_output/openpose_results*
+  
 xs-face.Rproj
 .idea
 .nfs*
@@ -21,5 +20,6 @@ writeup-cogsci-copy/cogsci2018_cache/*
 analysis-main/main_analyses_bll_cache/*
 analysis-main/main_analyses_bll_files/*
 figs/
+z-old/*
 
 .Rproj.user
