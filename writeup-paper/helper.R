@@ -1,7 +1,6 @@
 library(stringr)
 
 ######## MERGE IN EXACT TIMES FOR FRAMES #########
-
 add.times <- function(x) {
   print(x$subid[1])
   ## from initial submission
@@ -82,7 +81,7 @@ regularize.postures <- function (p) {
   
   # re-zero the times
   begin <- p$start[1]
-  print(paste0("**** zero-time", begin, "*** min time:", min(p$start)))
+  # print(paste0("**** zero-time", begin, "*** min time:", min(p$start)))
   ## make sure that this value is the smallest that we're reading
   assert_that(begin==min(p$start))
 
