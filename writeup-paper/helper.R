@@ -12,7 +12,7 @@ add.times <- function(x) {
     times <- read_csv(fname)
     times$time <- times$best_time ## comes from show_frames python script
     x <- left_join(x, times)
-    x$dt <- c(diff(x$time),.032) 
+    x$dt <- c(diff(x$time),.032) ## adds in 33ms for the last frame but otherwise goes on actual frame times, making an fps rate differences not a problem
   } else {
     print(paste0("**** ", x$subid[1], " is missing frames ****"))
     x$time <- NA
@@ -32,7 +32,9 @@ add.posture <- function(x) {
     print(fname)
     postures <- read_csv(fname)
     postures <- postures[order(postures$start),] ## add line to sort by time in case weird coding order
-    postures <- regularize.postures(subset(postures,code=="posture"))
+   
+    ## this reorders the postures so that they are "zeroed" relative to the beginning of the headcam videos
+     postures <- regularize.postures(subset(postures,code=="posture"),x$subid[1]) ## needs subid to get real sync time later 
     x$posture <- factor(NA,levels=levels(postures$posture))
     x$orientation <- factor(NA,levels=levels(postures$orientation))
     
@@ -51,8 +53,23 @@ add.posture <- function(x) {
   return(x)
 }
 
+get_sub_sync_time <- function(this_sub_id){
+  sync_times_check_file <- read_csv("../data/manual_sync_times/video_sync_times.csv") 
+  s <- sync_times_check_file %>%
+    filter(sid == this_sub_id) %>%
+    mutate(sync_time_string =toString(sync_time_stamp)) %>%
+    mutate(frames = str_split_fixed(sync_time_string,":",3)[,3]) %>%
+    mutate(sec = str_split_fixed(sync_time_string,":",3)[,2]) %>%
+    mutate(min = str_split_fixed(sync_time_string,":",3)[,1]) %>%
+    mutate(sync_time_ms = as.numeric(min)*6000 + as.numeric(sec)*1000 + as.numeric(frames)*33.33)
+
+  sync_time = s$sync_time_ms
+  return(sync_time)
+}
+
+
 ######## GET POSTURE CODING SORTED OUT #########
-regularize.postures <- function (p) {
+regularize.postures <- function (p,sub_id) {
   original.postures <- c("p","si","st","l","c","w","NIF")
   
   # clean up postures
@@ -79,14 +96,27 @@ regularize.postures <- function (p) {
                         "3"="behind",
                         "5"="other"))
   
-  # re-zero the times
-  begin <- p$start[1]
+
+  
+  
+  # re-zero the times 
+  # begin <- p$start[1] ### was doing this prior to march 2020; however noticed some files have some (small) discprencies
+  ## with sync times outputted from finalcutpro; changed to this strategy to get more accurate codings
   # print(paste0("**** zero-time", begin, "*** min time:", min(p$start)))
   ## make sure that this value is the smallest that we're reading
-  assert_that(begin==min(p$start))
+  # assert_that(begin==min(p$start))
+  
+  
+  # function above that reads in finalcutpro synctimes
+  begin <- get_sub_sync_time(sub_id) 
 
+  # subtract out sync_time and make into seconds (not milliseconds)
   p$start <- (p$start - begin)/1000
   p$end <- (p$stop - begin)/1000
+  
+  # set timestamp to 0 if we have coding from before the sync time (<0 means that it was before the headcam was synced with dv video)
+  p$start[p$start<0]=0
+  p$end[p$end<0]=0
   
   p <- p[,c("start","end","posture","orientation")]
   return(p)
@@ -118,7 +148,7 @@ regularize.naming <- function (n) {
   else {
     n$time=parse_date_time(timeBefore,"%M:OS%")
   }
-  assert_that(sum(hour(n$time))==0)  # check there are no hours!all sessions <20 minutes.
+  assert_that(sum(hour(n$time))==0)  # check there are no hours! all sessions <20 minutes.
   n$time <- minute(n$time)*60+second(n$time) # convert to seconds
 
   n <- subset(n,!is.na(name))
@@ -148,7 +178,7 @@ summarize.naming <- function (x, window = c(-2,2)) {
                       sep=""),
                 stringsAsFactors=FALSE)
   
-  print(x$subid[1])
+  # print(x$subid[1])
   
   # rectify the coding
   namings <- regularize.naming(namings)
