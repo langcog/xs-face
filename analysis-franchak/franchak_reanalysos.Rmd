@@ -1,0 +1,152 @@
+---
+title: "Franchak_ReAnalysis"
+author: "Bria Long"
+date: "3/5/2020"
+output: html_document
+---
+
+# Preprocessing
+## Libraries
+```{r}
+rm(list=ls()) # remove all objects from current workspace
+library(ggthemes)
+library(langcog)
+library(tidyverse)
+library(cowplot)
+
+```
+
+## Read in merging filenames data
+```{r}
+filenames <- read.csv('../data/franchak_dataset/meta/subID_matching.csv') %>%
+  mutate(vid_name = str_split_fixed(VideoName,'.mp4',2)[,1]) %>%
+  mutate(sub_id = SubID) %>%
+  select(vid_name, sub_id)
+```
+
+## Read in position data and preprocess
+```{r}
+files = dir('../data/franchak_dataset/posture/')
+all_pos_data=tibble()
+
+for (s in files) {
+  sub_id_short_temp = str_split_fixed(s, '-',2)[,2]
+  sub_id_short = str_split_fixed(sub_id_short_temp, '_pos.csv',2)[,1]
+  
+this_sub_position_data <- read.csv(paste0('../data/franchak_dataset/posture/', s)) %>%
+  as.tibble %>%
+  mutate(frame = row_number(), sub_id = sub_id_short) %>%
+  mutate(frame = frame - 1)  %>% ## openpose is 0 indexed
+  rename('infant_posture' = 'NaN.', 'caregiver_posture' = 'NaN..1') %>%
+  filter(!is.na(infant_posture)) 
+
+all_pos_data <- bind_rows(all_pos_data,this_sub_position_data)
+}
+
+all_pos_data <- all_pos_data %>%
+  mutate(sub_id = as.factor(sub_id))
+```
+
+## Read in detections and merge with subid from above
+```{r}
+detections <- read.csv('../data/franchak_dataset/openpose_detections/franchak_frames_openpose_master_frames.csv') 
+dets <- detections %>%
+  left_join(filenames) %>%
+  mutate(sub_id = as.factor(sub_id))
+```
+
+# Merge detections with position data (should merge on subid, frame)
+```{r}
+pos_detections  <- all_pos_data %>%
+  left_join(dets) 
+```
+
+### Recode variables so are redable
+```{R}
+level_key = c('0' = "Prone", '1' = "Sitting", '2' = "Upright")
+pos_detections$caregiver_posture_label = recode(pos_detections$caregiver_posture, !!!level_key) 
+pos_detections$infant_posture_label = recode(pos_detections$infant_posture, !!!level_key) 
+
+```
+
+### Save out preprocessed data
+```{r}
+save(file = '../data/franchak_dataset/preprocessed/franchak_dataset_detections.RData', pos_detections)
+```
+
+# Basic analyses
+## Compute faces by infant posture
+```{r}
+faces_by_pos  <- pos_detections %>%
+  group_by(sub_id, infant_posture_label) %>%
+  summarize(prop_faces = mean(face_openpose)) %>%
+  group_by(infant_posture_label) %>%
+  multi_boot_standard(col = 'prop_faces')
+
+faces_by_pos_by_sub  <- pos_detections %>%
+  group_by(sub_id, infant_posture_label) %>%
+  summarize(prop_faces = mean(face_openpose))
+```
+
+## Plot detections by posture
+```{r}
+(faces_by_pos_plot <- ggplot(faces_by_pos, aes(x=infant_posture_label, y=mean, col=infant_posture_label)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
+   geom_point(data=faces_by_pos_by_sub, aes(x=infant_posture_label, y=prop_faces, col=infant_posture_label), alpha=.2) +
+  theme_few(base_size=18) +
+  ylab('Prop faces detected') +
+  xlab('Infant posture') + 
+  ylim(c(0,.3)) +
+  theme(legend.position = 'none') +
+  scale_color_manual(name = "Posture", values=c("#339966","#eb7928","#0099cc"))) 
+
+
+```
+
+## Faces by caregiver posture 
+```{r}
+faces_by_CG_pos  <- pos_detections %>%
+  group_by(sub_id, caregiver_posture_label) %>%
+  summarize(prop_faces = mean(face_openpose)) %>%
+  group_by(caregiver_posture_label) %>%
+  multi_boot_standard(col = 'prop_faces') 
+  
+(ggplot(faces_by_CG_pos, aes(x=caregiver_posture_label, y=mean, col=caregiver_posture_label)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
+  theme_few())
+```
+
+
+## Look at hands by infant posture as well
+```{r}
+hands_by_pos  <- pos_detections %>%
+  group_by(sub_id, infant_posture_label) %>%
+  summarize(prop_hands = mean(hand_openpose)) %>%
+  group_by(infant_posture_label) %>%
+  multi_boot_standard(col = 'prop_hands')
+
+hands_by_pos_by_sub  <- pos_detections %>%
+  group_by(sub_id, infant_posture_label) %>%
+  summarize(prop_hands = mean(hand_openpose))
+
+```
+
+### Plot hands by infant posture
+```{r}
+(hands_by_pos_plot <- ggplot(hands_by_pos, aes(x=infant_posture_label, y=mean, col=infant_posture_label)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
+  geom_point(data=hands_by_pos_by_sub, aes(x=infant_posture_label, y=prop_faces, col=infant_posture_label), alpha=.2) +
+  theme_few(base_size=18) +
+  ylab('Prop hands detected') +
+   xlab('Infant posture') + 
+  ylim(c(0,.4)) +
+  theme(legend.position = 'none') +
+  scale_color_manual(name = "Posture", values=c("#339966","#eb7928","#0099cc")))
+)
+
+```
+
+
+```{r}
+cowplot::plot_grid(faces_by_pos_plot,hands_by_pos_plot)
+```

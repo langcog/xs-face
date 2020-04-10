@@ -1,0 +1,27 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 README: Posture and gaze data synchronized to baby scene camera frames\
+Databrary Volume 135: See and be seen \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 John Franchak, 3/5/2019, franchak@gmail.com\
+\
+Contents: \
+csv files for each participant generated from original datavyu coding based on the \'91synced\'92 videos; times have been adjusted and synchronized to match up with infant eye tracking scene videos rather than the \'91synced\'92 videos.\
+Each csv file contains rows = total number of video frames in the scene video\
+\
+XX_pos.csv - infants and CG posture. \
+First column, infants, second column, CG.\
+Posture was only coded during the 5-minute session analyzed in the paper; NaNs are entered for non-coded frames. NaN values also inserted for periods in which experimenters adjusted equipment/re-calibrated eye tracker and/or caregivers held infants or paused the task.\
+0 = prone\
+1 = sitting\
+2 = upright\
+\
+XX_gaze.csv - infant eye tracking data. \
+First column X data (0-640), second column Y data (0, 480).\
+NaN values inserted for missing data (blinks, eye tracker not worn, eye gaze out of range)\
+}
