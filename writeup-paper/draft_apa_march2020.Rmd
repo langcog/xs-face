@@ -33,9 +33,9 @@ abstract: |
   However, as children reach their first birthday, they begin to locomote themselves, dramatically changing the way they see the world around them. 
   How do these postural and locomotor developments affect children's access to the social information relevant for word-learning? 
   We explored this question by using head-mounted cameras to record the egocentric visual perspective of 36 infants' (at 8, 12, and 16 months of age) during a naturalistic play session with their caregiver. To estimate the proportion of faces and hands in the infant view, we used a computer vision algorithm to detect the presence of faces and hands in the entire dataset.
-  We found that infants' posture and orientation to their caregiver changed dramatically across this age range and modulated their access to this social information; infants who were sitting or standing with their caregiver at a close distance tended to have the most faces/hands in their visual field. 
+  We found that infants\\' posture and orientation to their caregiver changed dramatically across this age range and modulated their access to this social information; infants who were sitting or standing with their caregiver at a close distance tended to have the most faces/hands in their visual field. 
   We also applied our automated analysis to the egocentric video data from a recent paper documenting how posture changes one-year-olds visual access to faces (Franchak et al., 2017), finding convergence across both methodologies and dataset and confirming previous work that motoric developments play a significant role in the emergence of children’s linguistic and social capacities.
-  We suggest that the combined use of head-mounted cameras and the application of new computer vision techniques is a promising avenue for understanding the statistics of infants' visual and linguistic experience as they change over development.
+  We suggest that the combined use of head-mounted cameras and the application of new computer vision techniques is a promising avenue for understanding the statistics of infants\\' visual and linguistic experience as they change over development.
 
   
 keywords          : "Postural developments modulate children's visual access to social information"
@@ -43,8 +43,7 @@ wordcount         : "X"
 
 bibliography      : ["xsface.bib"]
 
-floatsintext      : yes
-figsintext        : yes
+figsintext        : no
 figurelist        : no
 tablelist         : no
 footnotelist      : no
@@ -62,7 +61,7 @@ output            : papaja::apa6_pdf
 library(knitr)
 knitr::opts_chunk$set(fig.width=6, fig.height=5, fig.crop = FALSE, 
                       fig.path='figs/', echo=FALSE, warning = FALSE, 
-                      cache=FALSE, message = FALSE, sanitize = TRUE)
+                      cache=TRUE, message = FALSE, sanitize = TRUE)
 library(readr)
 library(dplyr)
 library(tidyr)
@@ -77,6 +76,8 @@ library(assertthat)
 library(tidyverse)
 library(viridis)
 library(papaja)
+library(png)
+library(magick)
 
 # base_size in theme_few (changes font size in plots)
 plot_size=16
@@ -156,6 +157,21 @@ To obtain this final sample, we tested `r length(all_subs$reason)` children, exc
 `r sum(all_subs$reason=="no CDI")` for missing Communicative Development Inventory (CDI) data,
 `r sum(all_subs$reason=="no DV cam footage")` for missing scene camera footage,
 `r sum(all_subs$reason=="infant crying")` for fussiness, and one for sample symmetry. All inclusion decisions were made independent of the results of subsequent analyses. These data were also analyzed in @frank2013 and @sanchez2018postural.
+
+
+### Head-mounted camera
+```{r headcam, fig.env = "figure", fig.height=3, fig.pos = "H", fig.label="headcam", fig.cap = "Vertical field of view for two different headcam configurations (we used the lower in our current study)."}
+
+img <- png::readPNG("images/viewangle_cut.png")
+grid::grid.raster(img)
+```
+
+We used a small, head-mounted camera ("headcam") that was constructed from a MD80 model camera attached to a soft elastic headband. Videos captured by the headcam were 720x480 pixels with 25 frames per second [^2]. A fisheye lens was attached to the camera to increase the view angle from $32^{\circ}$ horizontal by $24^{\circ}$ vertical to $64^{\circ}$ horizontal by $46^{\circ}$ vertical (see Figure \ref{fig:headcam}, above). 
+
+[^2]: Detailed instructions for creating this headcam can be found  at \url{http://babieslearninglanguage.blogspot.com/2013/10/how-to-make-babycam.html}.
+
+Even with the fish-eye lens, the vertical field of view of the camera is still considerably reduced compared to the child's field of view, which spans around 100--120$^{\circ}$ in the vertical dimension by 6-7 months of age [@mayer1988;@cummings1988]. As we were primarily interested in the presence of faces in the child's field of view, we chose to orient the camera upwards to capture the entirety of the child's upper visual field where the child is likely to see adult faces, understanding that this decision limited our ability to detect hands (especially those of the child, which are typically found at the bottom of the visual field).
+
 
 ### Procedure
 All parents signed consent documents while children were fitted with the headcam. If the child was uninterested in wearing the headcam or tried to take it off, the experimenter presented engaging toys to try to draw the child's focus away from the headcam. When the child was comfortable wearing the headcam, the child and caregiver were shown to a playroom for the free-play session. Parents were shown a box containing three pairs of novel and familiar objects (e.g., a ball and a microfiber duster, named a "zem"), and were instructed to play with the object pairs with their child one at a time, "as they typically would." All parents confirmed that their child had not previously seen the novel toys and were instructed to use the novel labels to refer to the toys. The experimenter then left the playroom for approximately 15 minutes, during which a tripod-mounted camera in the corner of the room recorded the session and the headcam captured video from the child's perspective.
@@ -374,7 +390,7 @@ orient_plot <- ggplot(orientation, aes(x = age.at.test, y = prop.time, col = ori
   theme(legend.position = 'none')
 ```
 
-```{r posture, fig.env="figure*", out.width = "\\textwidth", fig.pos = "!h", fig.align = "center", fig.width=8, fig.height=6, fig.cap = "Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes"}
+```{r posture, fig.env = "figure", fig.pos = "H", echo=FALSE, out.width = "\\textwidth", fig.cap = "Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes"}
 cowplot::plot_grid(pos_plot, orient_plot, nrow=2)
 ```
 
@@ -394,7 +410,7 @@ posture_by_orientation <- posture_by_orientation %>%
   mutate(subid = fct_reorder(subid, age.at.test))
 ```
 
-```{r indivPosOrient, fig.env="figure*", out.width = "\\textwidth", fig.pos = "!h", fig.align = "center", fig.width=8, fig.height=4, fig.cap = "Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes"}
+```{r indivPosOrient,  fig.env = "figure", fig.pos = "H", echo=FALSE, out.width = "\\textwidth", fig.width=8, fig.height=4, fig.cap = "Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes"}
 
 ## should be a two column figure
 ggplot(posture_by_orientation, aes(x = subid, y = prop.time)) +
@@ -516,7 +532,7 @@ detectionsByAge <- dlong %>%
   mutate(len = as.numeric(len.min)) ## allows us to scale dots by length of video
 ```
 
-```{r detByAge, fig.env="figure*", out.width = "\\textwidth", fig.pos = "!h", fig.align = "center", fig.width=8, fig.height=3, fig.cap = "Proportion of faces (left) and wrists (right) detected by the OpenPose model as a function of child's age. Larger dots indicate children who had longer play sessions and thus for whom there was more data."}
+```{r detByAge, fig.env = "figure", fig.pos = "H", echo=FALSE, out.width = "\\textwidth", fig.height=3, fig.cap = "Proportion of faces (left) and wrists (right) detected by the OpenPose model as a function of child's age. Larger dots indicate children who had longer play sessions and thus for whom there was more data."}
 
 ggplot(detectionsByAge, aes(x = age.at.test, y = prop_detected, color = detectorType, size=num_detections)) +
   theme_few(base_size=plot_size) + 
@@ -563,7 +579,7 @@ detectionsByPostureAndOrientByGroup <- dlongPlot %>%
 
 ```
 
-```{r detByPosOrient, fig.env="figure*", out.width = "\\textwidth", fig.pos = "!h", fig.align = "center", fig.width=8, fig.height=6, fig.cap = "Proportion of face / wrist detections by children's age, their posture, and their caregivers orientation. Data points are scaled by the amount of time spent in each orientation/posture combination; times when posture/orientation annotatinos were unavaliable or the infant was carried are not plotted. Error bars represent 95\\% bootstrapped confidence intervals"}
+```{r detByPosOrient, fig.env="figure", out.width = "\\textwidth", fig.pos = "H", fig.align = "center", fig.width=8, fig.height=6, fig.cap = "Proportion of face / wrist detections by children's age, their posture, and their caregivers orientation. Data points are scaled by the amount of time spent in each orientation/posture combination; times when posture/orientation annotatinos were unavaliable or the infant was carried are not plotted. Error bars represent 95\\% bootstrapped confidence intervals"}
 
 # better labels 
 orientation_labels <- c(
@@ -717,7 +733,7 @@ wrists_aroundnamings_plot <- ggplot(aroundNamings_Detections_Grouped_Wrists, aes
 
 ```
 
-```{r detByNaming, fig.env="figure*", out.width = "\\textwidth", fig.pos = "!h", fig.align = "center", fig.width=8, fig.height=4, fig.cap = "Proportion of face / wrist detections during naming events (+/- 2 seconds around label)for familiar and novel objects; these rates are put into context relative to baseline Error bars represent 95\\% bootstrapped confidence intervals."}
+```{r detByNaming, fig.env="figure", out.width = "\\textwidth", fig.pos = "H", fig.align = "center", fig.width=8, fig.height=4, fig.cap = "Proportion of face / wrist detections during naming events (+/- 2 seconds around label)for familiar and novel objects; these rates are put into context relative to baseline Error bars represent 95\\% bootstrapped confidence intervals."}
 cowplot::plot_grid(faces_aroundnamings_plot, wrists_aroundnamings_plot)
 ```
 
@@ -789,7 +805,7 @@ hands_by_pos_plot <- ggplot(hands_by_pos, aes(x=infant_posture_label, y=mean, co
   scale_color_manual(name = "Posture", values=c("#0099cc","#339966","#eb7928")) 
 ```
 
-```{r franchak, fig.env="figure*", out.width = "\\textwidth", fig.pos = "!h", fig.align = "center", fig.width=8, fig.height=4, fig.cap = "Proportion of face / wrist detections for 12-month-olds in Franchak et al., 2017 as a function of children's in-the-moment posture. Error bars represent 95 percent bootstrapped confidence intervals."}
+```{r franchak, fig.env="figure", out.width = "\\textwidth", fig.pos = "H", fig.align = "center", fig.width=8, fig.height=4, fig.cap = "Proportion of face / wrist detections for 12-month-olds in Franchak et al., 2017 as a function of children's in-the-moment posture. Error bars represent 95 percent bootstrapped confidence intervals."}
 cowplot::plot_grid(faces_by_pos_plot,hands_by_pos_plot, nrow=1)
 ```
 

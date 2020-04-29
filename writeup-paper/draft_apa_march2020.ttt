@@ -1,0 +1,87 @@
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[ht]
+\centering
+\begin{tabular}{rrrrrr}
+\hline
+Group & N & \% incl. & Avg age & Avg video length (min) \\
+\hline
+8 mo. &   12 & 0.46 & 8.71 & 14.41 \\
+12 mo. &  12 & 0.40 & 12.62 & 12.71 \\
+16 mo. &  12 & 0.31 & 16.29 & 15.10\\
+\hline
+\end{tabular}
+\end{table*}
+\efloatseparator
+ 
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[ht]
+\centering
+\begin{tabular}{rllrrr}
+\hline
+Algorithm & Sample\ Type & P & R & F \\
+\hline
+MTCNN-Faces & High density & 0.89 & 0.92 & 0.90 \\
+MTCNN-Faces & Random & 0.94 & 0.62 & 0.75 \\
+OpenPose-Faces & High density & 0.78 & 0.93 & 0.84 \\
+OpenPose-Faces & Random & 0.72 & 0.80 & 0.76 \\
+ViolaJones-Faces & High density & 0.96 & 0.44 & 0.60 \\
+ViolaJones-Faces & Random & 0.44 & 0.38 & 0.41 \\
+OpenPose-Wrists & High density & 0.66 & 1.00 & 0.79 \\
+OpenPose-Wrists & Random & 0.88 & 0.29 & 0.44 \\
+\hline
+\end{tabular}
+\caption{Detector performance on both high density samples (where proportion of targets detected was high) and random samples (where frames were randomly selected). P, R, and F denote precision, recall, and F-score, respectively.}
+\vspace{-1em}
+\end{table*}
+\efloatseparator
+ 
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[ht]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\
+  \hline
+Intercept & -3.35 & 0.17 & -19.49 & 0.000 \\
+  Sit & 0.31 & 0.20 & 1.58 & 0.114 \\
+  Stand & -0.02 & 0.20 & -0.12 & 0.905 \\
+  Close & 0.03 & 0.19 & 0.15 & 0.882 \\
+  Far & 0.46 & 0.24 & 1.93 & 0.053 \\
+  Age (Scaled) & 0.14 & 0.11 & 1.22 & 0.223 \\
+  Sit*Close & 0.92 & 0.07 & 13.31 & 0.000 \\
+  Stand*Close & 1.30 & 0.08 & 16.02 & 0.000 \\
+  Sit*Far & 0.54 & 0.07 & 7.37 & 0.000 \\
+  Stand*Far & 1.24 & 0.09 & 14.18 & 0.000 \\
+   \hline
+\end{tabular}
+\caption{Model coefficients from a generalized linear mixed models predicting the proportion of faces seen by infants (as detected by OpenPose).}
+\end{table*}
+\efloatseparator
+ 
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[ht]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\
+  \hline
+Intercept & -4.28 & 0.23 & -18.67 & 0.000 \\
+  Sit & 0.54 & 0.19 & 2.90 & 0.004 \\
+  Stand & 0.61 & 0.23 & 2.63 & 0.009 \\
+  Close & 0.67 & 0.22 & 3.05 & 0.002 \\
+  Far & 0.33 & 0.24 & 1.35 & 0.176 \\
+  Age (Scaled) & 0.45 & 0.13 & 3.35 & 0.001 \\
+  Sit*Close & 0.34 & 0.09 & 3.93 & 0.000 \\
+  Stand*Close & 0.73 & 0.09 & 7.92 & 0.000 \\
+  Sit*Far & -0.15 & 0.11 & -1.39 & 0.165 \\
+  Stand*Far & 1.32 & 0.11 & 11.70 & 0.000 \\
+   \hline
+\end{tabular}
+\caption{Model coefficients from a generalized linear mixed models predicting the proportion of wrists seen by infants (as detected by OpenPose).}
+\end{table*}
+\efloatseparator
+ 

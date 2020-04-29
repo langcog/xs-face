@@ -1,4 +1,4 @@
-\documentclass[english,man,floatsintext]{apa6}
+\documentclass[english,man]{apa6}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -100,6 +100,12 @@ information},
 
 Correspondence concerning this article should be addressed to Bria L. Long, 450 Serra Mall, Stanford CA 94305. E-mail: bria@stanford.edu}
 \keywords{Postural developments modulate children's visual access to social information\newline\indent Word count: X}
+\DeclareDelayedFloatFlavor{ThreePartTable}{table}
+\DeclareDelayedFloatFlavor{lltable}{table}
+\DeclareDelayedFloatFlavor*{longtable}{table}
+\makeatletter
+\renewcommand{\efloat@iwrite}[1]{\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
+\makeatother
 \usepackage{csquotes}
 
 \title{Postural developments modulate children's visual access to social
@@ -119,20 +125,20 @@ perspective of 36 infants' (at 8, 12, and 16 months of age) during a
 naturalistic play session with their caregiver. To estimate the
 proportion of faces and hands in the infant view, we used a computer
 vision algorithm to detect the presence of faces and hands in the entire
-dataset. We found that infants' posture and orientation to their
-caregiver changed dramatically across this age range and modulated their
-access to this social information; infants who were sitting or standing
-with their caregiver at a close distance tended to have the most
-faces/hands in their visual field. We also applied our automated
-analysis to the egocentric video data from a recent paper documenting
-how posture changes one-year-olds visual access to faces (Franchak et
-al., 2017), finding convergence across both methodologies and dataset
-and confirming previous work that motoric developments play a
-significant role in the emergence of children's linguistic and social
+dataset. We found that infants\textbackslash{}`posture and orientation
+to their caregiver changed dramatically across this age range and
+modulated their access to this social information; infants who were
+sitting or standing with their caregiver at a close distance tended to
+have the most faces/hands in their visual field. We also applied our
+automated analysis to the egocentric video data from a recent paper
+documenting how posture changes one-year-olds visual access to faces
+(Franchak et al., 2017), finding convergence across both methodologies
+and dataset and confirming previous work that motoric developments play
+a significant role in the emergence of children's linguistic and social
 capacities. We suggest that the combined use of head-mounted cameras and
 the application of new computer vision techniques is a promising avenue
-for understanding the statistics of infants' visual and linguistic
-experience as they change over development.
+for understanding the statistics of infants\textbackslash{}' visual and
+linguistic experience as they change over development.
 }
 
 \begin{document}
@@ -280,6 +286,38 @@ scene camera footage, 1 for fussiness, and one for sample symmetry. All
 inclusion decisions were made independent of the results of subsequent
 analyses. These data were also analyzed in Frank, Simmons, Yurovsky, and
 Pusiol (2013) and Sanchez, Long, Kraus, and Frank (2018).
+
+\subsubsection{Head-mounted camera}\label{head-mounted-camera}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics{figs/headcam-1.pdf}
+\caption{\label{fig:headcam}Vertical field of view for two different headcam
+configurations (we used the lower in our current study).}
+\end{figure}
+
+We used a small, head-mounted camera (\enquote{headcam}) that was
+constructed from a MD80 model camera attached to a soft elastic
+headband. Videos captured by the headcam were 720x480 pixels with 25
+frames per second.\footnote{Detailed instructions for creating this
+  headcam can be found at
+  \url{http://babieslearninglanguage.blogspot.com/2013/10/how-to-make-babycam.html}.}
+A fisheye lens was attached to the camera to increase the view angle
+from \(32^{\circ}\) horizontal by \(24^{\circ}\) vertical to
+\(64^{\circ}\) horizontal by \(46^{\circ}\) vertical (see Figure
+\ref{fig:headcam}, above).
+
+Even with the fish-eye lens, the vertical field of view of the camera is
+still considerably reduced compared to the child's field of view, which
+spans around 100--120\(^{\circ}\) in the vertical dimension by 6-7
+months of age (Cummings, Van Hof-Van Duin, Mayer, Hansen, \& Fulton,
+1988; Mayer, Fulton, \& Cummings, 1988). As we were primarily interested
+in the presence of faces in the child's field of view, we chose to
+orient the camera upwards to capture the entirety of the child's upper
+visual field where the child is likely to see adult faces, understanding
+that this decision limited our ability to detect hands (especially those
+of the child, which are typically found at the bottom of the visual
+field).
 
 \subsubsection{Procedure}\label{procedure}
 
@@ -442,23 +480,13 @@ Finally, we apply the same automated detection method to a egocentric
 video dataset collected by a different lab (Franchak et al., 2017)
 during which children's in-the-moment posture was annotated.
 
-\begin{figure*}[!h]
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{figs/posture-1} \caption{Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes}\label{fig:posture}
+\end{figure}
 
-{\centering \includegraphics[width=\textwidth]{figs/posture-1} 
-
-}
-
-\caption{Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes}\label{fig:posture}
-\end{figure*}
-
-\begin{figure*}[!h]
-
-{\centering \includegraphics[width=\textwidth]{figs/indivPosOrient-1} 
-
-}
-
-\caption{Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes}\label{fig:indivPosOrient}
-\end{figure*}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{figs/indivPosOrient-1} \caption{Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes}\label{fig:indivPosOrient}
+\end{figure}
 
 \subsection{Changes in Posture and
 Orientation}\label{changes-in-posture-and-orientation}
@@ -595,32 +623,27 @@ Intercept & -4.28 & 0.23 & -18.67 & 0.000 \\
 \caption{Model coefficients from a generalized linear mixed models predicting the proportion of wrists seen by infants (as detected by OpenPose).}
 \end{table}
 
-\begin{figure*}[!h]
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{figs/detByAge-1} \caption{Proportion of faces (left) and wrists (right) detected by the OpenPose model as a function of child's age. Larger dots indicate children who had longer play sessions and thus for whom there was more data.}\label{fig:detByAge}
+\end{figure}
 
-{\centering \includegraphics[width=\textwidth]{figs/detByAge-1} 
-
-}
-
-\caption{Proportion of faces (left) and wrists (right) detected by the OpenPose model as a function of child's age. Larger dots indicate children who had longer play sessions and thus for whom there was more data.}\label{fig:detByAge}
-\end{figure*}
-
-\begin{figure*}[!h]
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{figs/detByPosOrient-1} 
 
 }
 
 \caption{Proportion of face / wrist detections by children's age, their posture, and their caregivers orientation. Data points are scaled by the amount of time spent in each orientation/posture combination; times when posture/orientation annotatinos were unavaliable or the infant was carried are not plotted. Error bars represent 95\% bootstrapped confidence intervals}\label{fig:detByPosOrient}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}[!h]
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{figs/detByNaming-1} 
 
 }
 
 \caption{Proportion of face / wrist detections during naming events (+/- 2 seconds around label)for familiar and novel objects; these rates are put into context relative to baseline Error bars represent 95\% bootstrapped confidence intervals.}\label{fig:detByNaming}
-\end{figure*}
+\end{figure}
 
 \subsection{Extension to Franchak et al.,
 2017}\label{extension-to-franchak-et-al.-2017}
@@ -651,14 +674,14 @@ they are allocating their attention (Yoshida \& Smith, 2008) then we
 should expect to find the same pattern of results only when analyzing
 the information in view.
 
-\begin{figure*}[!h]
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{figs/franchak-1} 
 
 }
 
 \caption{Proportion of face / wrist detections for 12-month-olds in Franchak et al., 2017 as a function of children's in-the-moment posture. Error bars represent 95 percent bootstrapped confidence intervals.}\label{fig:franchak}
-\end{figure*}
+\end{figure}
 
 Overall, we found convergence between our two methodologies: we
 replicated the main results from Franchak et al. (2017), finding that
@@ -812,6 +835,11 @@ Clerkin, E. M., Hart, E., Rehg, J. M., Yu, C., \& Smith, L. B. (2017).
 Real-world visual statistics and infants' first-learned object names.
 \emph{Phil. Trans. R. Soc. B}, \emph{372}(1711), 20160055.
 
+\hypertarget{ref-cummings1988}{}
+Cummings, M., Van Hof-Van Duin, J., Mayer, D., Hansen, R., \& Fulton, A.
+(1988). Visual fields of young children. \emph{Behavioural and Brain
+Research}, \emph{29}(1), 7--16.
+
 \hypertarget{ref-farroni2002eye}{}
 Farroni, T., Csibra, G., Simion, F., \& Johnson, M. H. (2002). Eye
 contact detection in humans from birth. \emph{Proceedings of the
@@ -847,6 +875,11 @@ relationship between motor development and language development.
 Karasik, L. B., Tamis-LeMonda, C. S., \& Adolph, K. E. (2014). Crawling
 and walking infants elicit different verbal responses from mothers.
 \emph{Developmental Science}, \emph{17}(3), 388--395.
+
+\hypertarget{ref-mayer1988}{}
+Mayer, D., Fulton, A., \& Cummings, M. (1988). Visual fields of infants
+assessed with a new perimetric technique. \emph{Investigative
+Ophthalmology \& Visual Science}, \emph{29}(3), 452--459.
 
 \hypertarget{ref-patrick2012developmental}{}
 Patrick, S. K., Noah, J. A., \& Yang, J. F. (2012). Developmental

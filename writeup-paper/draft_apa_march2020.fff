@@ -1,3 +1,13 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[htbp]
+\centering
+\includegraphics{figs/headcam-1.pdf}
+\caption{\label{fig:headcam}Vertical field of view for two different headcam
+configurations (we used the lower in our current study).}
+\end{figure*}
+\efloatseparator
+ 
 \begin{figure*}
 \centering
 \includegraphics[width=5.5in]{images/detector_samples_banner.pdf}
@@ -5,37 +15,30 @@
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[!h]
-
-{\centering \includegraphics[width=\textwidth]{figs/posture-1}
-
-}
-
-\caption{Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes}\label{fig:posture}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+\includegraphics[width=\textwidth]{figs/posture-1} \caption{Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes}\label{fig:posture}
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[!h]
-
-{\centering \includegraphics[width=\textwidth]{figs/indivPosOrient-1}
-
-}
-
-\caption{Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes}\label{fig:indivPosOrient}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+\includegraphics[width=\textwidth]{figs/indivPosOrient-1} \caption{Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes}\label{fig:indivPosOrient}
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[!h]
-
-{\centering \includegraphics[width=\textwidth]{figs/detByAge-1}
-
-}
-
-\caption{Proportion of faces (left) and wrists (right) detected by the OpenPose model as a function of child's age. Larger dots indicate children who had longer play sessions and thus for whom there was more data.}\label{fig:detByAge}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+\includegraphics[width=\textwidth]{figs/detByAge-1} \caption{Proportion of faces (left) and wrists (right) detected by the OpenPose model as a function of child's age. Larger dots indicate children who had longer play sessions and thus for whom there was more data.}\label{fig:detByAge}
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[!h]
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
 
 {\centering \includegraphics[width=\textwidth]{figs/detByPosOrient-1}
 
@@ -45,7 +48,9 @@
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[!h]
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
 
 {\centering \includegraphics[width=\textwidth]{figs/detByNaming-1}
 
@@ -55,7 +60,9 @@
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[!h]
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
 
 {\centering \includegraphics[width=\textwidth]{figs/franchak-1}
 
