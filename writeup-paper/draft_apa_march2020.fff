@@ -5,9 +5,9 @@
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[h]
+\begin{figure*}[!h]
 
-{\centering \includegraphics{figs/posture-1}
+{\centering \includegraphics[width=\textwidth]{figs/posture-1}
 
 }
 
@@ -15,9 +15,9 @@
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[h]
+\begin{figure*}[!h]
 
-{\centering \includegraphics{figs/indivPosOrient-1}
+{\centering \includegraphics[width=\textwidth]{figs/indivPosOrient-1}
 
 }
 
@@ -25,9 +25,9 @@
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[h]
+\begin{figure*}[!h]
 
-{\centering \includegraphics{figs/detByAge-1}
+{\centering \includegraphics[width=\textwidth]{figs/detByAge-1}
 
 }
 
@@ -35,9 +35,9 @@
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[h]
+\begin{figure*}[!h]
 
-{\centering \includegraphics{figs/detByPosOrient-1}
+{\centering \includegraphics[width=\textwidth]{figs/detByPosOrient-1}
 
 }
 
@@ -45,9 +45,9 @@
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[h]
+\begin{figure*}[!h]
 
-{\centering \includegraphics{figs/detByNaming-1}
+{\centering \includegraphics[width=\textwidth]{figs/detByNaming-1}
 
 }
 
@@ -55,9 +55,9 @@
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}[h]
+\begin{figure*}[!h]
 
-{\centering \includegraphics{figs/franchak-1}
+{\centering \includegraphics[width=\textwidth]{figs/franchak-1}
 
 }
 
