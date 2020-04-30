@@ -32,14 +32,14 @@ abstract: |
   The ability to process social information is a critical component of children's early linguistic and cognitive development.
   However, as children reach their first birthday, they begin to locomote themselves, dramatically changing the way they see the world around them. 
   How do these postural and locomotor developments affect children's access to the social information relevant for word-learning? 
-  We explored this question by using head-mounted cameras to record the egocentric visual perspective of 36 infants' (at 8, 12, and 16 months of age) during a naturalistic play session with their caregiver. To estimate the proportion of faces and hands in the infant view, we used a computer vision algorithm to detect the presence of faces and hands in the entire dataset.
-  We found that infants\\' posture and orientation to their caregiver changed dramatically across this age range and modulated their access to this social information; infants who were sitting or standing with their caregiver at a close distance tended to have the most faces/hands in their visual field. 
+  We explored this question by using head-mounted cameras to record the egocentric visual perspective of 36 infants (at 8, 12, and 16 months of age) during a naturalistic play session with their caregiver. To estimate the proportion of faces and hands in the infant view, we used a computer vision algorithm to detect the presence of faces and hands in the entire dataset.
+  We found that infants\' posture and orientation to their caregiver changed dramatically across this age range and modulated their access to this social information; infants who were sitting or standing with their caregiver at a close distance tended to have the most faces/hands in their visual field. 
   We also applied our automated analysis to the egocentric video data from a recent paper documenting how posture changes one-year-olds visual access to faces (Franchak et al., 2017), finding convergence across both methodologies and dataset and confirming previous work that motoric developments play a significant role in the emergence of children’s linguistic and social capacities.
-  We suggest that the combined use of head-mounted cameras and the application of new computer vision techniques is a promising avenue for understanding the statistics of infants\\' visual and linguistic experience as they change over development.
+  We suggest that the combined use of head-mounted cameras and the application of new computer vision techniques is a promising avenue for understanding the statistics of infants\' visual and linguistic experience as they change over development.
 
   
 keywords          : "Postural developments modulate children's visual access to social information"
-wordcount         : "X"
+wordcount         : "4295"
 
 bibliography      : ["xsface.bib"]
 
@@ -100,7 +100,7 @@ Thus, the current study allows us to analyze changes in the visual access to fac
 <!-- Second, we predicted that there would be a greater proportion of faces/hands in view around naming events—-broadly construed as any time a parent mentioned a label for one of the objects in the play set -->
 
 # Methods
-### Participants
+## Participants
 ```{r echo=FALSE, include=FALSE, demographics}
 all_subs <- read.csv("../data/demographics/all_participants.csv") %>%
   rename(subid = subID)
@@ -134,7 +134,7 @@ all_subs %>%
 # <!-- \caption{\label{tab:pop} Demographics by age group.} -->
 ```
 
-Our final sample consisted of 36 infants and children, with 12 participants in three age groups: 8 months (6 F), 12 months (7 F), and 16 months (6 F). Participants were recruited from the surrounding community via state birth records, had no documented disabilities, and were reported to hear at least 80 percent English at home. Demographics and exclusion rates are  given in the table below.
+ Our final sample consisted of 36 infants and children, with 12 participants in three age groups: 8 months (6 F), 12 months (7 F), and 16 months (6 F). Participants were recruited from the surrounding community via state birth records, had no documented disabilities, and were reported to hear at least 80 percent English at home. Demographics and exclusion rates are given in the table below.
 
 \begin{table}[ht]
 \centering
@@ -159,7 +159,7 @@ To obtain this final sample, we tested `r length(all_subs$reason)` children, exc
 `r sum(all_subs$reason=="infant crying")` for fussiness, and one for sample symmetry. All inclusion decisions were made independent of the results of subsequent analyses. These data were also analyzed in @frank2013 and @sanchez2018postural.
 
 
-### Head-mounted camera
+## Head-mounted camera
 ```{r headcam, fig.env = "figure", fig.height=3, fig.pos = "H", fig.label="headcam", fig.cap = "Vertical field of view for two different headcam configurations (we used the lower in our current study)."}
 
 img <- png::readPNG("images/viewangle_cut.png")
@@ -173,10 +173,10 @@ We used a small, head-mounted camera ("headcam") that was constructed from a MD8
 Even with the fish-eye lens, the vertical field of view of the camera is still considerably reduced compared to the child's field of view, which spans around 100--120$^{\circ}$ in the vertical dimension by 6-7 months of age [@mayer1988;@cummings1988]. As we were primarily interested in the presence of faces in the child's field of view, we chose to orient the camera upwards to capture the entirety of the child's upper visual field where the child is likely to see adult faces, understanding that this decision limited our ability to detect hands (especially those of the child, which are typically found at the bottom of the visual field).
 
 
-### Procedure
+## Procedure
 All parents signed consent documents while children were fitted with the headcam. If the child was uninterested in wearing the headcam or tried to take it off, the experimenter presented engaging toys to try to draw the child's focus away from the headcam. When the child was comfortable wearing the headcam, the child and caregiver were shown to a playroom for the free-play session. Parents were shown a box containing three pairs of novel and familiar objects (e.g., a ball and a microfiber duster, named a "zem"), and were instructed to play with the object pairs with their child one at a time, "as they typically would." All parents confirmed that their child had not previously seen the novel toys and were instructed to use the novel labels to refer to the toys. The experimenter then left the playroom for approximately 15 minutes, during which a tripod-mounted camera in the corner of the room recorded the session and the headcam captured video from the child's perspective.
 
-### Data Processing and Annotation
+## Data Processing and Annotation
 Headcam videos were trimmed such that they excluded the instruction phase when the experimenter was in the room and were automatically synchronized with the tripod-mounted videos using FinalCut Pro Software. These sessions yielded 
 `r round(sum(inc_subs$len.min), digits = 0)` minutes (almost a million frames) of video, with an average video length of
 `r round(mean(inc_subs$len.min), digits = 2)` minutes
@@ -190,11 +190,13 @@ We used three face detection systems to measure infants' access to faces. The fi
 
 The OpenPose detector also provided us with the location of an agent's wrists, which we used as a proxy for hands for two reasons. First, as we did not capture children's entire visual field, the presence of a wrist is likely often indicative of the presence of a hand within the field of view. Second, hands are often occluded by objects when caregivers are interacting with children, yet still visually accessible by the child and part of their joint interaction. 
 
-\begin{figure*}
-\centering
-\includegraphics[width=5.5in]{images/detector_samples_banner.pdf}
-\caption{\label{fig:frames} Example face and pose detections made by OpenPose (top row) and MTCNN (bottom row) from a child in each age group. The last column features a false positive from OpenPose and a false negative from MTCNN.}
-\end{figure*}
+
+```{r frames, fig.env = "figure", fig.height=3, fig.pos = "H", fig.label="headcam", fig.cap = "Example face and pose detections made by OpenPose (top row) and MTCNN (bottom row) from a child in each age group. The last column features a false positive from OpenPose and a false negative from MTCNN."}
+
+img <- png::readPNG("images/detector_samples_banner.png")
+grid::grid.raster(img)
+```
+
 
 
 ### Algorithms
@@ -432,51 +434,85 @@ While faces tended to be in the field-of-view overall more often than hands, chi
 
 However, these age-related trends were much smaller than the effect of infant's postural developments on children's visual access to faces and hands. Children's in-the-moment posture was a major factor both in how many faces and hands were in view during the play session, as was their orientation relative to their caregiver. Infants who were sitting or standing had more faces in view than infants who were lying down/crawling (i.e. prone), which was most frequent among 12-month-olds relative to the other age groups  (Figure \ref{fig:detByPosOrient}). When caregivers were behind their children, supporting their children's sitting or standing positions, children saw fewer faces and wrists. In particular, children who were sitting or in front of their caregiver had a high proportion of faces and hands in their field of view (Figure \ref{fig:detByPosOrient}). 
 
-These trends were quantified using two generalized linear mixed-effect models estimating the proportion of faces and hands that were in view, with orientation, posture, their interaction, and scaled participant's age as fixed effects, and with random slopes for infants' orientation and posture. A summary of the coefficients of the models can be found in Table 2, confirming that infants who were sitting/standing and in front of their caregivers saw the most faces and hands. When modeling the proportion of faces seen, age was not a significant predictor; however, age remained a significant predictor when modeling the proportion of hands seen by infants. Overall, these results suggest that infants' visual access to social information is largely modulated by their posture and orientation to their caregiver, which is in turn a function of their general locomotor development. Nonetheless, these results also suggest that infants may still increase their attention to hands throughout this age range as they continue to learn about objects, their functions, and their names. 
-
-## Access to Faces and Hands During Labeling Events
-Our play session was designed to provide parents with opporunities to label objects--both familiar and novel--such that we could examine whether children sought out different kinds of social information around naming events. We thus explored how face and hand detections changed during object labeling events, analyzing a four-second window around each labeling event (e.g., "Look at the [zem]!"). Every utterance of one of the labelled objects (e.g., 'ball') was counted as a 'labeling event'; timestamps of the beginning of each word were hand-annotated from transcripts ad synchronized with the frame-by-frame detections. Overall, we did not find major differences in face/hand detections during naming events relative to baseline, either for novel objects or for familiar objects (see Figure \ref{fig:detByNaming}). This was true both when we analyzed naming rates with or without taking into account children's posture and orientation relative to their caregiver. These results suggest that either children did not actively seek out social information during this particular play session around naming events, perhaps because were a limited number of possible referents at any given time.
 
 
-```{r runModels, eval=FALSE, include=FALSE}
+```{r runModels, eval=TRUE, include=TRUE}
+library(MuMIn)
+
 #wrangle data
 ## Using MTCNN detections for GLM since it was the best
 dGLM_faces <- d %>%
+  mutate(subid = as.factor(subid)) %>%
   group_by(subid, posture, orientation) %>%
   summarize(countFaces=sum(faceOP==TRUE), countNotFaces = sum(faceOP==FALSE), age.at.test=age.at.test[1]) %>%
   ungroup()
 
 dGLM_wrists <- d %>%
+  mutate(subid = as.factor(subid)) %>%
   group_by(subid, posture, orientation) %>%
   summarize(countWrists=sum(wristOP==TRUE), countNotWrists = sum(wristOP==FALSE), age.at.test=age.at.test[1]) %>%
   ungroup()
 
-## run models 
-faceGLM <- glmer(cbind(countFaces,countNotFaces) ~ posture * orientation + scale(age.at.test) + 
-               (posture + orientation | subid), 
-             dGLM_faces, family = "binomial", control=glmerControl(optCtrl=list(maxfun=20000),optimizer=c("bobyqa")))
+### FACES
 
-wristGLM <- glmer(cbind(countWrists,countNotWrists) ~ orientation * posture + scale(age.at.test) + 
-               (posture + orientation | subid), 
-             dGLM_wrists, family = "binomial", control=glmerControl(optCtrl=list(maxfun=20000),optimizer=c("bobyqa")))
+# Age as fixed effect, full random effects
+faceGLM_age_only <- glmer(cbind(countFaces,countNotFaces) ~  scale(age.at.test) +
+(posture + orientation | subid), dGLM_faces, family = "binomial", control=glmerControl(optCtrl=list(maxfun=20000),optimizer=c("bobyqa")))
 
-## output ---- 
+# Age and posture and orientation as fixed effects, full random effects
+faceGLM_no_int <- glmer(cbind(countFaces,countNotFaces) ~ posture + orientation + scale(age.at.test) +  (posture + orientation | subid), dGLM_faces, family = "binomial", control=glmerControl(optCtrl=list(maxfun=20000),optimizer=c("bobyqa")))
+
+# Age and posture * orientation as fixed effects, full random effects
+faceGLM_full <- glmer(cbind(countFaces,countNotFaces) ~ posture * orientation + scale(age.at.test) +  (posture + orientation | subid), dGLM_faces, family = "binomial", control=glmerControl(optCtrl=list(maxfun=20000),optimizer=c("bobyqa")))
+
+### WRISTS
+# Age as fixed effect, full random effects
+wristGLM_age_only <- glmer(cbind(countWrists,countNotWrists) ~ scale(age.at.test) +  (posture + orientation | subid), dGLM_wrists, family = "binomial", control=glmerControl(optCtrl=list(maxfun=20000),optimizer=c("bobyqa")))
+
+wristGLM_no_int <- glmer(cbind(countWrists,countNotWrists) ~ orientation + posture + scale(age.at.test) +  (posture + orientation | subid), dGLM_wrists, family = "binomial", control=glmerControl(optCtrl=list(maxfun=20000),optimizer=c("bobyqa")))
+
+# Age and posture and orientation as fixed effects, full random effects
+wristGLM_full <- glmer(cbind(countWrists,countNotWrists) ~ orientation * posture + scale(age.at.test) +  (posture + orientation | subid), dGLM_wrists, family = "binomial", control=glmerControl(optCtrl=list(maxfun=20000),optimizer=c("bobyqa")))
+```
+
+```{r eval=FALSE}
+## output
 cleanedNames_Int = c("Intercept","Sit","Stand","Close","Far","Age (Scaled)", "Sit*Close", "Stand*Close","Sit*Far","Stand*Far")
 
-# 
-faceGLMOut=(summary(faceGLM))
+#
+faceGLMOut=(summary(faceGLM_full))
 rownames(faceGLMOut$coefficients)<-cleanedNames_Int
-# 
-wristGLMOut=(summary(wristGLM))
+#
+wristGLMOut=(summary(wristGLM_full))
 rownames(wristGLMOut$coefficients)<-cleanedNames_Int
 #
 
-### 
+###
 xtable(wristGLMOut$coefficients, digits=c(2,2,2,2,3),"Model coefficients from a generalized linear mixed models predicting the proportion of wrists seen by infants.")
 
 xtable(faceGLMOut$coefficients, digits=c(2,2,2,2,3),"Model coefficients from a generalized linear mixed models predicting the proportion of faces seen by infants.")
-
 ```
+
+```{r}
+wrists_age_only = r.squaredGLMM(wristGLM_age_only)
+wrists_full= r.squaredGLMM(wristGLM_full)
+
+faces_age_only =  r.squaredGLMM(faceGLM_age_only)
+faces_full =r.squaredGLMM(faceGLM_full)
+
+# wrists_no_int= r.squaredGLMM(wristGLM_no_int)
+# faces_no_int =  r.squaredGLMM(faceGLM_no_int)
+```
+
+These trends were quantified using two generalized linear mixed-effect models estimating the proportion of faces and hands that were in view, with orientation, posture, their interaction, and scaled participant's age as fixed effects, and with random slopes for infants' orientation and posture. A summary of the coefficients of the models can be found in Tables 2 and 3, confirming that infants who were sitting/standing and in front of their caregivers saw the most faces and hands.  When modeling the proportion of faces seen, age was not a significant predictor; however, age remained a significant predictor when modeling the proportion of hands seen by infants. 
+
+We directly examined the contributions of posture and orientation by fitting a reduced version of the full model [@nakagawa2013general] without their fixed effects (both models were run with the maximal random effects structure). The fixed effects in a model with only the age of the participants accounted for relatively little variance in the proportion of faces (marginal $R^2$ < `r round(faces_age_only[1,1],5)`) or hands in view  (marginal $R^2$ = `r round(wrists_age_only[1,1],3)`). However, when adding children's posture and orientation to their caregiver to the model (and their interaction) the marginal $R^2$ were higher for both faces (marginal $R^2$ = `r round(faces_full[1,1],3)`) and wrists (marginal $R^2$ = `r round(wrists_full[1,1],3)`).  
+
+Overall, these results suggest that infants' visual access to social information is largely modulated by their posture and orientation to their caregiver, which is in turn a function of their general locomotor development. Nonetheless, these results also suggest that infants may still increase their attention to hands throughout this age range as they continue to learn about objects, their functions, and their names. 
+
+## Access to Faces and Hands During Labeling Events
+Our play session was designed to provide parents with opporunities to label objects--both familiar and novel--such that we could examine whether children sought out different kinds of social information around naming events. We thus explored how face and hand detections changed during object labeling events, analyzing a four-second window around each labeling event (e.g., "Look at the [zem]!"). Every utterance of one of the labelled objects (e.g., 'ball') was counted as a 'labeling event'; timestamps of the beginning of each word were hand-annotated from transcripts ad synchronized with the frame-by-frame detections. Overall, we did not find major differences in face/hand detections during naming events relative to baseline, either for novel objects or for familiar objects (see Figure \ref{fig:detByNaming}). This was true both when we analyzed naming rates with or without taking into account children's posture and orientation relative to their caregiver. These results suggest that either children did not actively seek out social information during this particular play session around naming events, perhaps because were a limited number of possible referents at any given time.
+
 
 \begin{table}[ht]
 \centering
@@ -745,8 +781,6 @@ cowplot::plot_grid(faces_aroundnamings_plot, wrists_aroundnamings_plot)
 In the present work, we found that infant's in-the-moment posture changed with their age, as did infants' orientation relative their caregiver. In a related study with 12-month-olds, @franchak2017see also that children's in-the-moment posture changed the amount of time infants spent looking at faces. Here, we sought to replicate the findings from @franchak2017see using our automated methodology (OpenPose detections), using the footage from their head-mounted cameras [@simon2015databrary]. 
 
 This dataset differed from the present in two key ways that could present a challenge for our automated methodology. First, the environment that infants were immersed in with their caregivers (and experimenters)  was much larger and more varied than the play room used in the present dataset, containing multiple structures and toys in different parts of the room for infants to explore, unlike the  room used for the present dataset which was relatively small (approximately 10' x 10'). Thus, our automated methodology could fail to generalize to scenes from these more complex environments, where detecting faces and hands could arguably be a much harder task. Second, @franchak2017see used a head-mounted eye-tracker, finding that children's posture affected where children were looking within their visual field. Nonetheless, if children are often orienting their heads towards where they are allocating their attention [@yoshida2008] then we should expect to find the same pattern of results only when analyzing the information in view.
-
-
 ```{r loadFranchakData}
 # loads pos_detections used below for franchak dataset
 load(file = '../data/franchak_dataset/preprocessed/franchak_dataset_detections.RData')

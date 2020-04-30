@@ -99,7 +99,7 @@ information},
 \authornote{
 
 Correspondence concerning this article should be addressed to Bria L. Long, 450 Serra Mall, Stanford CA 94305. E-mail: bria@stanford.edu}
-\keywords{Postural developments modulate children's visual access to social information\newline\indent Word count: X}
+\keywords{Postural developments modulate children's visual access to social information\newline\indent Word count: 4295}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -121,24 +121,24 @@ dramatically changing the way they see the world around them. How do
 these postural and locomotor developments affect children's access to
 the social information relevant for word-learning? We explored this
 question by using head-mounted cameras to record the egocentric visual
-perspective of 36 infants' (at 8, 12, and 16 months of age) during a
+perspective of 36 infants (at 8, 12, and 16 months of age) during a
 naturalistic play session with their caregiver. To estimate the
 proportion of faces and hands in the infant view, we used a computer
 vision algorithm to detect the presence of faces and hands in the entire
-dataset. We found that infants\textbackslash{}`posture and orientation
-to their caregiver changed dramatically across this age range and
-modulated their access to this social information; infants who were
-sitting or standing with their caregiver at a close distance tended to
-have the most faces/hands in their visual field. We also applied our
-automated analysis to the egocentric video data from a recent paper
-documenting how posture changes one-year-olds visual access to faces
-(Franchak et al., 2017), finding convergence across both methodologies
-and dataset and confirming previous work that motoric developments play
-a significant role in the emergence of children's linguistic and social
+dataset. We found that infants' posture and orientation to their
+caregiver changed dramatically across this age range and modulated their
+access to this social information; infants who were sitting or standing
+with their caregiver at a close distance tended to have the most
+faces/hands in their visual field. We also applied our automated
+analysis to the egocentric video data from a recent paper documenting
+how posture changes one-year-olds visual access to faces (Franchak et
+al., 2017), finding convergence across both methodologies and dataset
+and confirming previous work that motoric developments play a
+significant role in the emergence of children's linguistic and social
 capacities. We suggest that the combined use of head-mounted cameras and
 the application of new computer vision techniques is a promising avenue
-for understanding the statistics of infants\textbackslash{}' visual and
-linguistic experience as they change over development.
+for understanding the statistics of infants' visual and linguistic
+experience as they change over development.
 }
 
 \begin{document}
@@ -255,7 +255,7 @@ information in their environment.
 
 \section{Methods}\label{methods}
 
-\subsubsection{Participants}\label{participants}
+\subsection{Participants}\label{participants}
 
 Our final sample consisted of 36 infants and children, with 12
 participants in three age groups: 8 months (6 F), 12 months (7 F), and
@@ -287,7 +287,7 @@ inclusion decisions were made independent of the results of subsequent
 analyses. These data were also analyzed in Frank, Simmons, Yurovsky, and
 Pusiol (2013) and Sanchez, Long, Kraus, and Frank (2018).
 
-\subsubsection{Head-mounted camera}\label{head-mounted-camera}
+\subsection{Head-mounted camera}\label{head-mounted-camera}
 
 \begin{figure}[htbp]
 \centering
@@ -319,7 +319,7 @@ that this decision limited our ability to detect hands (especially those
 of the child, which are typically found at the bottom of the visual
 field).
 
-\subsubsection{Procedure}\label{procedure}
+\subsection{Procedure}\label{procedure}
 
 All parents signed consent documents while children were fitted with the
 headcam. If the child was uninterested in wearing the headcam or tried
@@ -337,7 +337,7 @@ minutes, during which a tripod-mounted camera in the corner of the room
 recorded the session and the headcam captured video from the child's
 perspective.
 
-\subsubsection{Data Processing and
+\subsection{Data Processing and
 Annotation}\label{data-processing-and-annotation}
 
 Headcam videos were trimmed such that they excluded the instruction
@@ -387,11 +387,14 @@ view. Second, hands are often occluded by objects when caregivers are
 interacting with children, yet still visually accessible by the child
 and part of their joint interaction.
 
-\begin{figure*}
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=5.5in]{images/detector_samples_banner.pdf}
-\caption{\label{fig:frames} Example face and pose detections made by OpenPose (top row) and MTCNN (bottom row) from a child in each age group. The last column features a false positive from OpenPose and a false negative from MTCNN.}
-\end{figure*}
+\includegraphics{figs/frames-1.pdf}
+\caption{\label{fig:frames}Example face and pose detections made by OpenPose
+(top row) and MTCNN (bottom row) from a child in each age group. The
+last column features a false positive from OpenPose and a false negative
+from MTCNN.}
+\end{figure}
 
 \subsubsection{Algorithms}\label{algorithms}
 
@@ -547,17 +550,29 @@ models estimating the proportion of faces and hands that were in view,
 with orientation, posture, their interaction, and scaled participant's
 age as fixed effects, and with random slopes for infants' orientation
 and posture. A summary of the coefficients of the models can be found in
-Table 2, confirming that infants who were sitting/standing and in front
-of their caregivers saw the most faces and hands. When modeling the
-proportion of faces seen, age was not a significant predictor; however,
-age remained a significant predictor when modeling the proportion of
-hands seen by infants. Overall, these results suggest that infants'
-visual access to social information is largely modulated by their
-posture and orientation to their caregiver, which is in turn a function
-of their general locomotor development. Nonetheless, these results also
-suggest that infants may still increase their attention to hands
-throughout this age range as they continue to learn about objects, their
-functions, and their names.
+Tables 2 and 3, confirming that infants who were sitting/standing and in
+front of their caregivers saw the most faces and hands. When modeling
+the proportion of faces seen, age was not a significant predictor;
+however, age remained a significant predictor when modeling the
+proportion of hands seen by infants.
+
+We directly examined the contributions of posture and orientation by
+fitting a reduced version of the full model (Nakagawa \& Schielzeth,
+2013) without their fixed effects (both models were run with the maximal
+random effects structure). The fixed effects in a model with only the
+age of the participants accounted for relatively little variance in the
+proportion of faces (marginal \(R^2\) = 0.00) or hands in view (marginal
+\(R^2\) = 0.15). However, when adding children's posture and orientation
+to their caregiver to the model (and their interaction) the marginal
+\(R^2\) were higher for both faces (marginal \(R^2\) = 0.28) and wrists
+(marginal \(R^2\) = 0.37).
+
+Overall, these results suggest that infants' visual access to social
+information is largely modulated by their posture and orientation to
+their caregiver, which is in turn a function of their general locomotor
+development. Nonetheless, these results also suggest that infants may
+still increase their attention to hands throughout this age range as
+they continue to learn about objects, their functions, and their names.
 
 \subsection{Access to Faces and Hands During Labeling
 Events}\label{access-to-faces-and-hands-during-labeling-events}
@@ -880,6 +895,11 @@ and walking infants elicit different verbal responses from mothers.
 Mayer, D., Fulton, A., \& Cummings, M. (1988). Visual fields of infants
 assessed with a new perimetric technique. \emph{Investigative
 Ophthalmology \& Visual Science}, \emph{29}(3), 452--459.
+
+\hypertarget{ref-nakagawa2013general}{}
+Nakagawa, S., \& Schielzeth, H. (2013). A general and simple method for
+obtaining r2 from generalized linear mixed-effects models. \emph{Methods
+in Ecology and Evolution}, \emph{4}(2), 133--142.
 
 \hypertarget{ref-patrick2012developmental}{}
 Patrick, S. K., Noah, J. A., \& Yang, J. F. (2012). Developmental

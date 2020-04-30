@@ -8,10 +8,15 @@ configurations (we used the lower in our current study).}
 \end{figure*}
 \efloatseparator
  
-\begin{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[htbp]
 \centering
-\includegraphics[width=5.5in]{images/detector_samples_banner.pdf}
-\caption{\label{fig:frames} Example face and pose detections made by OpenPose (top row) and MTCNN (bottom row) from a child in each age group. The last column features a false positive from OpenPose and a false negative from MTCNN.}
+\includegraphics{figs/frames-1.pdf}
+\caption{\label{fig:frames}Example face and pose detections made by OpenPose
+(top row) and MTCNN (bottom row) from a child in each age group. The
+last column features a false positive from OpenPose and a false negative
+from MTCNN.}
 \end{figure*}
 \efloatseparator
  
