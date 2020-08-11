@@ -13,7 +13,6 @@ library(ggthemes)
 library(langcog)
 library(tidyverse)
 library(cowplot)
-
 ```
 
 ## Read in merging filenames data
@@ -47,18 +46,48 @@ all_pos_data <- all_pos_data %>%
   mutate(sub_id = as.factor(sub_id))
 ```
 
+## How much data do we have for each subject?
+```{r}
+(frames_by_sub <- all_pos_data %>%
+  group_by(sub_id) %>%
+  summarize(num_frames = length(unique(frame))) %>%
+  kable())
+```
+
 ## Read in detections and merge with subid from above
 ```{r}
-detections <- read.csv('../data/franchak_dataset/openpose_detections/franchak_frames_openpose_master_frames.csv') 
+csv_dir = paste0(here::here(),'/data/franchak_dataset/openpose_detections/csvs_compressed_with_conf/')
+files = dir(csv_dir)
+sub_count = 0
+
+for (f in files){
+  print(f)
+  sub_count = sub_count + 1
+  print(sub_count)
+  this_sub <- read.csv(paste0(csv_dir,f)) %>%
+    as.tibble() 
+  
+  if (sub_count==1){
+     detections <- this_sub
+  } else{
+  detections <- detections %>%
+    full_join(this_sub) 
+  }
+}
+
 dets <- detections %>%
+  mutate(vid_name = str_split_fixed(subid,'.json',2)[,1]) %>%
+  select(-subid) %>%
   left_join(filenames) %>%
-  mutate(sub_id = as.factor(sub_id))
+  mutate(sub_id = as.factor(sub_id)) %>%
+  rename(frame = frame_num)
+
 ```
 
 # Merge detections with position data (should merge on subid, frame)
 ```{r}
 pos_detections  <- all_pos_data %>%
-  left_join(dets) 
+  left_join(dets, by=c('frame','sub_id')) 
 ```
 
 ### Recode variables so are redable
@@ -67,11 +96,17 @@ level_key = c('0' = "Prone", '1' = "Sitting", '2' = "Upright")
 pos_detections$caregiver_posture_label = recode(pos_detections$caregiver_posture, !!!level_key) 
 pos_detections$infant_posture_label = recode(pos_detections$infant_posture, !!!level_key) 
 
+pos_detections <- pos_detections %>%
+  mutate(face_openpose = as.logical(face_openpose), hand_openpose = as.logical(hand_openpose))
+
+
 ```
 
 ### Save out preprocessed data
 ```{r}
-save(file = '../data/franchak_dataset/preprocessed/franchak_dataset_detections.RData', pos_detections)
+# save(file = '../data/franchak_dataset/preprocessed/franchak_dataset_detections_july2020.RData', detections)
+save(file = '../data/franchak_dataset/preprocessed/franchak_dataset_detections_by_posture_july2020.RData', pos_detections)
+
 ```
 
 # Basic analyses
@@ -79,7 +114,7 @@ save(file = '../data/franchak_dataset/preprocessed/franchak_dataset_detections.R
 ```{r}
 faces_by_pos  <- pos_detections %>%
   group_by(sub_id, infant_posture_label) %>%
-  summarize(prop_faces = mean(face_openpose)) %>%
+  dplyr::summarize(prop_faces = mean(face_openpose)) %>%
   group_by(infant_posture_label) %>%
   multi_boot_standard(col = 'prop_faces')
 
@@ -114,6 +149,7 @@ faces_by_CG_pos  <- pos_detections %>%
 (ggplot(faces_by_CG_pos, aes(x=caregiver_posture_label, y=mean, col=caregiver_posture_label)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
   theme_few())
+
 ```
 
 
@@ -131,18 +167,32 @@ hands_by_pos_by_sub  <- pos_detections %>%
 
 ```
 
+
+```{r}
+faces_by_both_pos  <- pos_detections %>%
+  group_by(sub_id, infant_posture_label, caregiver_posture_label) %>%
+  summarize(prop_faces = mean(face_openpose)) %>%
+  group_by(infant_posture_label,caregiver_posture_label) %>%
+  multi_boot_standard(col = 'prop_faces') 
+  
+(ggplot(faces_by_both_pos, aes(x=infant_posture_label, y=mean)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
+  theme_few() +
+  facet_wrap(~caregiver_posture_label))
+
+```
+
 ### Plot hands by infant posture
 ```{r}
 (hands_by_pos_plot <- ggplot(hands_by_pos, aes(x=infant_posture_label, y=mean, col=infant_posture_label)) +
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper)) +
-  geom_point(data=hands_by_pos_by_sub, aes(x=infant_posture_label, y=prop_faces, col=infant_posture_label), alpha=.2) +
+  geom_point(data=hands_by_pos_by_sub, aes(x=infant_posture_label, y=prop_hands, col=infant_posture_label), alpha=.2) +
   theme_few(base_size=18) +
   ylab('Prop hands detected') +
    xlab('Infant posture') + 
   ylim(c(0,.4)) +
   theme(legend.position = 'none') +
   scale_color_manual(name = "Posture", values=c("#339966","#eb7928","#0099cc")))
-)
 
 ```
 
