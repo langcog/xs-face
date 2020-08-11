@@ -3,8 +3,11 @@ tmp/
 .DS_Store
 data/.DS_Store
 
+data/consolidated_data/*
 data/consolidated_data/consolidated_data_4detectors_march2020.csv
 data/consolidated_data/old/*
+data/consolidated_data/consolidated_data_4detectors_july2020.csv
+
 data/final_detector_output/*
 data/final_detector_output/openpose_results.csv
 data/final_detector_output/openpose_results*
@@ -35,6 +38,7 @@ preprocessing/video_preprocessing/check_posture_frames.Rmd
 analysis-validation/.RData
 writeup-paper/.Rhistory
 
+data/ground_truth/goldset_frames/*
 data/openpose_examples/*
 data/franchak_dataset/openpose_detections/full_jsons/161384-Baby_Scene.json
 data/franchak_dataset/openpose_detections/full_jsons/161386-Baby_Scene.json
@@ -54,3 +58,7 @@ data/franchak_dataset/openpose_detections/full_jsons/161538-Baby_Scene.json
 data/franchak_dataset/openpose_detections/full_jsons/161540-Baby_Scene.json
 data/franchak_dataset/openpose_detections/full_jsons/161542-Baby_Scene.json
 data/franchak_dataset/openpose_detections/z-old/franchak_frames_openpose_master_frames.csv
+
+
+data/franchak_dataset/openpose_detections/z-old/*
+
