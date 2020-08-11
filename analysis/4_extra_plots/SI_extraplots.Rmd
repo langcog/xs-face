@@ -1,0 +1,253 @@
+---
+title: "SI_ExtraPlots"
+author: "Bria Long"
+date: "4/8/2020"
+output: pdf_document
+---
+
+```{r, libraries}
+library(knitr)
+knitr::opts_chunk$set(fig.width=6, fig.height=5, fig.crop = FALSE, 
+                      fig.path='figs/', echo=FALSE, warning = FALSE, 
+                      cache=TRUE, message = FALSE, sanitize = TRUE)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(xtable)
+library(lubridate)
+library(langcog)
+library(ggplot2)
+library(ggthemes)
+library(lme4)
+library(gridExtra)
+library(ggridges)
+library(assertthat)
+library(tidyverse)
+library(viridis)
+library(papaja)
+```
+
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, include=FALSE}
+### READ IN DETECTIONS
+d <- read_csv("../data/consolidated_data/consolidated_data_4detectors_march2020.csv") %>%
+  mutate(posture = factor(posture), orientation = factor(orientation))
+
+## make long form version for plotting both face detections on same graph
+dlong <- d %>%
+  mutate(id = paste(subid,frame)) %>%
+  gather(key = detectorType, value = detection, faceMT, faceOP, faceVJ, wristOP) %>%
+  mutate(detectorType=as.factor(detectorType)) 
+
+# for better plotting names
+levels(dlong$detectorType) 
+# [1] "faceMT"  "faceOP"  "faceVJ"  "wristOP"
+levels(dlong$detectorType) <- c("MTCNN-Faces", "OpenPose-Faces","ViolaJones-Faces","OpenPose-Wrists") 
+
+```
+
+
+```{r}
+source("helper.R")
+## summarize detections around naming events
+aroundNamings_Wrists <- d %>%
+  group_by(subid) %>%
+  mutate(detections = wristOP) %>%
+  do(summarize.naming(.)) 
+
+aroundNamings_Faces <- d %>%
+  group_by(subid) %>%
+  mutate(detections = faceOP) %>%
+  do(summarize.naming(.)) 
+```
+
+
+
+```{r eval=FALSE,include=FALSE}
+
+### SUMMARIES FOR SI PLOTS
+### Faces/Wrists by naming by posture/orientation
+
+## summarize faces/wrists detected by orientation/posture/naming events
+aroundNamings_Faces_PosOrient_Group <- aroundNamings_Faces %>%
+  group_by(subid, age.grp, orientation, posture, familiarity) %>%
+  summarize(propFacesDetected = mean(detections, na.rm=TRUE)) %>%
+  filter(!is.na(orientation)) %>%
+  filter(!is.na(posture)) %>%
+  group_by(orientation, posture, familiarity, age.grp) %>%
+  multi_boot_standard(col = "propFacesDetected")
+
+aroundNamings_Wrists_PosOrient_Group <- aroundNamings_Wrists %>%
+  group_by(subid, age.grp, orientation, posture, familiarity) %>%
+  summarize(propWristsDetected = mean(detections, na.rm=TRUE)) %>%
+  filter(!is.na(orientation)) %>%
+  filter(!is.na(posture)) %>%
+  group_by(orientation, posture, familiarity, age.grp) %>%
+  multi_boot_standard(col = "propWristsDetected")
+
+## for plotting
+aroundNamings_Faces_PosOrient_Raw <- aroundNamings_Faces %>%
+  group_by(subid, age.grp, orientation, posture, familiarity) %>%
+  summarize(prop_detected = mean(detections, na.rm=TRUE), num_namings= length(detections)) %>%
+  filter(!is.na(orientation)) %>%
+  filter(!is.na(posture)) %>%
+  left_join(ages_inc_subs) 
+
+aroundNamings_Wrists_PosOrient_Raw <- aroundNamings_Wrists %>%
+  group_by(subid, age.grp, orientation, posture, familiarity) %>%
+  summarize(prop_detected = mean(detections, na.rm=TRUE), num_namings=length(detections)) %>%
+  filter(!is.na(orientation)) %>%
+  filter(!is.na(posture)) %>%
+  left_join(ages_inc_subs)
+
+```
+
+```{r eval=FALSE,include=FALSE}
+
+### SI PLOT 1
+### Faces by naming by posture/orientation
+
+# plots means by familairity and posture
+ggplot(aroundNamings_Faces_PosOrient_Group, aes(x=age.grp, y=mean, color=familiarity)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper, color=familiarity), position = position_dodge(width=3), alpha=.9) +
+    # plot indiv data points
+  geom_point(data=aroundNamings_Faces_PosOrient_Raw, aes(x=age.grp, y=prop_detected, size=num_namings, color=familiarity), position = position_dodge(width=3), alpha=.2) +
+  # # plot baseline
+    geom_pointrange(data = (detectionsByPostureAndOrientByGroup %>% filter(detectorType == 'OpenPose-Faces')), aes(ymin = ci_lower, ymax = ci_upper, color='baseline'), position = position_dodge(width=0), alpha=.9) +
+  theme_few() +
+  ylim(0,.6) +
+  facet_grid(orientation ~ posture) +
+  labs(y = "Prop. face detections around naming events", x = "Age (months)") +
+  theme_few(base_size=16) +
+  theme(legend.position="bottom", legend.text=element_text(size = 12), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm"), legend.title=element_text(size = 14)) +
+  scale_colour_viridis(name = 'Object familiarity', discrete=TRUE, option='A', begin=.2, end=.8) +
+  scale_x_continuous(breaks=seq(8, 16, 4), limits=c(7, 18)) +
+  scale_size_continuous(name="# of naming events")
+```
+```{r eval=FALSE,include=FALSE}
+
+### SI PLOT 2
+### Wrists by naming by posture/orientation
+
+# plots means by familairity and posture
+ggplot(aroundNamings_Wrists_PosOrient_Group, aes(x=age.grp, y=mean, color=familiarity)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper, color=familiarity), position = position_dodge(width=3), alpha=.9) +
+    # plot indiv data points
+  geom_point(data=aroundNamings_Wrists_PosOrient_Raw, aes(x=age.grp, y=prop_detected, size=num_namings, color=familiarity), position = position_dodge(width=3), alpha=.2) +
+  # # plot baseline
+    geom_pointrange(data = (detectionsByPostureAndOrientByGroup %>% filter(detectorType == 'OpenPose-Wrists')), aes(ymin = ci_lower, ymax = ci_upper, color='baseline'), position = position_dodge(width=0), alpha=.9) +
+  theme_few() +
+  ylim(0,.6) +
+  facet_grid(orientation ~ posture) +
+  labs(y = "Prop. wrist detections around naming events", x = "Age (months)") +
+  theme_few(base_size=16) +
+  theme(legend.position="bottom", legend.text=element_text(size = 12), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm"), legend.title=element_text(size = 14)) +
+  scale_colour_viridis(name = 'Object familiarity', discrete=TRUE, option='A', begin=.2, end=.8) +
+  scale_x_continuous(breaks=seq(8, 16, 4), limits=c(7, 18)) +
+  scale_size_continuous(name="# of naming events")
+```
+
+
+```{r eval=FALSE}
+### Parallel plot to detections -- not included
+# better labels 
+orientation_labels <- c(
+  behind ='Caregiver behind',
+  close = 'Caregiver close',
+  far = 'Caregiver far')
+
+posture_labels = c(
+  prone = 'Infant prone',
+  sit = 'Infant sitting',
+  stand ='Infant standing'
+)
+posture_by_orientation_subset <- d %>%
+  filter(!is.na(posture)) %>%
+  filter(!is.na(orientation)) %>%
+  group_by(subid, posture, orientation) %>%
+  summarise(time = sum(dt, na.rm=TRUE)) %>%
+  group_by(subid) %>%
+  mutate(prop.time = time/sum(time)) %>%
+  left_join(ages_inc_subs) %>%
+  mutate(pos_orient = paste0('Infant ',posture, ', CG ', orientation)) # for colors
+
+ggplot(posture_by_orientation_subset, aes(x = age.at.test, y = prop.time, col=pos_orient, size=time)) +
+  geom_point(alpha=.9) +
+  ylab("Proportion Time") +
+  xlab("Age (months)") +
+  theme_few(base_size=18) +
+  ylim(0,1) +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank(), legend.position='none') +
+  scale_color_manual(name = "Posture & CG Orientation", values=c("#006080", "#0099cc", "#99e6ff","#339966","#66cc99", "#b3e6cc",  "#e67300","#ffa64d", "#ffe6cc")) +
+  facet_grid(orientation ~ posture, labeller = labeller(posture = posture_labels, orientation= orientation_labels)) +
+  geom_smooth(span=10, alpha=.2)
+
+```
+
+
+
+
+
+
+```{r afterNamingsExplore, eval=FALSE, include=FALSE, echo=FALSE}
+afterNamings_Faces <- d %>%
+  group_by(subid) %>%
+  mutate(detections = faceOP) %>%
+  do(summarize.naming((.),window = c(0,4)))
+
+detectionsByGroup <- dlongPlot %>%
+  group_by(age.grp, subid, detectorType) %>%
+  summarise(prop_detected = mean(detection), num_detections = length(detection)) %>%
+  group_by(age.grp, detectorType) %>%
+  multi_boot_standard(col = 'prop_detected')
+
+afterNamings_Detections_BySub_Faces <- afterNamings_Faces %>%
+  group_by(subid, familiarity, age.grp) %>%
+  summarize(prop_detected = mean(detections, na.rm=TRUE))
+
+afterNamings_Detections_Grouped_Faces <- afterNamings_Detections_BySub_Faces %>%
+  group_by(familiarity, age.grp) %>%
+  multi_boot_standard(col = 'prop_detected')
+
+faces_afternamings_plot <- ggplot(afterNamings_Detections_Grouped_Faces, aes(x=age.grp, y=mean, color=familiarity)) +
+  # plot baseline
+  geom_pointrange(data = (detectionsByGroup %>% filter(detectorType == 'OpenPose-Faces')), aes(ymin = ci_lower, ymax = ci_upper, color='baseline'), position = position_dodge(width=3), alpha=.9) +
+  # plot averages by familiarity 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width=3), alpha=.9) +
+  # plot familairity detections for each sub
+  geom_point(data=afterNamings_Detections_BySub_Faces, aes(x=age.grp, y=prop_detected), position = position_dodge(width=3), alpha=.2) +
+  theme_few() +
+  labs(y = "Prop. face detections", x = "Age (months)") +
+  theme_few(base_size=plot_size) +
+  ylim(0,.6) +
+  theme(legend.position="bottom", legend.text=element_text(size = 12), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm"), legend.title=element_text(size = 14)) +
+  scale_colour_viridis(name = 'Object familiarity', discrete=TRUE, option='A', begin=.2, end=.8) +
+  scale_x_continuous(breaks=seq(8, 16, 4), limits=c(7, 18)) +
+  scale_size_continuous(name="# of naming events")
+
+```
+
+
+
+```{r}
+### get individual points
+baseline_diffs_faces <- dlong %>%
+  group_by(age.grp, subid, detectorType) %>%
+  summarise(prop_detected = mean(detection)) %>%
+  mutate(familiarity = 'baseline') %>%
+  full_join(aroundNamings_Detections_BySub_Faces) %>%
+  spread(familiarity,  prop_detected) %>%
+  summarize(fam_vs_baseline = familiar - baseline, novel_vs_baseline = novel - baseline) 
+
+baseline_by_group <-  baseline_diffs_faces %>%
+  group_by(age.grp) %>%
+  filter(!is.na(novel_vs_baseline)) %>%
+  multi_boot_standard(col='novel_vs_baseline')
+
+ggplot(baseline_by_group, aes(x=age.grp, y=mean)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width=3), alpha=.9) +
+  # plot familairity detections for each sub
+  geom_point(data=afterNamings_Detections_BySub_Faces, aes(x=age.grp, y=prop_detected), position = position_dodge(width=3), alpha=.2) +
+  theme_few() +
+```
+

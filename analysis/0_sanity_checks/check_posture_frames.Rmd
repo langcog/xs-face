@@ -1,0 +1,61 @@
+---
+title: "check_posture_times"
+author: "Bria Long"
+date: "2/15/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Step 0: Libraries and helper functions
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+rm(list=ls()) # remove all objects from current workspace
+library(dplyr)
+library(readr)
+library(magrittr)
+library(tidyr)
+library(assertthat)
+source("helper.R") # Contains critical helper functions for merging annotations
+```
+
+
+## Step 3. Merge demographics and manual annotations
+```{r}
+# load demographics and pose / orientation / timing
+demo.data <- read_csv("../data/demographics/demographics.csv") %>% 
+  select(-ra, -assist, -len) ## -dot -dib fields did not exist, deleted bll
+```
+
+```{r}
+######## ADD POSTURE CODING #########
+add.posture <- function(x) {
+  fname <- paste("../data/posture/",
+                 x$subid[1],
+                 ".csv",
+                 sep="")
+  
+  if (file.exists(fname)) {
+    print(fname)
+    postures <- read_csv(fname)
+    postures <- postures[order(postures$start),] ## add line to sort by time in case weird coding order
+    postures <- regularize.postures(subset(postures,code=="posture"))
+    x$posture <- factor(NA,levels=levels(postures$posture))
+    x$orientation <- factor(NA,levels=levels(postures$orientation))
+    
+    # for each row of p, populate posture and orientation to x
+    for (i in 1:nrow(postures)) {
+      range <- x$time > postures$start[i] & x$time <= postures$end[i]
+      x$posture[range] <- postures$posture[i]
+      x$orientation[range] <- postures$orientation[i]
+    }
+  } else {
+    print(paste0("**** ", x$subid[1], " is missing posture ****"))
+    x$posture <- NA
+    x$orientation <- NA
+  }
+  
+  return(x)
+}
+```

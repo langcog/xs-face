@@ -1,0 +1,32 @@
+---
+title: "FPS Sanity Checks"
+output: html_notebook
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(knitr)
+```
+
+```{r, message=FALSE, warning=FALSE}
+new <- read_csv("../data/video_stats/new_movie_lengths.csv") 
+old <- read_csv("../data/video_stats/old_movie_lengths.csv") ## from previous iteration
+```
+
+```{r}
+new %>%
+  rename(new_fps = fps, new_length = length) %>%
+  inner_join(old %>%
+              mutate(old_fps = last.frame / length) %>%
+              rename(old_length = length), 
+            by = "subid") %>%
+  mutate(length_close_enough = abs(new_length - old_length) <= 1) %>%
+  mutate(fps_close_enough =  abs(new_fps - old_fps) <= 1) %>%
+  kable
+```
+Notes:
+
+XS_1229: Was trimmed from when headcam fell out and therefore is a different lengthj
+XS_1628: Was exported with wrong frame count in Oct 2017; error was not caught until March 2018 (error was in CogSCi 2018
+initial submission, corrected for revisions)
+

@@ -1,0 +1,229 @@
+---
+title: "extra_plotting_code"
+author: "Bria Long"
+date: "3/18/2020"
+output: html_document
+---
+
+
+
+
+
+```{r}
+# ggplot(posture, aes(y = posture, x = prop.time, fill=posture, col=posture)) + 
+#   ggridges::geom_density_ridges(alpha=.7) +
+#   theme_few() +
+#   facet_grid(~age.grp) 
+# coord_flip()
+
+# p1=ggplot(posture, aes(x = factor(age.grp), y = prop.time, col = posture)) + 
+#   geom_violin() + 
+#   ylab("Proportion Time") + 
+#   xlab("") + 
+#   theme_few() +
+#   scale_x_discrete( labels=c("8 m.", "12 m.", "16 m."))
+# 
+# p2=ggplot(orientation, aes(x = factor(age.grp), y = prop.time, col = orientation)) + 
+#   geom_boxplot() + 
+#   ylab("Proportion Time") + 
+#   xlab("") + 
+#   theme_few() +
+#   scale_x_discrete( labels=c("8 m.", "12 m.", "16 m.")) +
+#   theme(axis.ticks = element_blank())
+# 
+# ggarrange(p1,p2)
+```
+
+
+
+
+
+```{r detByPosOrientOld, fig.env="figure*", fig.pos = "h", fig.align = "center", fig.width=6, fig.height=3, fig.cap = "Proportion of face / wrist detections by children's age, posture (top panel), and orientation (bottom panel)."}
+# ages_inc_subs <- inc_subs %>%
+#   select(subid, age.at.test, age.grp)
+# 
+# detectionsByOrientation <- dlongPlot %>%
+#   filter(!is.na(orientation)) %>%
+#   group_by(age.grp, orientation, subid, detectorType) %>%
+#   summarise(prop_detected = mean(detection), num_detections = length(detection), detection_size = mean(w*h, na.rm=TRUE)) %>%
+#   left_join(ages_inc_subs) %>%
+#   mutate(age.at.test = as.numeric(age.at.test))
+# 
+# ggplot(detectionsByOrientation, aes(x = age.at.test, y = detection_size, col = detectorType, size=num_detections)) + 
+#   geom_point(alpha=.5) + 
+#   labs(y = "Prop. detected", x = "Age (months)") +
+#   facet_grid(~detectorType) +
+#   theme_few() +
+#   theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) +
+#   # scale_y_continuous(breaks=seq(0,.60,.20), limits=c(0, .6)) +
+#   facet_grid(~orientation) +
+#   geom_smooth(span=10, alpha=.2, aes(weight = num_detections), show.legend = FALSE)
+
+
+```
+
+```{r}
+detectionsByPosture <- dlongPlot %>%
+  filter(!is.na(posture)) %>%
+  group_by(age.grp, posture, subid, detectorType) %>%
+  summarise(prop_detected = mean(detection), num_detections = length(detection)) %>%
+  left_join(ages_inc_subs) %>%
+  mutate(age.at.test = as.numeric(age.at.test))
+
+ggplot(detectionsByPosture, aes(x = age.at.test, y = prop_detected, col = detectorType, size=num_detections)) +
+  geom_point(alpha=.5) +
+  labs(y = "Prop. detected", x = "Age (months)") +
+  facet_grid(~detectorType) +
+  theme_few() +
+  theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) +
+  scale_y_continuous(breaks=seq(0,.60,.20), limits=c(0, .6)) +
+  facet_grid(~posture) +
+  geom_smooth(span=10, alpha=.2, show.legend = FALSE)
+
+```
+
+
+
+
+```{r eval=FALSE}
+p1=ggplot(detectionsByPosture, aes(x = factor(age.grp), y = face, col = posture)) + 
+  geom_boxplot(outlier.size = 0.5) + 
+  labs(y = "Prop. detected", x = element_blank()) +
+  facet_grid(~detectorType) +
+  theme_few() +
+  theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm")) +
+  scale_y_continuous(breaks=seq(0,.60,.20), limits=c(0, .6))
+
+detectionsByOrientation <- dlongPlot %>%
+  filter(!is.na(orientation)) %>%
+  group_by(age.grp, orientation, subid, detectorType) %>%
+  summarise(detections = mean(detection)) %>%
+  group_by(age.grp)
+
+p2=ggplot(detectionsByOrientation, aes(x = factor(age.grp), y = detections, col = orientation)) + 
+  geom_boxplot(outlier.size = 0.5) + 
+  labs(y = "Prop. detected", x = element_blank()) +
+  facet_grid(~detectorType) +
+  theme_few() +
+  theme(legend.position="right", legend.text=element_text(size = 8), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm"))  +
+  scale_y_continuous(breaks=seq(0,.60,.20), limits=c(0, .6))
+
+ggarrange(p1, p2)
+
+```
+
+
+
+```{r}
+# naming_rate_posorient <- aroundNamings_Faces %>%
+#   group_by(subid, age.grp, orientation, posture) %>%
+#   summarize(count_namings= length(naming.instance)) %>%
+#   left_join(posture_by_orientation) %>%
+#   filter(!is.na(posture)) %>%
+#   filter(!is.na(orientation)) %>%
+#   mutate(naming_rate = count_namings / time) %>%
+#   left_join(ages_inc_subs) %>%
+#   ungroup() %>%
+#   mutate(subid = fct_reorder(subid, age.at.test))
+
+# ggplot(naming_rate_posorient, aes(x = subid, y = naming_rate)) + 
+#   geom_col(aes(fill = pos_orient), position=position_stack()) +
+#   ylab("Objects named  / second ") + 
+#   xlab("Individual subjects (ordered by age)") +
+#   theme_few() +
+#   theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+#   scale_fill_manual(name = "Posture & CG Orientation", values=c("#8878cc",  "#006080", "#0099cc", "#99e6ff","#87b5c4", "#339966","#66cc99", "#b3e6cc",  "#e67300","#ffa64d", "#ffe6cc","#d1b673")) 
+# 
+# ggplot(naming_rate_posorient, aes(x = age.grp, y = naming_rate, col=posture,size=prop.time)) + 
+#   geom_boxplot(alpha=.4) +
+#   ylab("Objects named  / second ") + 
+#   # xlab("Age (months)") +
+#   theme_few() +
+#   theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+#   facet_grid(~age.grp)
+#   scale_color_manual(name = "Posture & CG Orientation", values=c("#8878cc",  "#006080", "#0099cc", "#99e6ff","#87b5c4", "#339966","#66cc99", "#b3e6cc",  "#e67300","#ffa64d", "#ffe6cc","#d1b673")) 
+
+```
+
+```{r}
+namings_prop <- aroundNamings_Faces %>%
+  group_by(subid, age.grp, orientation, posture) %>%
+  summarize(count_namings=length(naming.instance)) %>%
+  group_by(subid) %>%
+  mutate(total_namings=sum(count_namings)) %>%
+  group_by(subid, age.grp, orientation, posture) %>%
+  mutate(prop_namings = count_namings / total_namings) %>%
+  # filter(!is.na(posture)) %>%
+  # filter(!is.na(orientation)) %>%
+  left_join(ages_inc_subs) %>%
+  ungroup() %>%
+  mutate(subid = fct_reorder(subid, age.at.test)) %>%
+  mutate(pos_orient = as.factor(paste0(posture,'_',orientation)))
+
+
+ggplot(namings_prop, aes(x = subid, y = prop_namings)) + 
+  geom_col(aes(fill = pos_orient), position=position_stack()) +
+  ylab("Proportion naming events") + 
+  xlab("Individual subjects (ordered by age)") +
+  theme_few() +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  scale_fill_manual(name = "Posture & CG Orientation", values=c("#8878cc","#ebebeb","#ebebeb", "#006080", "#0099cc", "#99e6ff","#87b5c4", "#339966","#66cc99", "#b3e6cc", "#98a69f", "#e67300","#ffa64d", "#ffe6cc","#d1b673")) 
+```
+
+
+
+```{r}
+## does naming rate differ by posture?
+
+## number of namimgs in each posture/orientation combo by sub
+posture_orientation_naming_count <- aroundNamings_Faces %>%
+  group_by(subid, posture, orientation) %>%
+  summarize(num_namings = length(naming.instance))
+
+## time spent in each posture/orient combo for each sub
+posture_orientation_time <- d %>%
+  group_by(subid, posture, orientation) %>%
+  summarise(time = sum(dt, na.rm=TRUE)) 
+
+naming_rate_by_posture <- posture_orientation_naming_count %>%
+  left_join(posture_orientation_time) %>%
+  filter(!is.na(orientation)) %>%
+  filter(!is.na(posture)) %>%
+  mutate(naming_rate = num_namings / time) %>%
+  group_by(posture, orientation) %>%
+  multi_boot_standard(col = 'naming_rate')
+
+## nope, not really
+ggplot(naming_rate_by_posture, aes(x=posture, y=mean, col=orientation)) +
+  geom_pointrange(aes(ymin=ci_lower, ymax=ci_upper), position=position_dodge(width=1)) +
+  theme_few()
+```
+
+
+
+```{r}
+countNamings_Raw <- aroundNamings_Faces %>%
+  group_by(subid, age.grp, orientation, posture, familiarity) %>%
+  summarize(prop_detected = mean(detections, na.rm=TRUE), num_namings=length(detections)) %>%
+  left_join(ages_inc_subs)
+
+countNamings_2 <- countNamings_Raw %>%
+  mutate(pos_orient = as.factor(paste0('Infant ',posture, ', CG ', orientation))) %>%
+  left_join(ages_inc_subs) %>%
+  ungroup() %>%
+  mutate(subid = fct_reorder(subid, age.at.test))
+
+ggplot(countNamings_2, aes(x = subid, y = num_namings)) + 
+  geom_col(aes(fill = pos_orient), position=position_stack()) +
+  ylab("Number of naming events") + 
+  xlab("Individual subjects (ordered by age)") +
+  theme_few() +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  scale_fill_manual(name = "Posture & CG Orientation", values=c("#8878cc", "#ebebeb", "#ebebeb", "#006080", "#0099cc", "#99e6ff","#87b5c4", "#339966","#66cc99", "#b3e6cc",  "#e67300","#ffa64d", "#ffe6cc","#d1b673")) 
+
+## more naming events wtih age
+
+
+
+
+```
