@@ -46,14 +46,16 @@ detsOpenPose <- detsOpenPose %>%
   distinct(video,frame,.keep_all=TRUE)  %>%
   mutate(frame = as.numeric(frame) + 1) %>% ## Frame output is off by one since we extracted from videos vs. frames.
   mutate(faceOP = Nose_conf!=0)  %>%  
-  mutate(wristOP = LWrist_conf!=0 | RWrist_conf!=0 )   
+  mutate(wristOP = LWrist_conf!=0 | RWrist_conf!=0 )   %>%
+  mutate(faceOPStrict = Nose_conf>.5)  %>%  
+  mutate(wristOPStrict = LWrist_conf>.5 | RWrist_conf>.5 )   
 ```
 
 ## Step 2:  Merge detectors and sanity check
 ```{r}
 assert_that(dim(dets_MTCNN)[1]==dim(detsViola)[1]) 
 alldets=left_join(dets_MTCNN,detsViola[,c("video","frame","faceVJ")])  ## Join MTCNN + Viola Jones
-alldets=left_join(alldets,detsOpenPose[,c("video","frame","faceOP","wristOP")])  ##  ++ OpenPose
+alldets=left_join(alldets,detsOpenPose[,c("video","frame","faceOP","wristOP", "faceOPStrict", "wristOPStrict")])  ##  ++ OpenPose
 ```
 
 ### Sanity checks for merging detectors
@@ -71,7 +73,7 @@ maxFrameNum <- alldets %>%
   group_by(video) %>%
   summarize(maxFrame = max(frame))
 
-## Let's look at which frames these are
+## Let's look at which frames these areall
 missingOP<- alldets %>% 
   filter(missingInd) %>%
   group_by(video) %>%
@@ -113,8 +115,23 @@ d <- alldets %>%
   group_by(subid) %>% # get subid
   do(add.times(.)) %>%  # calls helper functions to add times
   group_by(subid) %>%
-  do(add.posture(.)) ## adds both postures and orientatinos
+  do(add.posture(.)) %>% ## adds both postures and orientatinos
+  do(add.posture.second(.)) ## gets reliability coding for postures
 ```
+
+```{r}
+# for reliability anlayses
+# all_dets_stripped <- alldets %>%
+#   select(subid, group, frame)
+# 
+# save(all_dets_stripped, file = '../data/consolidated_data/video_by_frame.RData')
+```
+
+
+
+
+
+
 ### Recheck posture syncing times
 ```{r}
 sync_times_check <- read_csv("../data/manual_sync_times/video_sync_times.csv") 
@@ -125,7 +142,7 @@ s <- sync_times_check %>%
   mutate(frames = str_split_fixed(sync_time_string,":",3)[,3]) %>%
   mutate(sec = str_split_fixed(sync_time_string,":",3)[,2]) %>%
   mutate(min = str_split_fixed(sync_time_string,":",3)[,1]) %>%
-  mutate(sync_time_ms = as.numeric(min)*6000 + as.numeric(sec)*1000 + as.numeric(frames)*33.33)
+  mutate(sync_time_ms = as.numeric(min)*60000 + as.numeric(sec)*1000 + as.numeric(frames)*33.33)
 
 posture.sync <- function(x) {
   fname <- paste("../data/posture/",
@@ -149,7 +166,8 @@ s <- s %>%
   do(posture.sync(.))
 
 ## problematic kids
-issues = (s$posture_start_time<s$sync_time_ms)
+# we want posture coding to start BEFORE the sync time, can zero after
+issues = (s$posture_start_time>s$sync_time_ms) # problematic if greater
 diffs =  s$posture_start_time-s$sync_time_ms
 off_by = diffs[issues]
 seconds_off = round(off_by / 1000*-1,2)
@@ -185,5 +203,5 @@ d <- bind_rows(d, complete_combos) ## bind these 251 data points
 
 # Step 4: Save out the data
 ```{r}
-write_csv(d, "../data/consolidated_data/consolidated_data_4detectors_march2020.csv") #
+write_csv(d, "../data/consolidated_data/consolidated_data_4detectors_july2020.csv") #
 ```
