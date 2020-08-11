@@ -1,0 +1,78 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+\includegraphics[width=0.4\linewidth]{images/view_angle_redone} \caption{Vertical field of view for two different headcam configurations (we used the lower in our current study).}\label{fig:headcam}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+\includegraphics[width=1\linewidth]{images/exampe_detections} \caption{Example detections made by OpenPose from children in each age group.}\label{fig:exampledetections}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+\includegraphics[width=0.5\linewidth]{images/example_failures} \caption{Example failed detections from OpenPose, showing both false positives and false negatives (i.e. missed detections).}\label{fig:failures}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+\includegraphics[width=\textwidth]{figs/posture-1} \caption{Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes}\label{fig:posture}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+\includegraphics[width=\textwidth]{figs/indivPosOrient-1} \caption{Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times when infant was carried or when posture/orientation were not codable are ommitted for visualization purposes}\label{fig:indivPosOrient}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+\includegraphics[width=\textwidth]{figs/detByAge-1} \caption{Proportion of faces (left) and wrists (right) detected by the OpenPose model as a function of child's age. Larger dots indicate children who had longer play sessions and thus for whom there was more data.}\label{fig:detByAge}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+
+{\centering \includegraphics[width=\textwidth]{figs/detByPosOrient-1}
+
+}
+
+\caption{Proportion of face / wrist detections by children's age, their posture, and their caregivers orientation. Data points are scaled by the amount of time spent in each orientation/posture combination; times when posture/orientation annotatinos were unavaliable or the infant was carried are not plotted. Error bars represent 95\% bootstrapped confidence intervals}\label{fig:detByPosOrient}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+
+{\centering \includegraphics[width=\textwidth]{figs/detByNaming-1}
+
+}
+
+\caption{Proportion of face / wrist detections during naming events (+/- 2 seconds around label) for familiar and novel objects; these rates are put into context relative to baseline. Error bars represent 95\% bootstrapped confidence intervals. Grey lines connect points from individual subjects.}\label{fig:detByNaming}
+\end{figure*}
+\efloatseparator
+ 
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+
+{\centering \includegraphics[width=\textwidth]{figs/franchak-1}
+
+}
+
+\caption{Proportion of face / wrist detections for 12-month-olds in Franchak et al., 2017 as a function of children's in-the-moment posture. Error bars represent 95 percent bootstrapped confidence intervals.}\label{fig:franchak}
+\end{figure*}
+\efloatseparator
+ 

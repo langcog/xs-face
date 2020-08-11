@@ -89,9 +89,14 @@ Around their first birthday, however, children’s ability to interact with thei
 
 One possibility is that these motor improvements have strong developmental cascades, impacting children’s emerging social, cognitive, and linguistic abilities [@iverson2010]. Indeed, these postural changes change how children interact with their mothers; walking infants make different kinds of object-related bids for attention from their mothers than crawling infants, and tend to hear more action directed statements (e.g., “open it”) [@karasik2014]. In an observational study, @walle2014 also found that children who were able to walk had both higher receptive and productive vocabularies. On their account, children’s ability to stand and independently locomote may fundamentally change their ability to access the social information (e.g., facial expressions, gaze cues, pointing) relative to children who are still crawling and sitting. In other words, the ability of walking infants to access more detailed social information may allow infants to learn words quicker and more efficiently, facilitating language growth.
 
-Over the past decade, researchers have started to use egocentric, head-mounted cameras to document the social information that infants and children have access to across early development, and to understand the degree to which there are substantial shifts in their viewpoints that may have downstream developmental consequences [@yoshida2008]. Indeed, the infant visual perspective has proved to be both remarkably different than the adult perspective and not easily predicted by our own intuitions [@franchak2011, @yoshida2008, @clerkin2017]. Over the first two years of life, the infant viewpoint seems to transition from primarily containing close up view of faces to capturing relatively restricted views of hands paired with the objects they are acting on [@fausey2016]; both computational and empirical work suggest that this restricted viewpoint may be more effective for learning about objects and their labels than the comparable adult perspective [@yurovsky2012, @bambach2017].
+Over the past decade, researchers have started to use egocentric, head-mounted cameras to document the social information that infants and children have access to across early development, and to understand the degree to which there are substantial shifts in their viewpoints that may have downstream developmental consequences [@yoshida2008]. Indeed, the infant visual perspective has proved to be both remarkably different than the adult perspective and not easily predicted by our own intuitions [@franchak2011, @yoshida2008, @clerkin2017]. 
+
+Over the first two years of life, the infant viewpoint seems to transition from primarily containing close up view of faces to capturing relatively restricted views of hands paired with the objects they are acting on [@fausey2016]. (FAUSEY REVIEW HERE) both computational and empirical work suggest that this restricted viewpoint may be more effective for learning about objects and their labels than the comparable adult perspective [@yurovsky2012, @bambach2017].
 
 We hypothesized that children’s postural developments may be partially responsible for some of these changes in the infant perspective. During spontaneous play, toddlers are more likely to look at the floor while crawling than while walking (Franchak et al., 2011), when they have full visual access to their environment and the people in it (Kretch, Franchak, and Adolph, 2014). More recently, when 12-month-olds [@franchak2017see] participated in a free-play session with their caregivers, their own posture and as well as their caregiver’s posture influenced the proportion of time they spent looking at the faces and bodies of their caregivers [@franchak2017see].
+
+TWO GOALS
+
 
 Here, we directly examine the role that postural developments that infants’ experience as they reach their first birthday change the social information in the infant view. We expand on previous findings in three key ways. First, using head-mounted cameras during a brief laboratory free-play session, we record the visual experience of three groups of children at 8, 12, and 16 months-of-age, covering a broad range of ages and locomotor abilities around the first birthday; Children’s posture and orientation relative to their caregiver were also recorded from a third-person perspective and hand-annotated. This cross-sectional design thus allows us to directly examine the relative contributions of age vs. postural developments on children’s visual access to social information. Second, we use a modern computer vision algorithm for the automated detection of faces and hands in the egocentric viewpoints of infants.  In particular, we capitalize on recent improvements in face and pose detection algorithms [@zhang2016; @cao2017realtime] to analyze the frequencies of faces and hands in the child’s visual environment, both overall and relative to naming events by their caregivers. Use of this emerging technology allows us to annotate the entirety of the dataset, allowing a more complete picture of the changing infant perspective. We apply this same automated method to the dataset used in @franchak2017see, validating the generalizability of this technique. Third, as parents were presented with pairs of novel and familiar objects with their children during the play sessions, we were able to explore the availability of social signals during naming events.
 
@@ -100,6 +105,9 @@ Thus, the current study allows us to analyze changes in the visual access to fac
 <!-- Second, we predicted that there would be a greater proportion of faces/hands in view around naming events—-broadly construed as any time a parent mentioned a label for one of the objects in the play set -->
 
 # Methods
+A secondary goal of this project was to provide a rich, open dataset for other researchers to examine labeling behavior during naturalistic parent-child interactions. We thus invited parents of 8, 12, and 16-month-olds to participate in play sessions where they were provided with pairs of novel and familiar objects (e.g., a ball and a microfiber duster, called a "zem"). Third-person cameras show a birds-eye videw of the play session, and all videos were transcribed. Finally, we collected collected MacArthur CDIs for all children who particpated.  
+
+
 ## Participants
 ```{r echo=FALSE, include=FALSE, demographics}
 all_subs <- read.csv("../data/demographics/all_participants.csv") %>%
@@ -150,13 +158,13 @@ Group & N & \% incl. & Avg age & Avg video length (min) \\
 \end{table}
 
 To obtain this final sample, we tested `r length(all_subs$reason)` children, excluding `r sum(all_subs$reason!="included")` children for the following reasons:
-`r sum(all_subs$reason=="HC technical error")` for technical issues related to the headcam,
+`r sum(all_subs$reason=="HC technical error")` for technical issues related to the headcam (e.g., failure to record),
 `r sum(all_subs$reason=="would not wear camera")` for failing to wear the headcam,
 `r sum(all_subs$reason=="less than 4 min HC footage")` for fewer than 4 minutes of headcam footage,
 `r sum(all_subs$reason=="multiple people")` for having multiple adults present,
 `r sum(all_subs$reason=="no CDI")` for missing Communicative Development Inventory (CDI) data,
 `r sum(all_subs$reason=="no DV cam footage")` for missing scene camera footage,
-`r sum(all_subs$reason=="infant crying")` for fussiness, and one for sample symmetry. All inclusion decisions were made independent of the results of subsequent analyses. These data were also analyzed in @frank2013 and @sanchez2018postural.
+`r sum(all_subs$reason=="infant crying")` for fussiness, and one for sample symmetry. All inclusion decisions were made independent of the results of subsequent analyses. 
 
 
 ## Head-mounted camera
@@ -174,13 +182,16 @@ Even with the fish-eye lens, the vertical field of view of the camera is still c
 
 
 ## Procedure
-All parents signed consent documents while children were fitted with the headcam. If the child was uninterested in wearing the headcam or tried to take it off, the experimenter presented engaging toys to try to draw the child's focus away from the headcam. When the child was comfortable wearing the headcam, the child and caregiver were shown to a playroom for the free-play session. Parents were shown a box containing three pairs of novel and familiar objects (e.g., a ball and a microfiber duster, named a "zem"), and were instructed to play with the object pairs with their child one at a time, "as they typically would." All parents confirmed that their child had not previously seen the novel toys and were instructed to use the novel labels to refer to the toys. The experimenter then left the playroom for approximately 15 minutes, during which a tripod-mounted camera in the corner of the room recorded the session and the headcam captured video from the child's perspective.
+All parents signed consent documents while children were fitted with the headcam. If the child was uninterested in wearing the headcam or tried to take it off, the experimenter presented engaging toys to try to draw the child's focus away from the headcam. When the child was comfortable wearing the headcam, the child and caregiver were shown to a playroom for the free-play session. Parents were shown a box containing three pairs of novel and familiar objects (e.g., a ball and a microfiber duster, named a "zem"), and were instructed to play with the object pairs with their child one at a time, "as they typically would."  Objects were provided in a box with written labels so that parents did not need to remember the novel labels. All parents confirmed that their child had not previously seen the novel toys and were instructed to use the novel labels to refer to the toys.  The experimenter then left the playroom for approximately 15 minutes, during which a tripod-mounted camera in the corner of the room recorded the session and the headcam captured video from the child's perspective.
 
 ## Data Processing and Annotation
 Headcam videos were trimmed such that they excluded the instruction phase when the experimenter was in the room and were automatically synchronized with the tripod-mounted videos using FinalCut Pro Software. These sessions yielded 
 `r round(sum(inc_subs$len.min), digits = 0)` minutes (almost a million frames) of video, with an average video length of
 `r round(mean(inc_subs$len.min), digits = 2)` minutes
 (min = `r round(min(inc_subs$len.min), digits = 2)`, max = `r round(max(inc_subs$len.min), digits = 2)`).
+
+### Transcriptions
+Audio from headcam video was transcribed...
 
 ### Posture and Orientation Annotation
 We created custom annotations to describe the child's physical posture (e.g. standing) and the orientation of the child relative to the caregiver (e.g. far away). The child's posture was categorized as being held/carried, prone (crawling or lying), sitting, or standing. The caregiver's orientation was characterized as being close, far, or behind the child (independent of distance). For the first two annotations (close/far from the child), the caregiver could either be to the front or side of the child. All annotations were made by a trained coder using the OpenSHAPA/Datavyu software [@adolph2012toward]. Times when the child was out of view of the tripod camera were marked as uncodable and were excluded from these annotations. 
@@ -859,8 +870,6 @@ Understanding these changes and how they relate to one another has been a persis
 # Acknowledgements
 
 Thanks to Kaia Simmons, Kathy Woo, and Aditi Maliwal for help in recruitment, data collection, and annotation. This work was funded by a Jacobs Foundation Fellowship to MCF, a John Merck Scholars award to MCF, and NSF #1714726 to BLL. An earlier version of this work was presented to the Cognitive Science Society in @frank2013 and @sanchez2018postural.
-
-
 
 \newpage
 
