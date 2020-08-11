@@ -1,0 +1,248 @@
+---
+title: "render_examples"
+author: "Bria Long"
+date: "7/31/2020"
+output: html_document
+---
+
+# Load libraries
+
+```{r, libraries}
+library(knitr)
+knitr::opts_chunk$set(fig.width=6, fig.height=5, fig.crop = FALSE, 
+                      fig.path='figs/', echo=FALSE, warning = FALSE, 
+                      cache=TRUE, message = FALSE, sanitize = TRUE)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(xtable)
+library(lubridate)
+library(langcog)
+library(ggplot2)
+library(ggthemes)
+library(lme4)
+library(gridExtra)
+library(assertthat)
+library(tidyverse)
+library(viridis)
+library(papaja)
+library(png)
+library(magick)
+
+
+# base_size in theme_few (changes font size in plots)
+plot_size=16
+```
+
+####  Load detections
+```{r loadDetections}
+
+d <- read_csv("../data/consolidated_data/consolidated_data_4detectors_july2020.csv") %>%
+  mutate(posture = factor(posture), orientation = factor(orientation))
+
+## make long form version for plotting both face detections on same graph
+dlong <- d %>%
+  mutate(id = paste(subid,frame)) %>%
+  gather(key = detectorType, value = detection, faceMT, faceOP, faceOPStrict, faceVJ, wristOP, wristOPStrict) %>%
+  mutate(detectorType=as.factor(detectorType))  %>%
+  mutate(detection = replace_na(detection,FALSE)) ## few frames where OP didn't have detections
+
+# for better plotting names
+levels(dlong$detectorType) 
+#[1] "faceMT"        "faceOP"        "faceOPStrict"  "faceVJ"       
+#[5] "wristOP"       "wristOPStrict"
+levels(dlong$detectorType) <- c("MTCNN-Faces","OpenPose-Faces", "OpenPose-Faces-Strict","ViolaJones-Faces","OpenPose-Wrists","OpenPose-Wrists-Strict") 
+
+```
+
+
+## Load ground truth
+```{r groundTruthSetup, message=FALSE, warning=FALSE, echo=FALSE, include=FALSE}
+### READ IN GROUND TRUTH and load function
+ground_truth_faces <- read_csv("../data/ground_truth/ground_truth_faces.csv") %>%
+  mutate(sample_type=as.factor(sample_type)) 
+
+ground_truth_wrists <- read_csv("../data/ground_truth/ground_truth_wrists.csv") %>%
+  mutate(sample_type=as.factor(sample_type))
+
+# Renaming for table output
+levels(ground_truth_faces$sample_type)=c("High density", "Random")
+levels(ground_truth_wrists$sample_type)=c("High density", "Random")
+
+# Function to evaluate detectors
+evaluate <- function(a, b) {
+  if (a == TRUE) {
+    if (a == b) return ("TP") # was face/wrist, detected face/wrist
+    else return("FN") # was face/wrist, missed face/wrist
+  }
+  else {
+    if (a == b) return("TN") # was not face/wrist, did not detect face/wrist
+    else return("FP") # was not face/wrist, detected face/wrist
+  }
+}
+```
+
+
+## Evaluate face detectors
+```{r}
+performanceFaces <- ground_truth_faces  %>%
+  mutate(frame=as.numeric(frame), subid=video) %>%
+  left_join(dlong)   %>%
+  filter(!detectorType %in% c('OpenPose-Wrists-Strict','OpenPose-Wrists')) %>%
+  mutate(detector_is_face = detection, is_face = as.logical(is_face)) %>%
+  rowwise() %>%
+  mutate(result = evaluate(is_face, detector_is_face)) # always have the gronud truth first in evaluate argument
+```
+
+
+## Set up paths for getting detection images
+```{r}
+example_op_images = paste0(here::here(),'/data/openpose_examples/3sample/')
+goldset_image_dir = paste0(here::here(),'/data/ground_truth/goldset_frames/face_images/')
+dir.create(paste0(here::here(),'/data','/example_montages/'))
+save_dir = paste0(here::here(),'/data','/example_montages/')
+no_consent_show_images = c('XS_1224','XS_1622','XS_1628','XS_1631','XS_1634')
+
+performanceFacesToRender <- performanceFaces %>%
+  filter(!subid %in% no_consent_show_images) %>% #don't render frames from non-consenting fams
+  mutate(frame_string = sprintf("image-%05d", frame)) %>%
+  # mutate(image_path = paste0(goldset_image_dir, video, '/',frame_string,'.jpg')) %>%
+  mutate(image_path = paste0(example_op_images, video, '_',frame_string,'_rendered.png')) %>% 
+  #NOTE: only renders high confidence OP detections
+  mutate(file_exists = file.exists(image_path)) %>%
+  filter(file_exists==TRUE)
+```
+
+
+## Render out example errors for Viola Jones
+```{r}
+false_negs_VJ <- performanceFacesToRender %>%
+  filter(detectorType=='ViolaJones-Faces') %>%
+  filter(result=="FN") %>%
+  filter(sample_type=='Random') 
+
+false_pos_VJ <- performanceFacesToRender %>%
+  filter(detectorType=='ViolaJones-Faces') %>%
+  filter(result=="FP") %>%
+  filter(sample_type=='Random') 
+
+## note these will take a random sample, so set seed if trying to reproduce everything
+# set.seed(30)
+OpenPose_TP_ViolaJones_FN <- performanceFacesToRender %>%
+  filter(image_path %in% false_negs_VJ$image_path) %>%
+  filter(detectorType=='OpenPose-Faces') %>%
+  filter(result=='TP')  %>%
+  sample_n(8)
+
+OpenPose_TN_ViolaJones_FP <- performanceFacesToRender %>%
+  filter(image_path %in% false_pos_VJ$image_path) %>%
+  filter(detectorType=='OpenPose-Faces') %>%
+  filter(result=='TN') %>%
+  sample_n(8)
+```
+
+### Make montages 
+```{r}
+image_read(false_negs_VJ$image_path) %>%
+    image_append(stack = FALSE) %>%
+    image_write(file.path(paste0(goldset_image_dir,"example_montages/", "false_negs_VJ.png")))
+
+image_read(false_pos_VJ$image_path) %>%
+    image_append(stack = FALSE) %>%
+    image_write(file.path(paste0(goldset_image_dir,"example_montages/", "false_pos_VJ.png")))
+
+image_read(OpenPose_TP_ViolaJones_FN$image_path) %>%
+    image_append(stack = FALSE) %>%
+    image_write(file.path(paste0(goldset_image_dir,"example_montages/", "OpenPose_TP_ViolaJones_FN.png")))
+
+image_read(OpenPose_TN_ViolaJones_FP$image_path) %>%
+    image_append(stack = FALSE) %>%
+    image_write(file.path(paste0(goldset_image_dir,"example_montages/", "OpenPose_TN_ViolaJones_FP.png")))
+
+false_negs_MTCNN <- performanceFacesToRender %>%
+  filter(detectorType=='MTCNN-Faces') %>%
+  filter(result=="FN") 
+
+OpenPose_TP_MTCNN_FN <- performanceFacesToRender %>%
+  filter(image_path %in% false_negs_MTCNN$image_path) %>%
+  filter(detectorType=='OpenPose-Faces') %>%
+  filter(result=='TP') %>%
+  sample_n(16)
+
+image_read(OpenPose_TP_MTCNN_FN$image_path) %>%
+    image_append(stack = FALSE) %>%
+    image_write(file.path(paste0(goldset_image_dir,"example_montages/", "OpenPose_TP_MTCNN_FN.png")))
+```
+
+## Where OpenPose had false alarms that MTCNN correctly rejected 
+```{r}
+false_pos_OP <- performanceFacesToRender %>%
+  filter(detectorType=='OpenPose-Faces') %>%
+  filter(result=="FP") 
+
+OpenPose_FP_MTCNN_TN <- performanceFacesToRender %>%
+  filter(image_path %in% false_pos_OP$image_path) %>%
+  filter(detectorType=='MTCNN-Faces') %>%
+  filter(result=='TN') %>%
+  sample_n(16)
+
+image_read(OpenPose_FP_MTCNN_TN$image_path) %>%
+    image_append(stack = FALSE) %>%
+    image_write(file.path(paste0(goldset_image_dir,"example_montages/", "OpenPose_FP_MTCNN_TN.png")))
+```
+
+
+## by posture
+```{r}
+sit <- performanceFacesToRender %>%
+   filter(posture=='sit') %>%
+   # filter(is_face==TRUE) %>%
+   # filter(detectorType=='OpenPose-Faces-Strict') %>%
+   # filter(detection==TRUE) %>%
+   sample_n(8)
+
+   
+stand <- performanceFacesToRender %>%
+   filter(posture=='stand') %>%
+   # filter(is_face==TRUE) %>%
+   # filter(detectorType=='OpenPose-Faces-Strict') %>%
+   # filter(detection==TRUE) %>%
+   sample_n(8)
+   
+      
+prone <- performanceFacesToRender %>%
+   filter(posture=='prone') %>%
+   # filter(is_face==TRUE) %>%
+   # filter(detectorType=='OpenPose-Faces-Strict') %>%
+   # filter(detection==TRUE) %>%
+   sample_n(8)
+   
+
+# carry <- performanceFacesToRender %>%
+#    filter(posture=='carry') %>%
+#    filter(is_face==TRUE) %>%
+#    filter(detectorType=='OpenPose-Faces-Strict') %>%
+#    filter(detection==TRUE) %>%
+#    sample_n(8)
+   
+   
+   
+image_read(prone$image_path) %>%
+    image_append(stack = FALSE) %>%
+    image_write(file.path(paste0(save_dir, "prone.png")))
+    
+image_read(sit$image_path) %>%
+    image_append(stack = FALSE) %>%
+    image_write(file.path(paste0(save_dir, "sit.png")))
+  
+image_read(stand$image_path) %>%
+    image_append(stack = FALSE) %>%
+    image_write(file.path(paste0(save_dir, "stand.png")))
+   
+   
+   
+   
+   
+   
+
+```
