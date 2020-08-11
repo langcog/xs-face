@@ -184,3 +184,70 @@ ggplot(posture_by_orientation_subset, aes(x = age.at.test, y = prop.time, col=po
 
 ```
 
+
+
+
+
+
+```{r afterNamingsExplore, eval=FALSE, include=FALSE, echo=FALSE}
+afterNamings_Faces <- d %>%
+  group_by(subid) %>%
+  mutate(detections = faceOP) %>%
+  do(summarize.naming((.),window = c(0,4)))
+
+detectionsByGroup <- dlongPlot %>%
+  group_by(age.grp, subid, detectorType) %>%
+  summarise(prop_detected = mean(detection), num_detections = length(detection)) %>%
+  group_by(age.grp, detectorType) %>%
+  multi_boot_standard(col = 'prop_detected')
+
+afterNamings_Detections_BySub_Faces <- afterNamings_Faces %>%
+  group_by(subid, familiarity, age.grp) %>%
+  summarize(prop_detected = mean(detections, na.rm=TRUE))
+
+afterNamings_Detections_Grouped_Faces <- afterNamings_Detections_BySub_Faces %>%
+  group_by(familiarity, age.grp) %>%
+  multi_boot_standard(col = 'prop_detected')
+
+faces_afternamings_plot <- ggplot(afterNamings_Detections_Grouped_Faces, aes(x=age.grp, y=mean, color=familiarity)) +
+  # plot baseline
+  geom_pointrange(data = (detectionsByGroup %>% filter(detectorType == 'OpenPose-Faces')), aes(ymin = ci_lower, ymax = ci_upper, color='baseline'), position = position_dodge(width=3), alpha=.9) +
+  # plot averages by familiarity 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width=3), alpha=.9) +
+  # plot familairity detections for each sub
+  geom_point(data=afterNamings_Detections_BySub_Faces, aes(x=age.grp, y=prop_detected), position = position_dodge(width=3), alpha=.2) +
+  theme_few() +
+  labs(y = "Prop. face detections", x = "Age (months)") +
+  theme_few(base_size=plot_size) +
+  ylim(0,.6) +
+  theme(legend.position="bottom", legend.text=element_text(size = 12), legend.margin=margin(t=0, r=0, b=0, l=0, unit="cm"), legend.title=element_text(size = 14)) +
+  scale_colour_viridis(name = 'Object familiarity', discrete=TRUE, option='A', begin=.2, end=.8) +
+  scale_x_continuous(breaks=seq(8, 16, 4), limits=c(7, 18)) +
+  scale_size_continuous(name="# of naming events")
+
+```
+
+
+
+```{r}
+### get individual points
+baseline_diffs_faces <- dlong %>%
+  group_by(age.grp, subid, detectorType) %>%
+  summarise(prop_detected = mean(detection)) %>%
+  mutate(familiarity = 'baseline') %>%
+  full_join(aroundNamings_Detections_BySub_Faces) %>%
+  spread(familiarity,  prop_detected) %>%
+  summarize(fam_vs_baseline = familiar - baseline, novel_vs_baseline = novel - baseline) 
+
+baseline_by_group <-  baseline_diffs_faces %>%
+  group_by(age.grp) %>%
+  filter(!is.na(novel_vs_baseline)) %>%
+  multi_boot_standard(col='novel_vs_baseline')
+
+ggplot(baseline_by_group, aes(x=age.grp, y=mean)) +
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper), position = position_dodge(width=3), alpha=.9) +
+  # plot familairity detections for each sub
+  geom_point(data=afterNamings_Detections_BySub_Faces, aes(x=age.grp, y=prop_detected), position = position_dodge(width=3), alpha=.2) +
+  theme_few() +
+```
+
