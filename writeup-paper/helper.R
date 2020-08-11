@@ -53,6 +53,40 @@ add.posture <- function(x) {
   return(x)
 }
 
+add.posture.second <- function(x) {
+  fname <- paste("../data/posture/second/",
+                 x$subid[1],
+                 ".csv",
+                 sep="")
+  
+  if (file.exists(fname)) {
+    print(fname)
+    postures <- read_csv(fname)
+    postures <- postures[order(postures$start),] ## add line to sort by time in case weird coding order
+    
+    ## this reorders the postures so that they are "zeroed" relative to the beginning of the headcam videos
+    postures <- regularize.postures(subset(postures,code=="posture"),x$subid[1]) ## needs subid to get real sync time later 
+    x$posture_second <- factor(NA,levels=levels(postures$posture))
+    x$orientation_second <- factor(NA,levels=levels(postures$orientation))
+    
+    # for each row of p, populate posture and orientation to x
+    for (i in 1:nrow(postures)) {
+      range <- x$time > postures$start[i] & x$time <= postures$end[i]
+      x$posture_second[range] <- postures$posture[i]
+      x$orientation_second[range] <- postures$orientation[i]
+      print(paste0("**** ", x$subid[1], " has  second posture ****"))
+      
+    }
+  } else {
+    x$posture_second <- NA
+    x$orientation_second <- NA
+  }
+  
+  return(x)
+}
+
+
+
 get_sub_sync_time <- function(this_sub_id){
   sync_times_check_file <- read_csv("../data/manual_sync_times/video_sync_times.csv") 
   s <- sync_times_check_file %>%
@@ -61,7 +95,7 @@ get_sub_sync_time <- function(this_sub_id){
     mutate(frames = str_split_fixed(sync_time_string,":",3)[,3]) %>%
     mutate(sec = str_split_fixed(sync_time_string,":",3)[,2]) %>%
     mutate(min = str_split_fixed(sync_time_string,":",3)[,1]) %>%
-    mutate(sync_time_ms = as.numeric(min)*6000 + as.numeric(sec)*1000 + as.numeric(frames)*33.33)
+    mutate(sync_time_ms = as.numeric(min)*60000 + as.numeric(sec)*1000 + as.numeric(frames)*33.33)
 
   sync_time = s$sync_time_ms
   return(sync_time)
@@ -141,6 +175,7 @@ regularize.naming <- function (n) {
   n$familiarity <- factor(n$familiarity)
   
   # make the times seconds since onset - # if excel output is HMS vs MS - ugh! this was causing a big bug in analyses prior to jan 2018
+  n$time = as.character(n$time)
   timeBefore=n$time
   if (nchar(timeBefore[1])>8) { ## hacky but works.
     n$time=parse_date_time(timeBefore,"%H:%M:OS%")
@@ -156,6 +191,8 @@ regularize.naming <- function (n) {
   return(n)
 }
 
+
+
 ######## ADD NAMING INSTANCES #########
 naming.instance <- function(ns) {
   ni <- rep(0,length(ns))
@@ -168,11 +205,31 @@ naming.instance <- function(ns) {
 }
 
 ######## GET SUMMARY MEASURES OVER NAMINGS #########
-summarize.naming <- function (x, window = c(-2,2)) {  
+
+get.namings <- function (x, window = c(-2,2), file_dir = '../data/naming/') {  
+  # read in naming times
+  namings <- read.csv(paste(file_dir,
+                            x$subid[1],
+                            ".csv",
+                            sep=""),
+                      stringsAsFactors=FALSE)
+  
+  namings <- regularize.naming(namings)
+}
+
+get.namings.second <- function (x, window = c(-2,2), file_dir = '../data/naming/second/') {
+  # try for second file
+  second_file = Sys.glob(paste(file_dir,x$subid[1], '*',".csv", sep=""))
+  naming_second = read.csv(second_file)
+  namings_second <- regularize.naming(naming_second)
+
+}
+
+summarize.naming <- function (x, window = c(-2,2), file_dir = '../data/naming/') {  
   words <- c("ball","zem","car","manu","brush","gimo","tima","kittycat","bobcat","cat","gasser","puppy")
 
   # read in naming times
-  namings <- read.csv(paste("../data/naming/",
+  namings <- read.csv(paste(file_dir,
                       x$subid[1],
                       ".csv",
                       sep=""),
@@ -199,15 +256,4 @@ summarize.naming <- function (x, window = c(-2,2)) {
   namings$age.grp <- x$age.grp[1]
   namings$age.at.test <- x$age.at.test[1]
   return(namings)
-}
-
-######## PLOTTING FUNCTION #########
-plot.individual <- function(x) {
-  n <- summarize.naming(x)
-  x$face.tf <- factor(x$face==1)
-  ggplot() + 
-    geom_point(aes(x=time,y=posture,colour=face.tf,pch=face.tf),
-        data=x,xlab="Time (s)",
-               ylab="Posture") + 
-    geom_text(aes(x=time,y=4 +naming.instance*.4,label=name),data=n)
 }
