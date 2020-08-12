@@ -1,10 +1,11 @@
 library(stringr)
+library(here)
 
 ######## MERGE IN EXACT TIMES FOR FRAMES #########
 add.times <- function(x) {
   print(x$subid[1])
   ## from initial submission
-  fname <- paste0("../../data/frame_times_redone/",
+  fname <- paste0(here::here(), "/data/frame_times_redone/",
                  str_sub(as.character(x$subid[1]),start=4,end=8),
                  ".csv")
   
@@ -23,7 +24,7 @@ add.times <- function(x) {
 
 ######## ADD POSTURE CODING #########
 add.posture <- function(x) {
-  fname <- paste("../../data/posture/",
+  fname <- paste(here::here(), "/data/posture/",
                  x$subid[1],
                  ".csv",
                  sep="")
@@ -54,7 +55,7 @@ add.posture <- function(x) {
 }
 
 add.posture.second <- function(x) {
-  fname <- paste("../../data/posture/second/",
+  fname <- paste(here::here(),"/data/posture/second/",
                  x$subid[1],
                  ".csv",
                  sep="")
@@ -88,7 +89,7 @@ add.posture.second <- function(x) {
 
 
 get_sub_sync_time <- function(this_sub_id){
-  sync_times_check_file <- read_csv("../../data/manual_sync_times/video_sync_times.csv") 
+  sync_times_check_file <- read_csv(paste0(here::here(),"/data/manual_sync_times/video_sync_times.csv")) 
   s <- sync_times_check_file %>%
     filter(sid == this_sub_id) %>%
     mutate(sync_time_string =toString(sync_time_stamp)) %>%
@@ -206,7 +207,7 @@ naming.instance <- function(ns) {
 
 ######## GET SUMMARY MEASURES OVER NAMINGS #########
 
-get.namings <- function (x, window = c(-2,2), file_dir = '../../data/naming/') {  
+get.namings <- function (x, window = c(-2,2), file_dir = paste0(here::here(),'/data/naming/')) {  
   # read in naming times
   namings <- read.csv(paste(file_dir,
                             x$subid[1],
@@ -217,7 +218,7 @@ get.namings <- function (x, window = c(-2,2), file_dir = '../../data/naming/') {
   namings <- regularize.naming(namings)
 }
 
-get.namings.second <- function (x, window = c(-2,2), file_dir = '../../data/naming/second/') {
+get.namings.second <- function (x, window = c(-2,2), file_dir = paste0(here::here(),'/data/naming/second')) {
   # try for second file
   second_file = Sys.glob(paste(file_dir,x$subid[1], '*',".csv", sep=""))
   naming_second = read.csv(second_file)
@@ -225,7 +226,7 @@ get.namings.second <- function (x, window = c(-2,2), file_dir = '../../data/nami
 
 }
 
-summarize.naming <- function (x, window = c(-2,2), file_dir = '../../data/naming/') {  
+summarize.naming <- function (x, window = c(-2,2), file_dir = paste0(here::here(),'/data/naming/')) {  
   words <- c("ball","zem","car","manu","brush","gimo","tima","kittycat","bobcat","cat","gasser","puppy")
 
   # read in naming times
