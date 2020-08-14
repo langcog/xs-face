@@ -1,1 +1,16 @@
-code,start,stop,type,orientposture,576190,645001,p,posture,645002,659540,si ,2posture,659541,680248,p,posture,680249,695066,si ,2posture,695067,747818,p,posture,747819,846737,c,posture,846738,875133,p,posture,875134,889765,si,2posture,889766,897507,p,not-in-frame,582358,608980,NIF,NIFnot-in-frame,618467,642645,NIF,NIFnot-in-frame,660967,674080,NIF,NIFnot-in-frame,692897,746113,NIF,NIFnot-in-frame,848442,869553,NIF,NIFnot-in-frame,888455,895678,NIF,NIF
+code,start,stop,type,orient
+posture,576190,645001,p,1
+posture,645002,659540,si ,2
+posture,659541,680248,p,0
+posture,680249,695066,si ,2
+posture,695067,747818,p,3
+posture,747819,846737,c,NaN
+posture,846738,875133,p,1
+posture,875134,889765,si,2
+posture,889766,897507,p,1
+not-in-frame,582358,608980,NIF,NIF
+not-in-frame,618467,642645,NIF,NIF
+not-in-frame,660967,674080,NIF,NIF
+not-in-frame,692897,746113,NIF,NIF
+not-in-frame,848442,869553,NIF,NIF
+not-in-frame,888455,895678,NIF,NIF

@@ -1,1 +1,42 @@
-code,start,stop,type,orientposture,15839,54837,si,0posture,54838,63145,si,0posture,63146,74335,p,posture,74336,103042,si,0posture,103043,107847,p,posture,107848,116401,si ,2posture,116402,252236,p,posture,252236,255871,xx,posture,255872,277121,si,2posture,277122,298622,p,posture,298622,313905,st,posture,313906,335411,p,posture,335411,356995,si ,3posture,356996,368373,p,posture,368374,424731,si ,2posture,424732,447450,p,posture,447450,498768,st,posture,498769,519475,p,posture,519476,565418,si ,0posture,571933,601383,p,posture,601384,614362,si,2posture,614362,623970,p,posture,623971,645857,st ,posture,645858,678834,xx,posture,678835,695547,p,posture,695547,710166,st,posture,731647,765932,p,posture,765933,847432,st,posture,847432,863838,si,3posture,863839,896803,p,posture,896804,923773,st,posture,923774,962425,si ,1not-in-frame,65812,128245,NIF,NIFnot-in-frame,128246,255406,NIF,NIFnot-in-frame,284840,305425,NIF,NIFnot-in-frame,319610,355447,NIF,NIFnot-in-frame,429227,601384,NIF,NIFnot-in-frame,614362,675555,NIF,NIFnot-in-frame,690244,700841,NIF,NIFnot-in-frame,725419,847432,NIF,NIFnot-in-frame,872085,863838,NIF,NIF
+code,start,stop,type,orient
+posture,15839,54837,si,0
+posture,54838,63145,si,0
+posture,63146,74335,p,3
+posture,74336,103042,si,0
+posture,103043,107847,p,3
+posture,107848,116401,si ,2
+posture,116402,128672,p,1
+posture,128672,252236,p,0
+posture,252236,255871,NIF,NIF
+posture,255872,277121,si,2
+posture,277122,298622,p,1
+posture,298622,306428,st,3
+posture,306428,313905,st,1
+posture,313906,335411,p,1
+posture,335411,356995,si ,3
+posture,356996,368373,p,1
+posture,368374,424731,si ,2
+posture,424732,447450,p,1
+posture,447450,601383,NIF,NIF
+posture,519476,565418,si ,0
+posture,571933,601383,NIF,NIF
+posture,601384,614362,si,2
+posture,614362,676914,NIF,NIF
+posture,676914,682678,p,3
+posture,682678,691448,p,1
+posture,691448,702204,NIF,NIF
+posture,702204,725307,st,0
+posture,725307,847432,NIF,NIF
+posture,847432,863838,si,3
+posture,863839,872736,p,1
+posture,872736,923773,NIF,NIF
+posture,923774,962425,NIF,NIF
+not-in-frame,65812,128245,NIF,NIF
+not-in-frame,128246,255406,NIF,NIF
+not-in-frame,284840,305425,NIF,NIF
+not-in-frame,319610,355447,NIF,NIF
+not-in-frame,429227,601384,NIF,NIF
+not-in-frame,614362,675555,NIF,NIF
+not-in-frame,690244,700841,NIF,NIF
+not-in-frame,725419,847432,NIF,NIF
+not-in-frame,872085,863838,NIF,NIF
