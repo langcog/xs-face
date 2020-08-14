@@ -5,7 +5,6 @@ date: "7/27/2020"
 output: html_document
 ---
 
-
 # Step 0: Libraries and helper functions
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -18,19 +17,22 @@ library(lubridate)
 library(irr)
 library(forcats)
 library(assertthat)
-source("helper.R") # Contains critical helper functions for merging annotations
+library(here)
+library(ggplot2)
+# Contains critical helper functions for merging annotations
+source(paste0(here::here(), "/analysis/1_merge_data/helper.R")) 
 ```
 
 ## Load basics
 ```{r}
 # frame by video structure
-load(file = '../data/consolidated_data/video_by_frame.RData')
+load(file = paste0(here::here(),'/data/consolidated_data/video_by_frame.RData'))
 ```
 
-## Naming reliabilty
+## Load naming data for first and second coders
 ```{r}
 # paths to datafiles
-file_path = '../data/naming/second/'
+file_path = paste0(here::here(), '/data/naming/second/')
 second_codes = dir(file_path) %>%
   tibble() %>%
   mutate(subid = str_split_fixed(., '-',2)[,1])
@@ -51,7 +53,10 @@ all_namings_first_coder <- all_dets_stripped %>%
   do(get.namings(.))  %>%
   rename(time_first_coder = time) %>%
   select(-naming.instance, -X) 
+```
 
+## Calculate namings that occur within the same range
+```{r}
 joined_namings_4s <- all_namings_first_coder %>%
   full_join(all_namings_second_coder) %>%
   mutate(time_lower = time_first_coder-2, time_upper = time_first_coder+2) %>%
@@ -105,9 +110,11 @@ test <- for_binning %>%
   
 ```
 
-## Posture reliability
-```{r}
+# Posture & oreintation coding reliability
 
+## Load data, frame times, coding 
+### Call functions sourced in helper.R
+```{r}
 d <- all_dets_stripped %>%
   group_by(subid) %>% # get subid
   do(add.times(.)) %>%  # calls helper functions to add times
@@ -116,7 +123,7 @@ d <- all_dets_stripped %>%
   do(add.posture.second(.)) ## and from a second coder...
 ```
 
-
+### Create dataframe
 ```{r}
 posture_reliability <- d %>%
   select(subid, frame, posture, posture_second, orientation, orientation_second) %>%
@@ -127,15 +134,9 @@ posture_reliability <- d %>%
   
 col_names = c('rater1','rater2')
 posture_eval = data.frame(posture_reliability$posture, posture_reliability$posture_second)
-irr::kappa2(posture_eval)
-
-orient_eval = data.frame(posture_reliability$orientation, posture_reliability$orientation_second)
-irr::kappa2(orient_eval)
-
-
 ```
 
-
+## Posture reliability plots and calculation
 ```{r}
 coder_1 <- ggplot(posture_reliability, aes(x=frame, y=posture_second, fill=posture_second)) +
   geom_tile() +
@@ -151,13 +152,32 @@ cowplot::plot_grid(coder_1,coder_2, nrow=2)
 ```
 
 ```{r}
-# posture_every_second <- d %>%
-#   mutate(time_seconds = round(time,0)) %>%
-#   group_by(time_seconds) %>%
-#   mutate(common_posture = names(sort(table(posture)))[5],
-#   common_posture_second = names(sort(table(posture_second)))[5])
-# 
-# posture_eval_second = data.frame(posture_every_second$common_posture, posture_every_second$common_posture_second)
-# irr::kappa2(posture_eval_second)
+posture_irr =irr::kappa2(posture_eval)
 ```
+Cohen's kappa for posture is `r round(posture_irr$value,2)`
+
+
+## Orientation reliability plots and calculation
+```{R}
+coder_1 <- ggplot(posture_reliability, aes(x=frame, y=orientation_second, fill=orientation_second)) +
+  geom_tile() +
+  facet_wrap(~subid) + 
+  theme(legend.position='none')
+
+coder_2 <- ggplot(posture_reliability, aes(x=frame, y=orientation, fill=orientation)) +
+  geom_tile() +
+  facet_wrap(~subid) + 
+  theme(legend.position='none')
+
+cowplot::plot_grid(coder_1,coder_2, nrow=2)
+```
+
+```{R}
+orient_eval = data.frame(posture_reliability$orientation, posture_reliability$orientation_second)
+orient_irr = irr::kappa2(orient_eval)
+```
+Cohen's kappa for orientation is `r round(orient_irr$value,2)`
+
+
+
 
