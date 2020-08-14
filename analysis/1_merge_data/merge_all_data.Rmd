@@ -18,6 +18,43 @@ library(here)
 ```
 
 ## Step 1: Load detectors
+
+### Load demographics
+```{r}
+# All of the videos were filmed with an MD-80 headcam. Some videos had a fisheye lens attached to them that increased their FOV by approximately 50% in both directions (see manuscript; in demographics column "fisheye"). This was determined by looking at the third-person videos.
+
+# The original resolutoin fo ALL of the videos is 480 x 720. But, then, OpenPose resizes them (not sure why?) and adds some blank space so that it is the right space -- this blank space is on the RIGHT. The final resolution becomes 1280 x 720; all vertical space has meaningful detections, but all horizontal space does not
+
+# In order to make the detections comparable, we need to restrict detections to center FOV for fisheye participants.
+### Specify cropping for participants with fish-eye lens
+
+## pop out fisheye versus none
+demo <- read.csv(paste0(here::here(),"/data/demographics/demographics_updated.csv"))
+
+fisheye_subs <- demo %>%
+  filter(Fisheye=='yes')
+
+no_fisheye_subs <- demo %>%
+  filter(Fisheye=='no')
+
+# based on difference in view angle between veho/muvi-80
+vertical_diff = (1 - (47/64))/2
+horizontal_diff = (1 - (36/46))/2
+
+# vid params
+# x_max = 1280 # actual max -- black space between 1080 and 1280
+x_max = 1080 # max with content
+y_max = 720
+
+# cropping params -- c
+limit_lower_y = vertical_diff*y_max
+limit_upper_y = (1 - vertical_diff)*y_max
+
+limit_lower_x = horizontal_diff*x_max
+limit_upper_x = (1 - horizontal_diff)*x_max
+
+```
+
 ### Load detectors from MTCNN
 ```{r}
 dets_MTCNN <- read_csv("../../data/final_detector_output/mtcnn3.csv") %>%
@@ -36,27 +73,54 @@ detsViola <- detsViola %>%
   mutate(frame = as.numeric(frame)) 
 ```
 
-### Load OpenPose detections (face and wrists)
+### Load & Preprocess OpenPose detections (face and wrists)
 Wrists: if right or left wrist was ever detected
 Faces: If nose was ever detected
 
 ```{r}
-detsOpenPose <- read_csv("../../data/final_detector_output/openpose_results_truncated_2.csv") 
-detsOpenPose <- detsOpenPose %>%
-  mutate(video = name) %>%
-  distinct(video,frame,.keep_all=TRUE)  %>%
-  mutate(frame = as.numeric(frame) + 1) %>% ## Frame output is off by one since we extracted from videos vs. frames.
+detsOpenPoseRaw <- read_csv(paste0(here::here(),"/data/final_detector_output/openpose_results_truncated_2.csv")) %>%
+  mutate(subid = name, video = name) %>%
+  distinct(subid,frame,.keep_all=TRUE) %>%
+  mutate(frame = as.numeric(frame) + 1)  ## Frame output is off by one since we extracted from videos vs. frames.
+```
+
+## break out detetions for fisheye vs non
+```{r}
+# dets for subs w/o fisheye lens 
+detsOpenPose_no_fisheye <- no_fisheye_subs %>%
+  left_join(detsOpenPoseRaw) %>%
   mutate(faceOP = Nose_conf!=0)  %>%  
   mutate(wristOP = LWrist_conf!=0 | RWrist_conf!=0 )   %>%
   mutate(faceOPStrict = Nose_conf>.5)  %>%  
-  mutate(wristOPStrict = LWrist_conf>.5 | RWrist_conf>.5 )   
+  mutate(wristOPStrict = LWrist_conf>.5 | RWrist_conf>.5 )   %>%
+  mutate(faceOPAll = faceOP,wristOPAll = wristOP, faceOPStrictAll = faceOPStrict, wristOPStrictAll = wristOPStrict)
+
+# dets for subs w fisheye lens 
+detsOpenPose_fisheye <- fisheye_subs %>%
+  left_join(detsOpenPoseRaw) %>%
+  mutate(faceOPAll = Nose_conf!=0)  %>%  
+  mutate(wristOPAll = LWrist_conf!=0 | RWrist_conf!=0 )   %>%
+  mutate(faceOPStrictAll = Nose_conf>.5)  %>%  
+  mutate(wristOPStrictAll = LWrist_conf>.5 | RWrist_conf>.5 ) %>%
+  mutate(noseOP_center = (Nose_y<(limit_upper_y) & Nose_x<(limit_upper_x) & Nose_y>(limit_lower_y) & Nose_x>(limit_lower_x))) %>%
+  mutate(wristOPLeft_center = (LWrist_y<(limit_upper_y) & LWrist_x<(limit_upper_x) & LWrist_y>(limit_lower_y) & LWrist_x>(limit_lower_x)))  %>%
+  mutate(wristOPRight_center = (RWrist_y<(limit_upper_y) & RWrist_x<(limit_upper_x) & RWrist_y>(limit_lower_y) & RWrist_x>(limit_lower_x)))  %>%
+  mutate(faceOP = Nose_conf!=0 & noseOP_center) %>%  
+  mutate(wristOP = (LWrist_conf!=0 & wristOPLeft_center) | (wristOPRight_center & RWrist_conf!=0 )) %>%
+  mutate(faceOPStrict = Nose_conf>.5 & noseOP_center) %>%  
+  mutate(wristOPStrict = (LWrist_conf>.5 & wristOPLeft_center) | (wristOPRight_center & RWrist_conf>.5 )) %>%
+  select(-noseOP_center, -wristOPLeft_center, -wristOPRight_center)
+
+detsOpenPose <- detsOpenPose_no_fisheye %>%
+  full_join(detsOpenPose_fisheye)
 ```
 
 ## Step 2:  Merge detectors and sanity check
 ```{r}
 assert_that(dim(dets_MTCNN)[1]==dim(detsViola)[1]) 
 alldets=left_join(dets_MTCNN,detsViola[,c("video","frame","faceVJ")])  ## Join MTCNN + Viola Jones
-alldets=left_join(alldets,detsOpenPose[,c("video","frame","faceOP","wristOP", "faceOPStrict", "wristOPStrict")])  ##  ++ OpenPose
+
+alldets=left_join(alldets,detsOpenPose[,c("video","frame","faceOP","wristOP", "faceOPStrict", "wristOPStrict", "faceOPAll","wristOPAll", "faceOPStrictAll", "wristOPStrictAll")])  ##  ++ OpenPose
 ```
 
 ### Sanity checks for merging detectors
@@ -116,8 +180,7 @@ d <- alldets %>%
   group_by(subid) %>% # get subid
   do(add.times(.)) %>%  # calls helper functions to add times
   group_by(subid) %>%
-  do(add.posture(.)) %>% ## adds both postures and orientatinos
-  do(add.posture.second(.)) ## gets reliability coding for postures
+  do(add.posture(.)) 
 ```
 
 ```{r}
@@ -127,10 +190,6 @@ d <- alldets %>%
 # 
 # save(all_dets_stripped, file = '../data/consolidated_data/video_by_frame.RData')
 ```
-
-
-
-
 
 
 ### Recheck posture syncing times
@@ -204,5 +263,5 @@ d <- bind_rows(d, complete_combos) ## bind these 251 data points
 
 # Step 4: Save out the data
 ```{r}
-write_csv(d, "../data/consolidated_data/consolidated_data_4detectors_july2020.csv") #
+write_csv(d, paste0(here::here(), "/data/consolidated_data/consolidated_data_4detectors_aug2020.csv")) 
 ```
