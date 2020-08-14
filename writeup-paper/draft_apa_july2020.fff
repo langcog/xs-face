@@ -1,13 +1,6 @@
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
 [H]
-\includegraphics[width=0.4\linewidth]{images/view_angle_redone} \caption{Vertical field of view for two different headcam configurations (we used the lower in our current study).}\label{fig:headcam}
-\end{figure*}
-\efloatseparator
- 
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-[H]
 \includegraphics[width=1\linewidth]{images/exampe_detections} \caption{Example detections made by OpenPose from children in each age group.}\label{fig:exampledetections}
 \end{figure*}
 \efloatseparator
