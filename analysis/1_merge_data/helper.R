@@ -218,7 +218,7 @@ get.namings <- function (x, window = c(-2,2), file_dir = paste0(here::here(),'/d
   namings <- regularize.naming(namings)
 }
 
-get.namings.second <- function (x, window = c(-2,2), file_dir = paste0(here::here(),'/data/naming/second')) {
+get.namings.second <- function (x, window = c(-2,2), file_dir = paste0(here::here(),'/data/naming/second/')) {
   # try for second file
   second_file = Sys.glob(paste(file_dir,x$subid[1], '*',".csv", sep=""))
   naming_second = read.csv(second_file)
