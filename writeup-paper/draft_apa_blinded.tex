@@ -99,7 +99,7 @@ detection},
 \authornote{
 
 Correspondence concerning this article should be addressed to Bria L. Long, 450 Serra Mall, Stanford CA 94305. E-mail: bria@stanford.edu}
-\keywords{Postural developments, headcam, social information, face detection, pose detection\newline\indent Word count: XXX}
+\keywords{Postural developments, headcam, social information, face detection, pose detection\newline\indent Word count: 7324}
 \DeclareDelayedFloatFlavor{ThreePartTable}{table}
 \DeclareDelayedFloatFlavor{lltable}{table}
 \DeclareDelayedFloatFlavor*{longtable}{table}
@@ -114,6 +114,22 @@ infant view}
 \date{}
 
 \abstract{
+•We provided a open, annotated dataset of naturalistic parent-child
+interactions during a play session with with novel and familiar toys,
+recording the egocentric and third-person views.
+
+•We develop a novel method using a pose detection model to automatically
+quantify the faces and hands in the infant view.
+
+•We apply our novel method to this and another egoecentric video
+dataset, and confirm that locomotive developments around the first
+birthday shape the faces and hands that infants see in naturalistic
+interactions.
+
+•The combined use of head-mounted cameras and automated analyses has the
+potential to reveal the changing statistics of the information in the
+infant view.
+
 Social information plays a key role in infants' early linguistic and
 cognitive development. Yet infants locomotor abilities also develop
 continuously as they learn to sit, crawl, stand, and walk. How do these
@@ -121,25 +137,23 @@ postural developments affect infants access to the social information
 relevant for early learning? To address this question, we first created
 a rich annotated dataset of naturalistic play sessions between infants
 and their caregivers with sets of novel and familiar toys (N=36, 8-16
-months of age), recording both egocentric and third-person video. We
-then developed an automated analysis method using a pose detection model
-(Zhang et al., 2017) to detect the faces and hands in the infant view,
-allowing us to analyze the entirety of this dataset. We found that
-infants' posture and orientation to their caregiver changed dramatically
-across this age range and modulated infants access to social
-information; infants who were sitting or standing with their caregiver
-at a close distance tended to have the most faces and hands in their
-visual field. We also applied our automated method to a second
-egocentric video dataset where one-year-olds explored a large play room
-with their caregivers (Franchak et al., 2017), replicating and extending
-their findings. Together, these results establish the validity of a new
-method for detecting social information and confirm that motoric
-developments play a significant role in shaping the social information
-that infants have access to. We propose that the combined use of
-head-mounted cameras and the application of new computer vision
-techniques is a promising avenue for re-utilizing rich video datasets
-and understanding how the statistics of infants' visual and linguistic
-experience change over development.
+month-olds), recording both egocentric and third-person video. We then
+developed an automated analysis method using a pose detection model to
+detect the faces and hands in the infant view. We found that infants'
+posture and orientation to their caregiver changed dramatically across
+this age range and modulated infants access to social information;
+infants who were sitting or standing with their caregiver at a close
+distance tended to have the most faces and hands in their visual field.
+We applied this automated method to a second egocentric video dataset
+from a previous study, replicating and extending their findings on the
+influence of infants' posture on the social information in view.
+Together, these results establish the validity of a new method for
+detecting social information in egocentric videos and confirm that
+motoric developments play a significant role in shaping the social
+information that infants have access to. The combined use of
+head-mounted cameras and new computer vision techniques is a promising
+avenue for understanding how the statistics of infants' visual and
+linguistic experience change over development.
 }
 
 \begin{document}
@@ -151,177 +165,175 @@ vs.~averted gaze (Farroni, Csibra, Simion, \& Johnson, 2002) and young
 infants follow overt gaze shifts (Bruner, 1975; Gredeback, Fikke, \&
 Melinder, 2010). And as infants reach their first birthday, they also
 tend to follow (Yu \& Smith, 2013, 2017) and imitate the gestures of
-their caregivers (e.g., pointing).
-
-Infants ability to process these social cues may provide strong
-scaffolding for early word learning. Longitudinal studies provide some
-evidence for this link: children's level of joint engagement with their
-mother at 9-12 months predicts both their receptive and productive
-vocabularies (Carpenter, Nagell, \& Tomasello, 1998) and 10 month-olds
-who follow an adult's gaze (in an experimental context) have larger
-vocabularies at 18 months and throughout the second year of life (Brooks
-\& Meltzoff, 2005, 2008). While the relationship between hand-following
-and language development has been less well characterized, infants who
-follow their caregivers' hands tend to be those who spend more time
-jointly attending to events with their caregivers (Yu \& Smith, 2017).
+their caregivers (e.g., pointing). Infants ability to process these
+social cues may provide strong scaffolding for early word learning.
+Longitudinal studies provide some evidence for this link: children's
+level of joint engagement with their mother at 9-12 months predicts both
+their receptive and productive vocabularies (Carpenter, Nagell, \&
+Tomasello, 1998) and 10 month-olds who follow an adult's gaze (in an
+experimental context) have larger vocabularies at 18 months and
+throughout the second year of life (Brooks \& Meltzoff, 2005, 2008).
+While the relationship between hand-following and language development
+has been less well characterized, infants who follow their caregivers'
+hands tend to be those who spend more time jointly attending to events
+with their caregivers (Yu \& Smith, 2017).
 
 Relatively little work, however, has quantified how often infants see
-and use these kinds of social cues in naturalistic learing environments.
-By using head-mounted cameras to record what infants see, researchers
-have begun to document the infant egocentric perspective (Yoshida \&
-Smith, 2008) and to quantify the information -- social and otherwise --
-available to infants as they learn. While head-mounted camera data do
-not provide explicit information on where infants are attending, some
-work suggests that infants orient their head towards what they are
-focusing on -- putting those people or objects in view (Yoshida \&
-Smith, 2008). Initial recordings using this technique during in-lab play
-sessions revealed a different view than many imagined: instead of being
-dominated by faces, the infant perspective contained close up views of
-primarily toys and hands (Franchak, Kretch, Soska, \& Adolph, 2011;
-Yoshida \& Smith, 2008; Yu \& Smith, 2017). Subsequent research has
-revealed that the infant view is far from a unitary construct,
-undergoing dramatic changes as infants grow. Recordings from home
-environments suggest that the viewpoints of very young infants -- less
-than 4 months of age -- do indeed contain persistent and frequent views
-of faces (Fausey, Jayaraman, \& Smith, 2016; Jayaraman, Fausey, \&
-Smith, 2017) but that the infant view tends to contain more and more
-hands as infants grow older.
+and use these kinds of social cues in naturalistic learning
+environments. By using head-mounted cameras to record what infants see,
+researchers have begun to document the infant egocentric perspective
+(Yoshida \& Smith, 2008) and to quantify the information -- social and
+otherwise -- available to infants as they learn. While head-mounted
+camera data do not provide explicit information on where infants are
+attending, some work suggests that infants orient their head towards
+what they are focusing on -- putting those people or objects in view
+(Yoshida \& Smith, 2008). Initial recordings using this technique during
+in-lab play sessions revealed a different view than many imagined:
+instead of being dominated by faces, the infant perspective contained
+close up views of primarily toys and hands (Franchak, Kretch, Soska, \&
+Adolph, 2011; Yoshida \& Smith, 2008; Yu \& Smith, 2017). Subsequent
+research has revealed that the infant view undergoes dramatic changes as
+infants grow. Recordings from home environments suggest that the
+viewpoints of very young infants -- less than 4 months of age -- do
+indeed contain persistent and frequent views of faces (Fausey,
+Jayaraman, \& Smith, 2016; Jayaraman, Fausey, \& Smith, 2017) but that
+the infant view tends to contain more and more hands as infants grow
+older.
 
-These changes in perspective are likely the downstream consequence of a
+These changes in perspective are likely the downstream consequence of
 myriad factors, chief of which may be infants' evolving locomotive
 abilities: an infant's ability to sit, crawl, stand, or walk structures
 the way they interact with the things and people in their world.
 Infants' locomotive abilities can change rapidly: the physical body of
 an infant can lengthen up to 2cm in 24 hours (Lampl, 1993), leading to
-changes in their physical abilities from one day to the next. These
-motoric developments can be thought of as gateways that open up entirely
-new phases of development (Iverson, 2010), and cause a cascade of
-changes in infants ability to interact with their world and the people
-in it (Karasik, Tamis-LeMonda, \& Adolph, 2014).
+changes in their abilities from one day to the next. These motoric
+developments can be thought of as gateways that open up entirely new
+phases of development (Iverson, 2010), causing a cascade of changes in
+an infant's ability to interact with their world and the people in it
+(Karasik, Tamis-LeMonda, \& Adolph, 2014). Thus, infants' changing
+locomotor abilities may shape the social cues that infants' see and seek
+out, in turn impacting their cognitive and linguistic abilities.
 
-Thus, infants' changing locomotor abilities may shape the social cues
-that infants' see and seek out, in turn impacting their cognitive and
-linguistic abilities. Supporting this idea, infants experience with
-sitting predicts their success at 3D object completion tasks (Soska,
-Adolph, \& Johnson, 2010) as well as their receptive vocabulary
-(Libertus \& Violi, 2016). And as children begin crawling (Adolph,
-Vereijken, \& Denny, 1998) -- or scooting or cruising (Patrick, Noah, \&
-Yang, 2012) -- they are no longer constrained to the same spot that
-their caregivers last placed them in. Yet while crawlers can choose
-where to go and what they see to a much greater degree, they also appear
-to spend much of their time in a world populated by floors and knees;
-during spontaneous play, toddlers are more likely to look at the floor
-while crawling than while walking (Franchak et al., 2011), when they
-have full visual access to their environment and the people in it
-(Kretch, Franchak, \& Adolph, 2014).
+However, understanding the nuanced relationship between the social
+information in the infant view and their motoric and linguistic
+development has remained challenging. For example, as children begin
+crawling (Adolph, Vereijken, \& Denny, 1998) -- or scooting or cruising
+(Patrick, Noah, \& Yang, 2012) -- they are no longer constrained to the
+same spot that their caregivers last placed them in. Yet while crawlers
+can choose where to go and what they see to a much greater degree, they
+also appear to spend much of their time in a world populated by floors
+and knees; during spontaneous play, toddlers are more likely to look at
+the floor while crawling than while walking (Franchak et al., 2011),
+when they have full visual access to their environment and the people in
+it (Kretch, Franchak, \& Adolph, 2014). Further, infants' experience
+with sitting predicts their success at 3D object completion tasks
+(Soska, Adolph, \& Johnson, 2010) as well as their receptive vocabulary
+(Libertus \& Violi, 2016), suggesting the importance of focused play
+sessions for language development.
 
-On one view, it is children's ability to stand and walk that
+Others have posited that it is children's ability to stand and walk that
 fundamentally changes their ability to access social information (e.g.,
 facial expressions, gaze cues, pointing) relative to children who are
-still crawling and sitting (Walle, 2016). In turn, this ability to
-access more detailed social information could allow infants to learn
-words quicker and more efficiently, facilitating language growth (Walle,
-2016). Supporting this idea, walking infants make different kinds of
-object-related bids for attention from their caregivers than crawling
-infants, and tend to hear more action directed statements (e.g.,
-\enquote{open it}) (Karasik et al., 2014); further, in an observational
-study, Walle and Campos (2014) also found that children who were able to
-walk had both higher receptive and productive vocabularies. However, not
-all evidence supports this view: some parental report data suggest a
-weak relationship between walking and the onset of language (Moore,
-Dailey, Garrison, Amatuni, \& Bergelson, 2019), and head-mounted
-eye-tracking data have highlighted the role of infants' in-the-moment
-posture -- and that of their caregivers' -- in what infants' see,
-finding that these factors are better predictors of the social
-information in view than their locomotor status per se (i.e.,
-\enquote{walker} vs \enquote{crawler}) (Franchak, Kretch, \& Adolph,
-2017).
+still crawling and sitting (Walle, 2016), which in turn allow infants to
+learn words quicker and more efficiently (Walle, 2016). Supporting this
+idea, walking vs.~crawling infants tend to make different kinds of
+object-related bids for attention from their caregivers (Karasik et al.,
+2014), hear more action directed statements (e.g., \enquote{open it})
+(Karasik et al., 2014), and have higher receptive and productive
+vocabularies (Walle \& Campos, 2014). However, not all evidence supports
+this view: parental report data suggest a weak relationship between
+walking and the onset of language (Moore, Dailey, Garrison, Amatuni, \&
+Bergelson, 2019), and head-mounted eye-tracking data from one-year-olds
+highlights the role of infants' in-the-moment posture -- and that of
+their caregivers' -- in what infants' see, finding that these factors
+are better predictors of the social information in view than their
+locomotor status per se (i.e., \enquote{walker} vs \enquote{crawler})
+(Franchak, Kretch, \& Adolph, 2017).
 
-Understanding this nuanced relationship between the social information
-in the infant view and their motoric and linguistic development has
-remained challenging. Indeed, different kinds of play sessions (e.g.,
-exploring novel environments vs.~playing with novel objects) might
-modulate the degree to which infants' posture changes the social
-information in view. Furthermore, no work to date has directly examined
-how the availability of social information changes in naturalistic
-language learning contexts. For example, it is unclear if and how the
-social information in view changes during the naming events for
-different objects (e.g, \enquote{Look, a {[}ball{]}}).
-
-More broadly, the field is in need of computational tools to reutilize
-rich video datasets and to understand the generalizability of findings
-across different populations, tasks, and age-ranges. While the field has
+Broadly, the field is in need of computational tools to reuse these rich
+video datasets and understand the generalizability of findings across
+different populations, tasks, and age-ranges. For example, different
+kinds of play sessions (e.g., exploring novel environments vs.~playing
+with novel objects) might modulate the degree to which infants' posture
+changes the social information in view. Yet while the field has
 assembled many head-mounted camera datasets, conducting new analyses on
 these videos has remained prohibitively time-consuming due to a lack of
 computational tools for annotations. Instead, hundreds of hours of
 manual annotations have been required to analyze a fraction of the
-available frames for a given analysis. Thus, despite containing a wealth
+available frames for a given analysis. Thus despite containing a wealth
 of information about the structure of parent-child interactions, these
 datasets have thus gone dramatically underused.
 
 Recent innovations in computer vision hold promise for automated
 annotations of the infant view. Over the past decade, deep neural
 networks have become dramatically better at a wide range of visual
-tasks, including object classification, Simonyan and Zisserman
-(2014){]}, scene categorization (Zhou, Lapedriza, Khosla, Oliva, \&
-Torralba, 2017), and pose detection (K. Zhang, Zhang, Li, \& Qiao,
-2016), arguably facilitating our understanding of visual perception
-(Peterson, Abbott, \& Griffiths, 2018, VanRullen (2017)) and improving
-computational neuroscience (Kietzmann, McClure, \& Kriegeskorte, 2018).
-However, as most models have been trained on photographs or videos taken
-from the adult perspective, it is still unclear how easily these models
-can be applied to videos taken from the infant perspective.
+tasks, including object classification, Simonyan and Zisserman (2014),
+scene categorization (Zhou, Lapedriza, Khosla, Oliva, \& Torralba,
+2017), and pose detection (K. Zhang, Zhang, Li, \& Qiao, 2016), arguably
+facilitating our understanding of visual perception (Peterson, Abbott,
+\& Griffiths, 2018; VanRullen, 2017) and improving computational
+neuroscience (Kietzmann, McClure, \& Kriegeskorte, 2018). However, as
+most models have been trained on photographs or videos taken from the
+adult perspective, it is still unclear how easily these models can be
+applied to videos taken from the infant perspective.
 
-In this paper, we thus first validate a model for the automated
-detection of faces and hands in the infant view, using a open-source
-model of pose detection -- OpenPose(Cao, Simon, Wei, \& Sheikh, 2017; K.
-Zhang et al., 2016) -- that provides pose, face, and hand keypoints for
-every person in an image. We compare the detection accuracy of OpenPose
-with that of both older and more specialized models of face detection
-and demonstrate the usability of this off-the-shelf model for
+In the present paper, we make progress on understanding the relationship
+the between the infant visual perspective and motoric and linguistic
+development in three ways. First, we validate a model for the automated
+detection of faces and hands in the infant view. We use an open-source
+model of pose detection -- OpenPose (Cao, Simon, Wei, \& Sheikh, 2017;
+K. Zhang et al., 2016) -- that provides pose, face, and hand keypoints
+for every person in an image. We compare the detection accuracy of this
+method with that of both older and more specialized models of face
+detection, and demonstrate the usability of this off-the-shelf model for
 quantifying the faces and hands in the infant view.
 
-We then apply this automated method to a head-mounted camera dataset
-collected in our lab to directly examine the role of postural
-developments on the social information in the infant view during
-language learning. Specifically, we constructed a dataset where infants
-and caregivers played freely using a set of novel and familiar objects;
-8, 12, and 16 months-olds (N=36; N=12 in each age group) participated to
-ensure a wide range of locomotor abilities. Infants' in-the-moment
-posture and orientation relative to their caregiver were hand annotated
-and all play sessions were transcribed. This cross-sectional design thus
-allowed us to directly examine the relative contributions of age
-vs.~postural developments on children's visual access to social
-information, and how the avaliability of social cues changes relative to
-naming events (e.g., \enquote{Yes, you like the {[}ball!{]}}). Broadly,
-we predicted that there would be differential access to social
-information based on children's postural developments: crawling infants
-would see fewer faces/hands because they would primarily be looking at
-the ground, while walking toddlers would have access to a richer visual
-landscape with greater access to the social information in their
-environment.
+Second, we provide an annotated, open dataset for researchers to examine
+the effects of postural developments and naming behavior during
+naturalistic parent-child interactions. To do so, we invited caregivers
+of 8, 12, and 16-month-olds to participate in play sessions where they
+were provided with pairs of novel and familiar objects (e.g., a ball and
+a microfiber duster, called a \enquote{zem}). We chose this age-range to
+span the months when infants typically transition from sitting to
+crawling to standing, and documented the infant egocentric view as well
+as a third-person view of the play session. We then annotated infants'
+in-the-moment posture and orientation relative to their caregiver, and
+obtained full transcripts of the play sessions as well as
+MacArthur-Bates Communicative Development Inventories for each child.
 
-To examine the robustness of our automated method and the
-generalizability of our findings, we applied OpenPose (Cao et al., 2017)
-to the dataset collected in Franchak et al. (2017), where one-year-olds
-wore head-mounted eye-tracking cameras during a play session and their
-in-the-moment posture was hand-annotated. Unlike the present dataset,
-infants and caregivers roamed a large, open playroom and explored
-different toys placed throughout. We thus analyzed this dataset with the
-goal of both (1) validating our automated method on a very different
-kind of dataset, attempting to replicate their primary findings
-originally obtained with a head-mounted eye-tracker (2) examining
+Third, we apply our automated method to this and one other openly
+available head-mounted camera dataset, examining the generality of the
+effects of motor development on the social information in view. In Study
+1, we use the cross-sectional design of our dataset to directly examine
+the relative contributions of age vs.~in-the-moment posture on infants'
+visual access to social information, and use the transcriptions to
+examine how the availability of social cues changes relative to naming
+events (e.g., \enquote{Yes, you like the {[}ball!{]}}). Indeed, despite
+positing links between the social information in view and language
+development, no work to date has directly examined how the availability
+of social information changes around naming events in naturalistic
+contexts. In Study 2, we apply this automated method to Franchak et al.
+(2017), where one-year-olds wore head-mounted eye-tracking cameras
+during a play session and their in-the-moment posture was
+hand-annotated. Unlike the present dataset, infants and caregivers
+roamed a large, open playroom and explored different toys placed
+throughout. We thus analyzed this second dataset with a first goal of
+validating our automated method on a very different kind of video
+dataset, attempting to replicate their primary findings originally
+obtained with a head-mounted eye-tracker, and then further examine
 whether the proportion of hands in view also varies with infants'
-posture in an exploratory play session.
+posture. Broadly, we predicted that there would be differential access
+to social information based on children's postural developments:
+crawling infants would see fewer faces/hands because they would
+primarily be looking at the ground, while walking toddlers would have
+access to a richer visual landscape with greater access to the social
+information in their environment.
 
-\section{Methods}\label{methods}
+\section{Study 1}\label{study-1}
 
-\subsection{Free-play video dataset}\label{free-play-video-dataset}
+\subsection{Methods}\label{methods}
 
-A primary goal of this project was to provide a annotated, open dataset
-for other researchers to examine the effects of postural developments
-and labeling behavior during naturalistic parent-child interactions. We
-thus invited caregivers of 8, 12, and 16-month-olds to participate in
+Caregivers of 8, 12, and 16-month-olds were invited to participate in
 play sessions where they were provided with pairs of novel and familiar
 objects (e.g., a ball and a microfiber duster, called a \enquote{zem})
 in a small playroom in a lab (approximately 10' x 10'). Infants wore
@@ -330,9 +342,9 @@ camera), a tripod-mounted camera captured a third-person view of the
 play session. Using these video data, infants' posture and orientation
 to their caregiver were hand-coded and annotated for the entirety of the
 play session. All videos were transcribed, and MacArthur CDIs were
-collected for all children who particpated. All materials have been made
-publicly avaliable on Databrary for whom the parents provided sharing
-consent (29/36 dyads) via \url{https://nyu.databrary.org/volume/101}
+collected for all children who participated. All materials have been
+made publicly available on Databrary for whom the parents provided
+sharing consent (29/36 dyads) via {[}BLINDED{]}.
 
 \subsubsection{Participants}\label{participants}
 
@@ -372,8 +384,7 @@ were made independent of the results of subsequent analyses.
 
 We used a head-mounted camera (\enquote{headcam}) that was constructed
 from a small camera attached to a soft elastic headband.\footnote{Detailed
-  instructions for creating this headcam can be found at
-  \url{http://babieslearninglanguage.blogspot.com/2013/10/how-to-make-babycam.html}.}
+  instructions for creating this headcam can be found at {[}BLINDED{]}.}
 Initial participants wore an MD-80 camera, which was then replaced by a
 Veho pro camera which had better battery life and a larger view angle.
 The view angle of the MD-80 camera was \(32^{\circ}\) horizontal by
@@ -383,7 +394,7 @@ to increase the view angle to \(64^{\circ}\) horizontal by
 wider, \(47^{\circ}\) horizontal by \(36^{\circ}\) vertical. Videos
 captured by MD-80/Veho cameras were 640x480/720x480 pixels,
 respectively, and both cameras had a frame rate of \textasciitilde{}30
-frames per second. To ensure taht detections across these different
+frames per second. To ensure that detections across these different
 cameras were comparable, we excluded detections from the outer edges of
 the videos taken with the MD-80 cameras based on these view angle
 differences in our main analyses (i.e.~excluding top/bottom 13\% of the
@@ -398,7 +409,9 @@ presence of faces in the child's field of view, we chose to orient the
 camera upwards to capture the entirety of the child's upper visual field
 where the child is likely to see adult faces, understanding that this
 decision limited our ability to detect hands (especially those of the
-child, which are typically found at the bottom of the visual field).
+child, which are typically found at the bottom of the visual field). We
+note that these limitations regarding field of view and camera angle
+affect all studies using this method, not only our own.
 
 \subsubsection{Procedure}\label{procedure}
 
@@ -448,11 +461,11 @@ annotations; similarily, times when the child was being carried or the
 caregivers were out of the frame were marked as uncodable for caregiver
 orientation. On average, posture or orientation was uncodable from 1-2
 minutes of data in each child (seconds excluded from analysis for
-posture, M = 104.99s, SD = 233.86s; orientation; M = 104.99s, SD =
-233.86s), and these rates did not vary substantially with the age of the
-child. To assess the reliability of these annotations, a second coder
-annotated videos from three different children to calculate Cohen's
-kappa (posture, irr = .82; caregiver orientation, irr = .73).
+posture, M = 105s, SD = 234s; orientation; M = 105s, SD = 234s), and
+these rates did not vary substantially with the age of the child. To
+assess the reliability of these annotations, a second coder annotated
+videos from three different children to calculate Cohen's kappa
+(posture, \(\kappa\) = .82; caregiver orientation, \(\kappa\) = .73).
 
 \paragraph{Naming event annotations}\label{naming-event-annotations}
 
@@ -503,7 +516,7 @@ and part of their joint interaction.
 Viola Jones, the first face detection system, made use of a series of
 Haar feature-based cascade classifiers (Viola \& Jones, 2004) applied to
 each individual frame. The second algorithm (based on work by K. Zhang
-et al. (2016)) uses multi-task cascaded convolutional neural networks
+et al., 2016) uses multi-task cascaded convolutional neural networks
 (MTCNNs) for joint face detection and alignment, built to perform well
 in real-world environments where varying illuminations and occlusions
 are present. We used a Tensorflow implementation of this algorithm
@@ -541,46 +554,46 @@ a case-by-case basis. Precision (hits / hits + false alarms), recall
 (hits / hits + misses), and F-score (harmonic mean of precision and
 recall) were calculated for all detectors.
 
-\section{Results}\label{results}
+\subsection{Results}\label{results}
 
 First, we report the accuracy of the automated detectors, as assessed by
 comparison to hand-labelled frames from the free-play video dataset
 described above. We then apply one of these automated detectors
 (OpenPose) to the entirety of this video dataset, and use these outputs
 to examine how postural developments influence children's visual access
-to faces and hands from 8-16 months of age, as well as how access to
-these social cues changes during labeling events (e.g., do you see the
-{[}zem{]}?). Finally, we apply this same automated detector to another
-video dataset (Franchak et al., 2017), replicating and extending their
-findings on the effects of posture on visual access to social
-information.
+to faces and hands from 8-16 months of age. We further use the
+detections to examine how access to these social cues changes during
+naming events (e.g., do you see the {[}zem{]}?). Finally, we apply this
+same automated detector to another video dataset (Franchak et al.,
+2017), replicating and extending their findings on the effects of
+posture on visual access to social information.
 
 \begin{figure}[H]
 \includegraphics[width=1\linewidth]{images/exampe_detections} \caption{Example detections made by OpenPose from children in each age group.}\label{fig:exampledetections}
 \end{figure}
 
-\subsection{Accuracy of automated
+\subsubsection{Accuracy of automated
 detections}\label{accuracy-of-automated-detections}
 
 For face detection, we found that both OpenPose and MTCNN dramatically
-outperformed ViolaJones, our baseline model, especially with respect to
-the random sample, where ViolaJones missed many face that were in view.
-When considering only the composite F-score across all frames, MTCNN
-slightly outperformed OpenPose (0.89 MTCNN vs.~0.83 OpenPose), and MTCNN
-and OpenPose performed comparably with the random sample. Generally,
-MTCNN exhibited higher precision, whereas OpenPose exhibited higher
-recall, and these differences were most pronounced on the randomly
-sample frames. In other words, while OpenPose generated slightly more
-false positives than MTCNN, MTCNN missed several faces that were
-accurately detected by OpenPose. When we restricted our analysis to
-high-confidence detections from OpenPose (\textgreater{}.5 confidence;
-default threshold for visualization), we found very high precision (P =
-0.97), but much lower recall (R = 0.64) and thus overall performance (F
-= 0.77), indicating that these low-confidence detections often indexed
-actual faces that were in the infant view. Figure
-\ref{fig:exampledetections} shows example successful detections from
-OpenPose in each age group, and Figure \ref{fig:failures} shows examples
-of missed faces as well as false positives for context.
+outperformed ViolaJones (our baseline model) especially with respect to
+the random sample, where ViolaJones missed many face that were in view
+(see Table 1). When considering only the composite F-score across all
+frames, MTCNN slightly outperformed OpenPose (0.89 MTCNN vs.~0.83
+OpenPose), and MTCNN and OpenPose performed comparably with the random
+sample. Generally, MTCNN exhibited higher precision, whereas OpenPose
+exhibited higher recall, and these differences were most pronounced on
+the randomly sample frames. In other words, while OpenPose generated
+slightly more false positives than MTCNN, MTCNN missed several faces
+that were accurately detected by OpenPose. When we restricted our
+analysis to high-confidence detections from OpenPose (\textgreater{}.5
+confidence; default threshold for visualization), we found very high
+precision (P = 0.97), but much lower recall (R = 0.64) and thus overall
+lower performance (F = 0.77), indicating that these low-confidence
+detections often indexed actual faces that were in the infant view.
+Figure \ref{fig:exampledetections} shows example successful detections
+from OpenPose in each age group, and Figure \ref{fig:failures} shows
+examples of missed faces as well as false positives for context.
 
 We next assessed the viability of OpenPose as a hand detector. Despite
 the fact that hand detection is a more computationally challenging
@@ -591,7 +604,7 @@ precision -- generating relatively few false positives -- but showed low
 recall on the randomly sampled frames (see Table 1). As with face
 detections, when we restricted our analysis to high-confidence
 detections, we found much higher precision (P = 0.95), but much lower
-recall (R = 0.36) and thus overall performance (F = 0.52).
+recall (R = 0.36) and thus lower overall performance (F = 0.52).
 
 Thus, one major advantage of OpenPose relative to specialized face
 detectors, such as MTCNN, is that it allows the analysis of both the
@@ -632,9 +645,6 @@ MTCNN-Faces & High density & 0.89 & 0.92 & 0.90 \\
 \vspace{-1em}
 \end{table}
 
-\subsection{Study 1: Access to social information during postural
-developments}\label{study-1-access-to-social-information-during-postural-developments}
-
 \begin{figure}[H]
 \includegraphics[width=\textwidth]{figs/posture-1} \caption{Proportion of time spent by each infant in different postures and orientations relative to their caregivers (CG); times where posture was not codable are ommitted for visualization purposes}\label{fig:posture}
 \end{figure}
@@ -646,26 +656,24 @@ developments}\label{study-1-access-to-social-information-during-postural-develop
 \subsubsection{Developmental changes in infant posture and caregiver
 orientation}\label{developmental-changes-in-infant-posture-and-caregiver-orientation}
 
-We report developmental shifts in infants' posture and their orientation
-relative to their caregiver, consistent with previous literature (Adolph
-\& Berger, 2006; Franchak et al., 2017). The proportion of time infants
-spent sitting decreased with age, and the proportion of time infants
-spent standing increased with infants' age. As children got older, their
-locomotor abilities allowed them to become more independent. Both
-8-month-olds and 12-month-olds spent relatively equivalent amounts of
-time lying/crawling (i.e., \enquote{prone}) which was markedly decreased
-in the 16-month-olds, who spent most of their time sitting or standing
-(see Figure \ref{fig:posture}). We also observed changes in infants'
-orientation relative to their caregivers: the 8-month-olds spent more
-time with their caregiver behind them supporting their sitting positions
-than did children at other ages (see Figure \ref{fig:posture}). However,
-we also saw considerable variability across children: some infants spent
-almost their entire time sitting at a close distance from their
-caregiver, whereas others showed more considerable variability (see
-Figure \ref{fig:indivPosOrient}).
+Consistent with previous literature (Adolph \& Berger, 2006), the
+proportion of time infants spent sitting decreased with age, and the
+proportion of time infants spent standing increased with infants' age.
+As children got older, their locomotor abilities allowed them to become
+more independent. Both 8-month-olds and 12-month-olds spent relatively
+equivalent amounts of time lying/crawling (i.e., \enquote{prone}) which
+was markedly decreased in the 16-month-olds, who spent most of their
+time sitting or standing (see Figure \ref{fig:posture}). We also
+observed changes in infants' orientation relative to their caregivers:
+the 8-month-olds spent more time with their caregiver behind them
+supporting their sitting positions than did children at other ages (see
+Figure \ref{fig:posture}). However, we also saw considerable variability
+across children: some infants spent almost their entire time sitting at
+a close distance from their caregiver, whereas others showed more
+considerable variability (see Figure \ref{fig:indivPosOrient}).
 
-\subsubsection{Access to faces and hands across
-age}\label{access-to-faces-and-hands-across-age}
+\subsubsection{Changes in access to faces and
+hands}\label{changes-in-access-to-faces-and-hands}
 
 First, we examined the proportion of face and hand detections as a
 function of infants' age without considering their posture (see Figure
@@ -694,33 +702,27 @@ in their visual field that 8- or 16-month-olds.
 \end{figure}
 
 In contrast, infant's locomotor developments had a major effect on the
-faces and hands that were in the field of view. Infants' in-the-moment
-posture was a major factor both in how many faces and hands were in view
-during the play session, as was their orientation relative to their
-caregiver (see Figure \ref{fig:detByPosOrient}). This was quantified
-using two generalized linear mixed-effect models estimating the
-proportion of faces and hands that were in view, with orientation,
-posture, their interaction, and scaled participant's age as fixed
-effects, and with random slopes for infants' orientation and posture. A
-summary of the coefficients of the models can be found in Tables 2 and
-3.
-
-The interaction between infants' posture and their caregiver's
-orientation had the most dramatic effect on the social information in
-view. When caregivers were behind their infants, supporting their
-infants' sitting or standing positions, infants saw fewer faces. When
-caregivers were relatively close to their infants, infants who were
-sitting or standing had more faces in view (Face detections; infant
-sitting and CG close, b = 0.90, SE = 0.07, Z = 13.80, P \textless{}
-0.001; infant standing and CG close, b = 1.23, SE = 0.08, Z = 15.44, P
-\textless{} 0.001) than infants who were lying down/crawling
-(i.e.~prone). When caregivers were far away from their infants, face
-detections were similarity higher (Face detections; infant sitting and
-CG far, b = 0.63, SE = 0.07, Z = 9.16, P \textless{} 0.001; infant
-standing and CG far, b = 1.23, SE = 0.09, Z = 14.43,P \textless{}
-0.001). Infants' age was not significant predictor in accounting for the
-faces in view (Face detections; Age (scaled), b = 0.04, SE = 0.11, Z =
-0.42, P = 0.671).
+faces and hands that were in the field of view (see Figure
+\ref{fig:detByPosOrient}). Two generalized linear mixed-effect models
+were used to predict the proportion of faces and hands in view, with
+orientation, posture, their interaction, and scaled participant's age as
+fixed effects, and with random slopes for infants' orientation and
+posture (see all coefficients in Tables 3 and 4). In particular, the
+interaction between infants' posture and their caregiver's orientation
+had the most dramatic effect on the social information in view. When
+caregivers were behind their infants, supporting their infants' sitting
+or standing positions, infants saw fewer faces. When caregivers were
+relatively close to their infants, infants who were sitting or standing
+had more faces in view (Face detections; infant sitting and caregiver
+(CG) close, b = 0.90, SE = 0.07, Z = 13.80, P \textless{} 0.001; infant
+standing and CG close, b = 1.23, SE = 0.08, Z = 15.44, P \textless{}
+0.001) than infants who were lying down/crawling (i.e.~prone). When
+caregivers were far away from their infants, face detections were
+similarity higher (Face detections; infant sitting and CG far, b = 0.63,
+SE = 0.07, Z = 9.16, P \textless{} 0.001; infant standing and CG far, b
+= 1.23, SE = 0.09, Z = 14.43,P \textless{} 0.001). Infants' age was not
+significant predictor in accounting for the faces in view (Face
+detections; Age (scaled), b = 0.04, SE = 0.11, Z = 0.42, P = 0.671).
 
 We found a similar pattern of results for wrist detections, even though
 there were fewer wrist detections overall in the dataset. Infants saw
@@ -739,17 +741,17 @@ not a significant predictor in these models (Wrist detections; Age
 We directly examined the contributions of posture and orientation
 vs.~age by fitting a reduced version of the full model (Nakagawa \&
 Schielzeth, 2013) without their fixed effects (both models were run with
-the maximal random effects structure). The fixed effects in a model with
-only the age of the participants accounted for relatively little
-variance in the proportion of faces (marginal \(R^2\) \textless{} 0.01)
-or hands in view (marginal \(R^2\) = 0.02). However, when adding
-infants' posture and orientation to their caregiver to the model (and
-their interaction) the marginal \(R^2\) were higher for both faces
-(marginal \(R^2\) = 0.25) and wrists (marginal \(R^2\) = 0.26). Overall,
-these results suggest that infants' visual access to social information
-is largely modulated by their posture and orientation to their
-caregiver, which is in turn a function of their general locomotor
-development.
+the maximal random effects structure), and comparing model fits for each
+of these. The fixed effects in a model with only the age of the
+participants accounted for relatively little variance in the proportion
+of faces (marginal \(R^2\) \textless{} 0.01) or hands in view (marginal
+\(R^2\) = 0.02). However, when adding infants' posture and orientation
+to their caregiver to the model (and their interaction) the marginal
+\(R^2\) were higher for both faces (marginal \(R^2\) = 0.25) and wrists
+(marginal \(R^2\) = 0.26). Overall, these results suggest that infants'
+visual access to social information is largely modulated by their
+posture and orientation to their caregiver, which is in turn a function
+of their general locomotor development.
 
 \begin{table}[ht]
 \centering
@@ -800,12 +802,15 @@ Our play session was designed to provide parents with opportunities to
 label objects -- both familiar and novel -- such that we could examine
 whether children saw different kinds of social information around naming
 events. In a set of exploratory analyses, we thus analyzed how face and
-hand detections changed during object labeling events relative to
-baseline, analyzing a four-second window around each labeling event
-(e.g., \enquote{Look at the {[}zem{]}!}). Every utterance of one of the
-labelled objects (e.g., \enquote{ball}) was counted as a
-\enquote{labeling event}; timestamps of the beginning of each word were
-hand-annotated and synchronized with the frame-by-frame detections.
+hand detections changed during object naming events relative to
+baseline. We analyzed a four-second window (+/- 2 seconds) each time a
+caregiver uttered a name for one of the objects (e.g., \enquote{Look at
+the {[}zem{]}!}); this time window was chosen in keeping with previous
+work suggesting that parents attend to their target referents during
+this time range (Trueswell et al., 2016). Every utterance of one of the
+objects (e.g., \enquote{ball}) was counted as a \enquote{naming event};
+timestamps of the beginning of each word were hand-annotated and
+synchronized with the frame-by-frame detections.
 
 To assess whether there were differences in the social information in
 view during naming events, we first calculated the proportion of
@@ -838,13 +843,14 @@ Overall, these exploratory results suggest that children may tend to see
 more hands around naming events. This finding is consistent with the
 possibility that caregivers may change how they interact with their
 infant when presenting them with objects (Gogate, Bahrick, \& Watson,
-2000; Gogate, Bolzani, \& Betancourt, 2006). For example, caregivers may
-tend to simultaneously name objects when demonstrating their affordances
-or simply when pointing to them. In turn, infants may be sensitive to
-these naming events and orient their attention towards their caregiver,
-consistent with other accounts positing infants' sensitivity to social
-cues in early word learning environments (Frank, Simmons, Yurovsky, \&
-Pusiol, 2013; Yurovsky, 2018; Yurovsky \& Frank, 2017).
+2000; Gogate, Bolzani, \& Betancourt, 2006) and that hands could play a
+key role in guiding infants' attention during dyadic interactions (Yu \&
+Smith, 2017). For example, caregivers may tend to simultaneously name
+objects when demonstrating their affordances or simply when pointing to
+them. In turn, infants may be sensitive to these naming events and
+orient their attention towards their caregiver, consistent with other
+accounts positing infants' sensitivity to social cues in early word
+learning environments (Yurovsky, 2018; Yurovsky \& Frank, 2017).
 
 \begin{figure}[H]
 
@@ -855,42 +861,63 @@ Pusiol, 2013; Yurovsky, 2018; Yurovsky \& Frank, 2017).
 \caption{Proportion of face / wrist detections during naming events (+/- 2 seconds around label) for familiar and novel objects; these rates are put into context relative to baseline. Error bars represent 95\% bootstrapped confidence intervals. Grey lines connect points from individual subjects.}\label{fig:detByNaming}
 \end{figure}
 
-\subsection{Study 2: Extension of Franchak et al.,
-2017}\label{study-2-extension-of-franchak-et-al.-2017}
+\section{Study 2}\label{study-2}
 
-In the present work, we found that infant's in-the-moment posture
-changed with their age, as did infants' orientation relative their
-caregiver. In a related study with 12-month-olds, Franchak et al. (2017)
-also found that infants' in-the-moment posture changed the proportion of
-time infants spent looking at faces. Here, we sought to replicate these
-findings using our automated methodology (OpenPose detections), using
-the footage from their head-mounted cameras (hosted on Databrary; D. A.
-Simon, Gordon, Steiger, \& Gilmore, 2015) for two reasons. First, we
-sought to validate our novel method, which could fail to generalize to
-scenes from these more complex environments, where detecting faces and
-hands could arguably be a much harder task. Second, we sought to
-replicate the effects of infants' in-the-moment posture on differences
-in visual access to hands in an independent dataset.
+In Study 1, we found that infant's in-the-moment posture changed with
+their age, as did infants' orientation relative their caregiver. In a
+related study with 12-month-olds, Franchak et al. (2017) also found that
+infants' in-the-moment posture changed the proportion of time infants
+spent looking at faces. Here, we sought to replicate these findings
+using our automated methodology (OpenPose detections), using the footage
+from their head-mounted cameras (hosted on Databrary; D. A. Simon,
+Gordon, Steiger, \& Gilmore, 2015) for two reasons. First, we sought to
+validate our novel method, which could fail to generalize to scenes from
+these more complex environments, where detecting faces and hands could
+arguably be a much harder task. Second, we sought to replicate the
+effects of infants' in-the-moment posture on differences in visual
+access to hands in an independent dataset.
 
-\subsubsection{Comparison between video
-datasets}\label{comparison-between-video-datasets}
+\subsection{Methods}\label{methods-1}
 
-First, the play environment in Franchak et al. (2017) that infants were
-immersed in with their caregivers (and experimenters) was much larger
-and more varied than the play room used in the present dataset,
-containing multiple structures and toys in different parts of the room
-for infants to climb, explore, and interact with, and infants were
-unconstrained and allowed to freely wander the room. In contrast, the
-play room used in Study 1 was relatively small (approximately 10' x 10')
-and was set-up with focused play with the pairs of novel and familiar
-objects. Further, multiple people were present during the play session
-in Franchak et al. (2017)-- including their caregiver and two
-experimenters -- whereas in Study 1 the experimenters left the room
-during the play session. The view angle of the two head-mounted cameras
-used in Study 1 and Franchak et al. (2017) were relatively similar
-(\(52.2^{\circ}\) horizontal by \(42.2^{\circ}\) in Franchak et al.
-(2017), \(47^{\circ}\) horizontal by \(36^{\circ}\) vertical in Study
-1).
+\subsubsection{Participants}\label{participants-1}
+
+With the aid of Franchak et al. (2017), we obtained the scene camera
+footage from the head-mounted eye-trackers for the 17 one-year-old
+infants (range 11.8--12.4 months) who participated. As noted in Franchak
+et al. (2017), families were recruited from maternity wards of local
+hospitals in the New York City metropolitan area and were predominantly
+white and middle class.
+
+\subsubsection{Head-mounted camera}\label{head-mounted-camera-1}
+
+The view angle of the two head-mounted cameras used in these two studies
+were relatively similar (\(52.2^{\circ}\) horizontal by \(42.2^{\circ}\)
+in Franchak et al. (2017), \(47^{\circ}\) horizontal by \(36^{\circ}\)
+vertical in Study 1). However, in Study 2 the camera was mounted on the
+side of the infants' head in Study 2, closer to infants temples, whereas
+in Study 1 the camera was situated in the middle of infants' forehead
+and oriented slightly upwards.
+
+\subsubsection{Procedure}\label{procedure-1}
+
+The play environment that infants were immersed in with their caregivers
+(and experimenters) was much larger and more varied than the play room
+used in Study 1, containing multiple structures and toys in different
+parts of the room for infants to climb, explore, and interact with, and
+infants were unconstrained and allowed to freely wander the room. In
+contrast, the play room used in Study 1 was relatively small
+(approximately 10' x 10') and was set-up for focused play on a mat with
+the pairs of novel and familiar objects. In addition, multiple people
+were present during the play session -- including their caregiver and
+two experimenters -- whereas in Study 1 the experimenters left the room
+during the play session.
+
+\subsubsection{Video annotations}\label{video-annotations}
+
+The first five minutes of each of the videos were coded for the infants'
+posture (upright, prone, or sitting) by trained coders in Franchak et
+al. (2017). These frame-by-frame posture annotations were synced with
+the outputs of the same automated annotation used in Study 1.
 
 \begin{figure}[H]
 
@@ -901,47 +928,57 @@ used in Study 1 and Franchak et al. (2017) were relatively similar
 \caption{Proportion of face / wrist detections for 12-month-olds in Franchak et al., 2017 as a function of children's in-the-moment posture. Error bars represent 95 percent bootstrapped confidence intervals.}\label{fig:franchak}
 \end{figure}
 
-\subsubsection{Replication using automated
-detections}\label{replication-using-automated-detections}
+\subsection{Results}\label{results-1}
 
-Overall, we found convergence between our two methodologies, replicating
-the main results from Franchak et al. (2017), and finding that the
-proportion of faces detected was greater when infants were sitting or
-standing vs.~prone (see Figure \ref{fig:franchak}). We found this result
-regardless of whether we used all detections (proportion of frames with
-face detections; Prone: M = 0.13, Sitting: M = 0.20, Upright: M = 0.22)
-or restricted our analyses to high-confidence detections (percentage of
-frames with face detections; Prone: M = 0.03, Sitting: M = 0.06,
-Upright: M = 0.05). These results were confirmed in generalized
-linear-mixed models, as in the first study (Sitting vs.~Prone, b = 0.34,
-SE = 0.02, Z = 23.37, P \textless{} 0.001. Upright vs.~Prone, b = 0.38,
-SE = 0.02, Z = 24.01, P \textless{} 0.001).
+\subsubsection{Differences between eye-tracking vs.~automated
+detections}\label{differences-between-eye-tracking-vs.automated-detections}
 
-The most noticeable difference between our results is the overall
-proportion of frames with faces detected by OpenPose vs.~the proportion
-of frames in which infants were judged to be looking at faces in
-Franchak et al. (2017). Across the entire session in Franchak et al.
-(2017), infants looked at faces on 4.7\% of frames (Franchak et al.,
-2017). When we used all detections from OpenPose, we found a higher
+First, we compared the overall proportion of frames in which infants
+foveated faces -- as assessed by the head-mounted eye-tracker -- in
+Franchak et al. (2017) vs.~the proportion of frames with faces detected
+by OpenPose. We expected some differences, as (1) head-mounted
+eye-trackers may underestimate the proportion of faces attended due to
+calibration issues, and (2) OpenPose may detect faces that are in view
+for infants but that infants may not be foveating. Across the entire
+session in Franchak et al. (2017), infants looked at faces on 4.7\% of
+frames. When we used all detections from OpenPose, we found a higher
 proportion of faces -- 21.80\%. When we restricted our results to only
 high-confidence detections, we found 6.11\% of frames with faces, closer
 to the original values reported by Franchak et al. (2017). However, the
 above analyses on the accuracy of this method suggest that
 high-confidence detections dramatically underestimate the number of
-faces in view. Thus, we suspect that these differences between our
-findings are due to both (1) the fact head-mounted eye-trackers may
-sometimes underestimate the proportion of faces attended due to
-calibration issues, and that (2) OpenPose may sometimes detect faces
-that are in view for infants but that infants may not be foveating.
+faces in view. Thus, OpenPose may somewhat overestimate the proportion
+of faces that are actually foveated, while head-mounted eye-trackers may
+underestimate the proportion of faces that infants' could be attending
+to.
 
-We also found that infants' in-the-moment posture also modulated the
+\subsubsection{Replication \& extension using automated
+detections}\label{replication-extension-using-automated-detections}
+
+Despite these differences, we found convergence between our two
+methodologies, replicating the main results from Franchak et al. (2017),
+and finding that the proportion of faces detected was greater when
+infants were sitting or standing vs.~prone (see Figure
+\ref{fig:franchak}). We found this result regardless of whether we used
+all detections (proportion of frames with face detections; Prone: M =
+0.13, Sitting: M = 0.20, Upright: M = 0.22) or restricted our analyses
+to high-confidence detections (percentage of frames with face
+detections; Prone: M = 0.03, Sitting: M = 0.06, Upright: M = 0.05).
+These results were confirmed in generalized linear-mixed models, with
+random intercepts for each subjects and infants' posture as a fixed
+effect (Sitting vs.~Prone, b = 0.34, SE = 0.02, Z = 23.37, P \textless{}
+0.001. Upright vs.~Prone, b = 0.38, SE = 0.02, Z = 24.01, P \textless{}
+0.001).
+
+We also found that infants' in-the-moment posture modulated the
 proportion of hands that were in view (i.e., wrist detections), though
 these were not originally annotated in Franchak et al. (2017) (see
 Figure \ref{fig:franchak}, proportion of frames with wrist detections;
 Prone: M = 0.15; Sitting: M = 0.21; Upright: M = 0.22). These results
-were confirmed in generalized linear-mixed models, as in the first study
-(Sitting vs.~Prone, b = 0.27, SE = 0.01, Z = 19.09, P \textless{} 0.001.
-Upright vs.~prone, b = 0.30, SE = 0.02, Z = 19.73, P \textless{} 0.001).
+were confirmed in generalized linear-mixed models with the same model
+structure as with faces (Sitting vs.~Prone, b = 0.27, SE = 0.01, Z =
+19.09, P \textless{} 0.001. Upright vs.~prone, b = 0.30, SE = 0.02, Z =
+19.73, P \textless{} 0.001).
 
 Overall, these analyses extend and validate previous work, replicating
 the results in Study 1 that infants' in-the-moment posture modulated the
@@ -952,13 +989,13 @@ construed.
 \section{General Discussion}\label{general-discussion}
 
 What social cues do infants see as they learn language, and how does
-this change as they grow and start to locomote themselves? We explored
-this question using video data from head-mounted cameras from two
-naturalistic datasets of parent-child interactions: a cross-sectional
-database of play sessions from 8-16 month-olds with sets of novel and
-familiar toys, and database of head-mounted camera videos from
-one-year-olds who explored a large play area from Franchak et al.
-(2017). To analyze these datasets, we developed a novel method using a
+infants' access to these cues change as they grow and start to locomote
+themselves? We explored this question using video data from head-mounted
+cameras from two naturalistic datasets of parent-child interactions: a
+cross-sectional database of play sessions from 8-16 month-olds with sets
+of novel and familiar toys, and database of head-mounted camera videos
+from one-year-olds who explored a large play area (Franchak et al.,
+2017). To analyze these datasets, we developed a novel method using a
 pose detection model to automate the annotation of the social
 information in the infant view, here operationalized as the presence of
 the faces and hands of their caregiver; these annotations were then
@@ -966,25 +1003,27 @@ synced with manual annotations of infants in-the-moment posture from
 third-person videos.
 
 Despite being trained on the adult perspective, the pose detector we
-used (OpenPose, Cao et al. (2017)) was able to generalize relatively
-well to the infant viewpoint, achieving comparable precision and
-accuracy as a face detector relative to a state-of-the-art model
-optimized specifically for detecting faces in natural scenes (MTCNN, K.
-Zhang et al. (2016)). While OpenPose had relatively low recall as a hand
-detector -- missing some hands that were in the infant view -- it made
-comparable rates of false alarms. In both cases, we found that overall
-performance was maximized when all detections were included, regardless
-of their confidence, suggesting that some low-confidence face and hand
-detection still index actual faces and hands that were seen by infants.
-Thus, while imperfect, we suggest that OpenPose can be applied to infant
+used (OpenPose, Cao et al., 2017) was able to generalize relatively well
+to the infant viewpoint, achieving comparable precision and accuracy as
+a face detector relative to a state-of-the-art model optimized
+specifically for detecting faces in natural scenes (K. Zhang et al.,
+2016). While OpenPose had relatively low recall as a hand detector --
+missing some hands that were in the infant view -- it made comparable
+rates of false alarms. In both cases, we found that overall performance
+was maximized when all detections were included, regardless of their
+confidence, suggesting that some low-confidence face and hand detection
+still index actual faces and hands that were seen by infants. Thus,
+while imperfect, we suggest that OpenPose can be applied to infant
 egocentric videos for the extraction of the social information in the
 infant viewpoint, reducing the burden of manual annotations and
 promoting the reusability of rich video datasets for further analyses.
 The use of this automated methodology allowed us to easily annotate the
 entirety of our dataset -- additionally analyzing the social information
 around naming events -- and to re-analyze the data from Franchak et al.
-(2017) to replicate our findings in a very different kind of play
-session.
+(2017), replicating our findings in a very different kind of play
+session. Furthermore, future work may be able to fine-tune pose
+detectors for even better accuracy, leveraging human annotations of the
+faces and hands that infants see to adapt models for the infant view.
 
 Broadly, our results replicate and extend previous work, first by
 showing systematic changes in infants' in-the-moment posture and their
@@ -1032,7 +1071,11 @@ captured. Finally, locomotive abilities are of course only part of a
 cascade of changes in infants' abilities and experiences, and these
 analyses document only a fraction of this broader, multifaceted
 trajectory in a population of children from primarily WEIRD contexts --
-white, educated, industrialized, rich, and democratic (D. Jones, 2010).
+white, educated, industrialized, rich, and democratic (Henrich, Heine,
+\& Norenzayan, 2010). Parenting practices with respect to motor
+development can and do vary widely across cultures (Karasik,
+Tamis-LeMonda, Ossmy, \& Adolph, 2018) -- and these choices likely
+influence the social cues that children see and how they use them.
 
 Understanding the relationship between different domains of
 developmental changes in naturalistic contexts has been a persistent
@@ -1047,12 +1090,7 @@ perspective for linguistic, cognitive, and social development.
 
 \section{Acknowledgements}\label{acknowledgements}
 
-Thanks to Kaia Simmons, Kathy Woo, and Aditi Maliwal for help in
-recruitment, data collection, and annotation. This work was funded by a
-Jacobs Foundation Fellowship to MCF, a John Merck Scholars award to MCF,
-and NSF \#1714726 to BLL. An earlier version of this work was presented
-to the Cognitive Science Society in Frank et al. (2013) and Sanchez,
-Long, Kraus, and Frank (2018).
+{[}BLINDED{]}
 
 \newpage
 
@@ -1143,12 +1181,6 @@ Franchak, J. M., Kretch, K. S., Soska, K. C., \& Adolph, K. E. (2011).
 Head-mounted eye tracking: A new method to describe infant looking.
 \emph{Child Development}, \emph{82}(6), 1738--1750.
 
-\hypertarget{ref-frank2013}{}
-Frank, M. C., Simmons, K., Yurovsky, D., \& Pusiol, G. (2013).
-Developmental and postural changes in children's visual access to faces.
-In \emph{Proceedings of the 35th annual meeting of the cognitive science
-society} (pp. 454--459).
-
 \hypertarget{ref-gogate2000study}{}
 Gogate, L. J., Bahrick, L. E., \& Watson, J. D. (2000). A study of
 multimodal motherese: The role of temporal synchrony between verbal
@@ -1165,6 +1197,10 @@ joint visual attention: A longitudinal study of gaze following during
 interactions with mothers and strangers. \emph{Developmental Science},
 \emph{13}(6), 839--848.
 
+\hypertarget{ref-henrich2010most}{}
+Henrich, J., Heine, S. J., \& Norenzayan, A. (2010). Most people are not
+weird. \emph{Nature}, \emph{466}(7302), 29--29.
+
 \hypertarget{ref-iverson2010}{}
 Iverson, J. M. (2010). Developing language in a developing body: The
 relationship between motor development and language development.
@@ -1175,14 +1211,15 @@ Jayaraman, S., Fausey, C. M., \& Smith, L. B. (2017). Why are faces
 denser in the visual experiences of younger than older infants?
 \emph{Developmental Psychology}, \emph{53}(1), 38.
 
-\hypertarget{ref-jones2010weird}{}
-Jones, D. (2010). A weird view of human nature skews psychologists'
-studies. American Association for the Advancement of Science.
-
 \hypertarget{ref-karasik2014}{}
 Karasik, L. B., Tamis-LeMonda, C. S., \& Adolph, K. E. (2014). Crawling
 and walking infants elicit different verbal responses from mothers.
 \emph{Developmental Science}, \emph{17}(3), 388--395.
+
+\hypertarget{ref-karasik2018ties}{}
+Karasik, L. B., Tamis-LeMonda, C. S., Ossmy, O., \& Adolph, K. E.
+(2018). The ties that bind: Cradling in tajikistan. \emph{PloS One},
+\emph{13}(10), e0204428.
 
 \hypertarget{ref-kietzmann2018deep}{}
 Kietzmann, T. C., McClure, P., \& Kriegeskorte, N. (2018). Deep neural
@@ -1228,10 +1265,6 @@ Peterson, J. C., Abbott, J. T., \& Griffiths, T. L. (2018). Evaluating
 human representations. \emph{Cognitive Science}, \emph{42}(8),
 2648--2669.
 
-\hypertarget{ref-sanchez2018postural}{}
-Sanchez, A., Long, B., Kraus, A. M., \& Frank, M. C. (2018). Postural
-developments modulate children's visual access to social information.
-
 \hypertarget{ref-scheirer2014perceptual}{}
 Scheirer, W. J., Anthony, S. E., Nakayama, K., \& Cox, D. D. (2014).
 Perceptual annotation: Measuring human vision to improve computer
@@ -1258,6 +1291,12 @@ ArXiv:1409.1556}.
 Soska, K. C., Adolph, K. E., \& Johnson, S. P. (2010). Systems in
 development: Motor skill acquisition facilitates three-dimensional
 object completion. \emph{Developmental Psychology}, \emph{46}(1), 129.
+
+\hypertarget{ref-trueswell2016perceiving}{}
+Trueswell, J. C., Lin, Y., Armstrong III, B., Cartmill, E. A.,
+Goldin-Meadow, S., \& Gleitman, L. R. (2016). Perceiving referential
+intent: Dynamics of reference in natural parent--child interactions.
+\emph{Cognition}, \emph{148}, 117--135.
 
 \hypertarget{ref-vanrullen2017perception}{}
 VanRullen, R. (2017). Perception science in the age of deep neural
