@@ -21,7 +21,7 @@ library(here)
 
 ### Load demographics
 ```{r}
-# All of the videos were filmed with an MD-80 headcam. Some videos had a fisheye lens attached to them that increased their FOV by approximately 50% in both directions (see manuscript; in demographics column "fisheye"). This was determined by looking at the third-person videos.
+# Some of the videos were filmed with an MD-80 headcam where a fisheye lens attached to them that increased their FOV by approximately 50% in both directions (see manuscript; in demographics column "fisheye"). This was determined by looking at the third-person videos.
 
 # The original resolutoin fo ALL of the videos is 480 x 720. But, then, OpenPose resizes them (not sure why?) and adds some blank space so that it is the right space -- this blank space is on the RIGHT. The final resolution becomes 1280 x 720; all vertical space has meaningful detections, but all horizontal space does not
 
@@ -124,7 +124,7 @@ alldets=left_join(alldets,detsOpenPose[,c("video","frame","faceOP","wristOP", "f
 ```
 
 ### Sanity checks for merging detectors
-We know that openPose works on videos and so might notget all frames. Let's check out the frames it doesn't have
+We know that openPose works on videos and so might not get all frames. Let's check out the frames it doesn't have
 
 ```{r}
 # First -- MTCNN v Viola Joes
