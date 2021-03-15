@@ -1,0 +1,33 @@
+
+POSTURE/ORIENTATION:
+
+Watch the videos and code the posture from the beginning of the cropped headcam footage. (Variable: Posture) For each coding observation, there are two prompts: type and orientation. Activities are coded in a 2-3 second window, meaning that if a child briefly sits for 1 second and then goes back to standing, it's okay to ignore the sitting. However, if the child is sitting for closer to 2-3 seconds, then that counts.
+
+Types: 
+l: lying (on the back)
+p: prone (lying on stomach, including crawling)
+si: sitting
+st: standing (including walking)
+c: carrying (child is in parent's arms and clearly off the ground)
+xx: not codable - typically this means:
+child is out of dv camera view
+experimenter's face is in view
+child's actions are so sporadic that they aren't code-able 
+
+Orientations (this doesn't apply to the "carry" and "other" types)
+0: child is out of reaching distance of the parent
+1: child is in reaching distance, parent is in front
+2: child is in reaching distance, parent is on left or right side
+3: child is in reaching distance, parent is behind them
+{leave blank}: if the orientation is c or xx, this does not apply
+
+You are also concurrently going to code if the child is in the frame or not. (Variable: Not-In-Frame) We're doing this to mark which frames will be more subjective, since you'll be looking at the headcam video alone. 
+
+Whenever the child isn't in the frame, mark "NIF" in this column. 
+
+NAMING EVENTS: 
+
+We want to mark all instances naming the study objects; 6 will be in each session (generally: ball, brush, car, tima, manu, zem).
+Timestamp should be word onset.
+Code only proper names (YES: "zem"; NO: "the yellow one", "it")
+If a parent uses the wrong name, code it as the correct one.
