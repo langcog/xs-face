@@ -62,6 +62,7 @@ data/franchak_dataset/openpose_detections/z-old/franchak_frames_openpose_master_
 
 data/franchak_dataset/openpose_detections/z-old/*
 
+writeup-paper/_old-drafts/*
 writeup-paper/_old-drafts/backup.Rmd
 writeup-paper/_old-drafts/draft_1_from_CogSci 2.Rmd
 writeup-paper/_old-drafts/draft_1_from_CogSci.Rmd
@@ -91,3 +92,7 @@ writeup-paper/_submission_docs/draft_withIDinfo.docx
 writeup-paper/_submission_docs/old.docx
 
 writeup-paper/_submission_docs/*
+writeup-paper/_old-drafts/helper.R
+writeup-paper/_old-drafts/glmer_errorbands_try.R
+data/demographics/XS_FACE_Consents_temp.numbers
+data/posture/orient_redone_BL/numbers_dcs/XS_1612_postureagain.xls
